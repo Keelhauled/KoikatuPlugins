@@ -1,13 +1,6 @@
 ﻿using BepInEx;
-using BepInEx.Logging;
-using Config;
-using Harmony;
-using Manager;
 using System.ComponentModel;
 using UnityEngine;
-using UnityStandardAssets.ImageEffects;
-//using MadGoat_SSAA;
-using static BepInEx.Logger;
 
 namespace GraphicsSettings
 {
@@ -21,7 +14,6 @@ namespace GraphicsSettings
         const string CATEGORY_RENDER = "Rendering settings";
         const string CATEGORY_SHADOW = "Shadow settings";
         const string CATEGORY_MISC = "Misc settings";
-        //const string CATEGORY_NEW = "AAA New settings";
 
         [Browsable(true)]
         [Category(CATEGORY_RENDER)]
@@ -104,14 +96,6 @@ namespace GraphicsSettings
                      "On \"limited\", the game will stop if it has been unfocused and not loading anything for a couple seconds.")]
         ConfigWrapper<BackgroundRun> RunInBackground { get; }
 
-        //[Category(CATEGORY_NEW)]
-        //[AcceptableValueRange(0f, 1f, false)]
-        //ConfigWrapper<float> BloomIntensity { get; set; }
-
-        //[Category(CATEGORY_NEW)]
-        //[AcceptableValueRange(0f, 1f, false)]
-        //ConfigWrapper<float> AOIntensity { get; set; }
-
         GraphicsSettings()
         {
             VSyncCount = new ConfigWrapper<VSyncType>("VSyncCount", this, VSyncType.Enabled);
@@ -127,8 +111,6 @@ namespace GraphicsSettings
             ShadowNearPlaneOffset = new ConfigWrapper<float>("ShadowNearPlaneOffset", this, 2f);
             CameraNearClipPlane = new ConfigWrapper<float>("CameraNearClipPlane", this, 0.06f);
             RunInBackground = new ConfigWrapper<BackgroundRun>("RunInBackground", this, BackgroundRun.Limited);
-            //BloomIntensity = new ConfigWrapper<float>("BloomIntensity", this, 1f);
-            //AOIntensity = new ConfigWrapper<float>("AOIntensity", this, 1f);
         }
 
         bool fullscreen = Screen.fullScreen;
@@ -156,9 +138,6 @@ namespace GraphicsSettings
 
         void Awake()
         {
-            //var harmony = HarmonyInstance.Create("keelhauled.graphicssettings.harmony");
-            //harmony.PatchAll(typeof(GraphicsSettings));
-
             QualitySettings.vSyncCount = (int)VSyncCount.Value;
             VSyncCount.SettingChanged += (sender, args) => QualitySettings.vSyncCount = (int)VSyncCount.Value;
 
@@ -210,9 +189,6 @@ namespace GraphicsSettings
                         break;
                 }
             };
-
-            //BloomIntensity.SettingChanged += (sender, args) => { if(bloom) bloom.bloomIntensity = BloomIntensity.Value; };
-            //AOIntensity.SettingChanged += (sender, args) => { if(amplifyOcclus) amplifyOcclus.Intensity = AOIntensity.Value; };
         }
 
         int _focusFrameCounter;
@@ -239,40 +215,6 @@ namespace GraphicsSettings
             Application.runInBackground = true;
             _focusFrameCounter = 0;
         }
-
-        //[HarmonyPrefix, HarmonyPatch(typeof(Studio.CameraControl), "Start")]
-        //public static void SSAAPatch(Studio.CameraControl __instance)
-        //{
-        //    var ssaa = __instance.gameObject.AddComponent<MadGoatSSAA>();
-        //    ssaa.SetAsSSAA(SSAAMode.SSAA_X2);
-        //    ssaa.SetAsCustom(2f, Filter.BICUBIC, 0f, 0f);
-        //    ssaa.SetAsAdaptive(1f, 2f);
-        //    Log(LogLevel.Message, $"SSAA status: {ssaa}");
-        //}
-
-        //[HarmonyPrefix, HarmonyPatch(typeof(EtceteraSystem), nameof(EtceteraSystem.Init))]
-        //public static void EtceteraSystemPatch(EtceteraSystem __instance)
-        //{
-        //    Log(LogLevel.Info, new string('=', 40));
-        //    foreach(var item in __instance.FieldInfos)
-        //    {
-        //        Log(LogLevel.Info, item.Name);
-        //    }
-        //    Log(LogLevel.Info, new string('=', 40));
-        //}
-
-        //static BloomAndFlares bloom;
-        //static AmplifyOcclusionEffect amplifyOcclus;
-
-        //[HarmonyPrefix, HarmonyPatch(typeof(CameraEffector), "Awake")]
-        //public static void CameraEffectorPatch(CameraEffector __instance)
-        //{
-        //    bloom = __instance.bloom;
-        //    amplifyOcclus = __instance.amplifyOcclus;
-
-        //    Log(LogLevel.Info, bloom != null);
-        //    Log(LogLevel.Info, amplifyOcclus != null);
-        //}
 
         enum VSyncType
         {
