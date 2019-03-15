@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections;
-using ChaCustom;
+﻿using ChaCustom;
 using Harmony;
 using Manager;
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace CardOrganizer
@@ -33,7 +33,7 @@ namespace CardOrganizer
             int modeSex = Singleton<CustomBase>.Instance.modeSex;
             FolderAssist folderAssist = new FolderAssist();
             string folder = Environment.CurrentDirectory + (modeSex != 0 ? string.Format("/UserData/CardOrganizer/chara/{0}/", folderName) : "/UserData/chara/male/");
-            folderAssist.CreateFolderInfoEx(folder, new string[]{ "*.png" }, true);
+            folderAssist.CreateFolderInfoEx(folder, new string[] { "*.png" }, true);
             if(clearList) listCtrl.ClearList();
 
             int num = 0;

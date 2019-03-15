@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using BepInEx.Logging;
+using Harmony;
+using System.Collections.Generic;
 using System.Linq;
 using UniRx;
-using BepInEx.Logging;
-using Logger = BepInEx.Logger;
 using UnityEngine;
-using Harmony;
+using Logger = BepInEx.Logger;
 
 namespace Spectacular
 {

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using BepInEx;
+using Studio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using BepInEx;
-using Studio;
 using UnityEngine;
 
 namespace StudioAddonLite
@@ -333,7 +333,7 @@ namespace StudioAddonLite
 
         private void FinishMove()
         {
-            var array = (from v in targets select new GuideCommand.EqualsInfo{ dicKey = v.Key, oldValue = oldPos[v.Key], newValue = v.Value.changeAmount.pos }).ToArray();
+            var array = (from v in targets select new GuideCommand.EqualsInfo { dicKey = v.Key, oldValue = oldPos[v.Key], newValue = v.Value.changeAmount.pos }).ToArray();
             UndoRedoManager.Instance.Push(new GuideCommand.MoveEqualsCommand(array));
         }
 
@@ -354,7 +354,7 @@ namespace StudioAddonLite
 
         private void FinishRotate()
         {
-            var array = (from v in targets select new GuideCommand.EqualsInfo{ dicKey = v.Key, oldValue = oldRot[v.Key], newValue = v.Value.changeAmount.rot }).ToArray();
+            var array = (from v in targets select new GuideCommand.EqualsInfo { dicKey = v.Key, oldValue = oldRot[v.Key], newValue = v.Value.changeAmount.rot }).ToArray();
             UndoRedoManager.Instance.Push(new GuideCommand.RotationEqualsCommand(array));
         }
 
@@ -397,8 +397,8 @@ namespace StudioAddonLite
 
         private void FinishRotate2()
         {
-            var posChangeAmountInfo = (from v in targets select new GuideCommand.EqualsInfo{ dicKey = v.Key, oldValue = oldPos[v.Key], newValue = v.Value.changeAmount.pos }).ToArray();
-            var rotChangeAmountInfo = (from v in targets select new GuideCommand.EqualsInfo{ dicKey = v.Key, oldValue = oldRot[v.Key], newValue = v.Value.changeAmount.rot }).ToArray();
+            var posChangeAmountInfo = (from v in targets select new GuideCommand.EqualsInfo { dicKey = v.Key, oldValue = oldPos[v.Key], newValue = v.Value.changeAmount.pos }).ToArray();
+            var rotChangeAmountInfo = (from v in targets select new GuideCommand.EqualsInfo { dicKey = v.Key, oldValue = oldRot[v.Key], newValue = v.Value.changeAmount.rot }).ToArray();
             UndoRedoManager.Instance.Push(new MoveRotEqualsCommand(posChangeAmountInfo, rotChangeAmountInfo));
         }
 
@@ -421,7 +421,7 @@ namespace StudioAddonLite
 
         private void FinishScale()
         {
-            var array = (from v in targets select new GuideCommand.EqualsInfo{ dicKey = v.Key, oldValue = oldScale[v.Key], newValue = v.Value.changeAmount.scale }).ToArray();
+            var array = (from v in targets select new GuideCommand.EqualsInfo { dicKey = v.Key, oldValue = oldScale[v.Key], newValue = v.Value.changeAmount.scale }).ToArray();
             UndoRedoManager.Instance.Push(new GuideCommand.ScaleEqualsCommand(array));
         }
 

@@ -1,12 +1,15 @@
-﻿using System.ComponentModel;
+﻿using BepInEx;
+using BepInEx.Logging;
+using Harmony;
+using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using BepInEx;
-using Harmony;
+using Logger = BepInEx.Logger;
 
 namespace FixCompilation
 {
-    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.1.2")]
+    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.1.3")]
     public class FixCompilation : BaseUnityPlugin
     {
         [DisplayName("Disable \"NEW\" indicator animation")]
@@ -35,7 +38,7 @@ namespace FixCompilation
         [DisplayName("Deactivate hidden tabs in maker")]
         [Description("Major performance improvement at the cost of slower switching between tabs in maker.\n\nChanges take effect after maker restart.")]
         public static ConfigWrapper<bool> DisableHiddenTabs { get; private set; }
-        
+
         [DisplayName("Avoid yamadamod exceptions")]
         [Description("Increases fps in certain situations where exceptions are being spammed. This fix may be unnecessary if you don't have sideloader.\n\n" +
                      "Changes take effect after game restart.")]
@@ -70,7 +73,7 @@ namespace FixCompilation
 
         private void Start()
         {
-            if (DisableIKCalc.Value && BepInEx.Bootstrap.Chainloader.Plugins.Select(MetadataHelper.GetMetadata).Any(x => x.GUID == "com.essu.stiletto"))
+            if(DisableIKCalc.Value && BepInEx.Bootstrap.Chainloader.Plugins.Select(MetadataHelper.GetMetadata).Any(x => x.GUID == "com.essu.stiletto"))
             {
                 DisableIKCalc.Value = false;
                 Logger.Log(LogLevel.Warning, "Stiletto detected, disabling the DisableIKCalc optimization");

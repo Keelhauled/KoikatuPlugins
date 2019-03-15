@@ -53,7 +53,7 @@ namespace LockOnPluginKK
         {
             get { return !(guideObjectManager.isOperationTarget && guideObjectManager.mode == 1); }
         }
-        
+
         protected override bool InputFieldSelected
         {
             get { return base.InputFieldSelected || studio.isInputNow || guideObjectManager.isOperationTarget; }

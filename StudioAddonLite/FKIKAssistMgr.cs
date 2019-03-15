@@ -1,13 +1,13 @@
-﻿using System;
+﻿using BepInEx.Logging;
+using Studio;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Studio;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using TMPro;
 using static BepInEx.Logger;
-using BepInEx.Logging;
 
 namespace StudioAddonLite
 {
@@ -56,7 +56,7 @@ namespace StudioAddonLite
                 btn.onClick = new Button.ButtonClickedEvent();
                 btn.onClick.AddListener(DoActivateFKIKForce);
 
-                Log(LogLevel.Debug ,"FK&IK button installed.");
+                Log(LogLevel.Debug, "FK&IK button installed.");
             }
         }
 

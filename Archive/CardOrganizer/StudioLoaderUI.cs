@@ -1,16 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Diagnostics;
+﻿using ChaCustom;
+using Harmony;
+using Studio;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using UILib;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
-using Harmony;
-using UILib;
-using Studio;
-using ChaCustom;
 
 // change sex of studio character accordingly when loading
 // save scroll position for each list
@@ -281,7 +281,7 @@ namespace CardOrganizer
         {
             confirmpanel.gameObject.SetActive(false);
             optionspanel.gameObject.SetActive(false);
-            
+
             var position = imagelist.content.anchoredPosition;
             cardTypes[currentType].cache[category.captionText.text].savedPosition = position;
 
@@ -454,10 +454,10 @@ namespace CardOrganizer
                 case 1:
                 {
                     var list = (from v in GuideObjectManager.Instance.selectObjectKey
-                                       select Studio.Studio.GetCtrlInfo(v) as OCIChar into v
-                                       where v != null
-                                       //where v.oiCharInfo.sex == 1
-                                       select v).ToList();
+                                select Studio.Studio.GetCtrlInfo(v) as OCIChar into v
+                                where v != null
+                                //where v.oiCharInfo.sex == 1
+                                select v).ToList();
 
                     if(list.Count > 0)
                     {

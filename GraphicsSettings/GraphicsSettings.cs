@@ -1,13 +1,13 @@
-﻿using System.ComponentModel;
-using UnityEngine;
-using BepInEx;
-using Manager;
-using Harmony;
-//using MadGoat_SSAA;
-using static BepInEx.Logger;
+﻿using BepInEx;
 using BepInEx.Logging;
 using Config;
+using Harmony;
+using Manager;
+using System.ComponentModel;
+using UnityEngine;
 using UnityStandardAssets.ImageEffects;
+//using MadGoat_SSAA;
+using static BepInEx.Logger;
 
 namespace GraphicsSettings
 {
@@ -164,7 +164,7 @@ namespace GraphicsSettings
 
             if(LimitFrameRate.Value) Application.targetFrameRate = TargetFrameRate.Value;
             LimitFrameRate.SettingChanged += (sender, args) => Application.targetFrameRate = LimitFrameRate.Value ? TargetFrameRate.Value : -1;
-            TargetFrameRate.SettingChanged += (sender, args) => { if (LimitFrameRate.Value) Application.targetFrameRate = TargetFrameRate.Value; };
+            TargetFrameRate.SettingChanged += (sender, args) => { if(LimitFrameRate.Value) Application.targetFrameRate = TargetFrameRate.Value; };
 
             QualitySettings.antiAliasing = AntiAliasing.Value;
             AntiAliasing.SettingChanged += (sender, args) => QualitySettings.antiAliasing = AntiAliasing.Value;
@@ -191,7 +191,7 @@ namespace GraphicsSettings
             ShadowNearPlaneOffset.SettingChanged += (sender, args) => QualitySettings.shadowNearPlaneOffset = ShadowNearPlaneOffset.Value;
 
             //SceneManager.sceneLoaded += (scene, mode) => { if(Camera.main) Camera.main.nearClipPlane = CameraNearClipPlane.Value; };
-            CameraNearClipPlane.SettingChanged += (sender, args) => { if (Camera.main) Camera.main.nearClipPlane = CameraNearClipPlane.Value; };
+            CameraNearClipPlane.SettingChanged += (sender, args) => { if(Camera.main) Camera.main.nearClipPlane = CameraNearClipPlane.Value; };
 
             if(RunInBackground.Value == BackgroundRun.No)
                 Application.runInBackground = false;
@@ -214,27 +214,27 @@ namespace GraphicsSettings
             //BloomIntensity.SettingChanged += (sender, args) => { if(bloom) bloom.bloomIntensity = BloomIntensity.Value; };
             //AOIntensity.SettingChanged += (sender, args) => { if(amplifyOcclus) amplifyOcclus.Intensity = AOIntensity.Value; };
         }
-        
+
         int _focusFrameCounter;
 
         void Update()
         {
-            if (RunInBackground.Value != BackgroundRun.Limited) return;
+            if(RunInBackground.Value != BackgroundRun.Limited) return;
 
-            if (!Manager.Scene.Instance.IsNowLoadingFade)
+            if(!Manager.Scene.Instance.IsNowLoadingFade)
             {
                 // Run for a bunch of frames to let the game load anything it's currently loading (scenes, cards, etc)
                 // When loading it sometimes advances a frame at which point it would stop without this
-                if (_focusFrameCounter < 100)
+                if(_focusFrameCounter < 100)
                     _focusFrameCounter++;
-                else if (_focusFrameCounter == 100)
+                else if(_focusFrameCounter == 100)
                     Application.runInBackground = false;
             }
         }
 
         void OnApplicationFocus(bool hasFocus)
         {
-            if (RunInBackground.Value != BackgroundRun.Limited) return;
+            if(RunInBackground.Value != BackgroundRun.Limited) return;
 
             Application.runInBackground = true;
             _focusFrameCounter = 0;

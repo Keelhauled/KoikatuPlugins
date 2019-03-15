@@ -1,12 +1,12 @@
-﻿using System;
+﻿using BepInEx;
+using ChaCustom;
+using Harmony;
+using Illusion.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using BepInEx;
-using Harmony;
-using ChaCustom;
-using Illusion.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +26,7 @@ namespace FixCompilation
                 typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomNewAnime_Update), AccessTools.all),
                 FixCompilation.DisableNewAnimation);
 
-            if (FixCompilation.DisableIKCalc.Value)
+            if(FixCompilation.DisableIKCalc.Value)
             {
                 var replace = typeof(CustomBase).GetMethod("UpdateIKCalc", AccessTools.all);
                 var prefix = typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomBase_UpdateIKCalc), AccessTools.all);
@@ -42,12 +42,12 @@ namespace FixCompilation
 
         private static void SetupSetting(HarmonyInstance harmony, MethodInfo targetMethod, MethodInfo patchMethod, ConfigWrapper<bool> targetSetting)
         {
-            if (targetSetting.Value)
+            if(targetSetting.Value)
                 harmony.Patch(targetMethod, new HarmonyMethod(patchMethod), null);
 
             targetSetting.SettingChanged += (sender, args) =>
             {
-                if (targetSetting.Value)
+                if(targetSetting.Value)
                     harmony.Patch(targetMethod, new HarmonyMethod(patchMethod), null);
                 else
                     harmony.RemovePatch(targetMethod, patchMethod);
@@ -84,7 +84,7 @@ namespace FixCompilation
 
             // Put logic to run after maker is loaded here
 
-            if (FixCompilation.DisableHiddenTabs.Value)
+            if(FixCompilation.DisableHiddenTabs.Value)
             {
                 /* Tried and not working:
                  * treeGroup.interactable and treeItem.SetActive Doesn't do anything
@@ -97,27 +97,27 @@ namespace FixCompilation
                 var kkKiyaseExists = GameObject.Find("KK_Kiyase") != null;
                 var treeTop = GameObject.Find("CvsMenuTree");
 
-                foreach (Transform mainTab in treeTop.transform)
+                foreach(Transform mainTab in treeTop.transform)
                 {
                     var topMenuToggle = CanvasObjectLinks.TryGetValue(mainTab.name, out var topTabName)
                         ? GameObject.Find(topTabName)?.GetComponent<Toggle>()
                         : null;
 
                     var updateTabCallbacks = new List<Action>();
-                    foreach (Transform subTab in mainTab)
+                    foreach(Transform subTab in mainTab)
                     {
                         var toggle = subTab.GetComponent<Toggle>();
-                        if (toggle == null) continue;
+                        if(toggle == null) continue;
 
                         var innerContent = subTab.Cast<Transform>().FirstOrDefault(x =>
                         {
                             // Needed for KK_Kiyase to not crash, it uses slides under this tab
-                            if (kkKiyaseExists && x.GetComponent<CvsBreast>() != null) return false;
+                            if(kkKiyaseExists && x.GetComponent<CvsBreast>() != null) return false;
 
                             // Tab pages have raycast controllers on them, buttons have only image
                             return x.GetComponent<UI_RaycastCtrl>() != null;
                         })?.gameObject;
-                        if (innerContent == null) continue;
+                        if(innerContent == null) continue;
 
                         void SetTabActive(bool val)
                         {
@@ -130,11 +130,11 @@ namespace FixCompilation
 
                     topMenuToggle?.onValueChanged.AddListener(val =>
                     {
-                        foreach (var callback in updateTabCallbacks)
+                        foreach(var callback in updateTabCallbacks)
                             callback();
                     });
 
-                    foreach (var callback in updateTabCallbacks)
+                    foreach(var callback in updateTabCallbacks)
                         callback();
                 }
             }

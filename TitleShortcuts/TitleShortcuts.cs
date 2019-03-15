@@ -1,12 +1,12 @@
-﻿using System;
+﻿using BepInEx;
+using BepInEx.Logging;
+using System;
 using System.Collections;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-using BepInEx;
 using static BepInEx.Logger;
-using BepInEx.Logging;
 
 namespace TitleShortcuts
 {
@@ -20,7 +20,7 @@ namespace TitleShortcuts
 
         [DisplayName("!Start female maker")]
         SavedKeyboardShortcut StartFemaleMaker { get; }
-        
+
         [DisplayName("!Start male maker")]
         SavedKeyboardShortcut StartMaleMaker { get; }
 
@@ -77,7 +77,7 @@ namespace TitleShortcuts
                 {
                     titleScene = title;
                     check = true;
-                    StartCoroutine(InputCheck()); 
+                    StartCoroutine(InputCheck());
                 }
             }
             else

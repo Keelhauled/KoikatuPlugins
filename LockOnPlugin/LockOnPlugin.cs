@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
+﻿using BepInEx;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using BepInEx;
 
 namespace LockOnPluginKK
 {
@@ -16,7 +16,7 @@ namespace LockOnPluginKK
         [DisplayName("Scroll through males")]
         [Description("Choose whether to include males in the rotation when switching between characters using the hotkeys from the plugin.")]
         public static ConfigWrapper<bool> ScrollThroughMalesToo { get; private set; }
-        
+
         [DisplayName("Show info messages")]
         public static ConfigWrapper<bool> ShowInfoMsg { get; private set; }
 

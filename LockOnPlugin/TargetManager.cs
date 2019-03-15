@@ -1,8 +1,8 @@
-﻿using System;
+﻿using IllusionUtility.GetUtility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using IllusionUtility.GetUtility;
 
 namespace LockOnPluginKK
 {
@@ -14,7 +14,7 @@ namespace LockOnPluginKK
         float targetSize = 25f;
         bool showLockOnTargets = false;
         ChaInfo chara;
-        
+
         List<GameObject> quickTargets = new List<GameObject>();
         List<CustomTarget> customTargets = new List<CustomTarget>();
         CenterPoint centerPoint;
@@ -139,7 +139,7 @@ namespace LockOnPluginKK
                 if(!customFound)
                 {
                     var bone = character.objBodyBone.transform.FindLoop(targetName);
-                    if(bone) quickTargets.Add(bone); 
+                    if(bone) quickTargets.Add(bone);
                 }
             }
 
@@ -168,7 +168,7 @@ namespace LockOnPluginKK
                             targetInUse = true;
                             continue;
                         }
-                    } 
+                    }
                 }
 
                 if(targetInUse)
@@ -198,7 +198,7 @@ namespace LockOnPluginKK
                     else
                     {
                         Console.WriteLine($"CustomTarget '{data.target}' failed");
-                    } 
+                    }
                 }
                 else
                 {

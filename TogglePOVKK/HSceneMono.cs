@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using Manager;
+using System.Linq;
 using UnityEngine;
-using Manager;
 
 namespace TogglePOVKK
 {

@@ -77,7 +77,7 @@ namespace LockOnPluginKK
             {
                 shouldReset = true;
             }
-            
+
             if(EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<InputField>() != null)
             {
                 shouldReset = true;

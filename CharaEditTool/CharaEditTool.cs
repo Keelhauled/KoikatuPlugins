@@ -1,14 +1,14 @@
-﻿using System;
+﻿using BepInEx;
+using BepInEx.Logging;
+using ChaCustom;
+using Harmony;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using BepInEx;
 using static BepInEx.Logger;
-using BepInEx.Logging;
-using Harmony;
-using ChaCustom;
 
 namespace CharaEditTool
 {
@@ -123,11 +123,11 @@ namespace CharaEditTool
                         else
                         {
                             checkMoreAcc = false;
-                        } 
+                        }
                     }
 
                     Log(LogLevel.Message, "Color applied to accessories.");
-                    return; 
+                    return;
                 }
             }
 
@@ -163,7 +163,7 @@ namespace CharaEditTool
                     else
                     {
                         checkMoreAcc = false;
-                    } 
+                    }
                 }
             }
             else if(selectIndex >= 0)

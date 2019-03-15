@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ParadoxNotion.Serialization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using ParadoxNotion.Serialization;
 
 namespace LockOnPluginKK
 {

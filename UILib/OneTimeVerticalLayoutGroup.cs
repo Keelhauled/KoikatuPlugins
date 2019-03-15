@@ -3,11 +3,12 @@ using UnityEngine.UI;
 
 namespace UILib
 {
-    public class OneTimeVerticalLayoutGroup : VerticalLayoutGroup {
+    public class OneTimeVerticalLayoutGroup : VerticalLayoutGroup
+    {
         protected override void OnEnable()
         {
             base.OnEnable();
-            if (Application.isEditor == false || Application.isPlaying)
+            if(Application.isEditor == false || Application.isPlaying)
                 this.ExecuteDelayed(() => this.enabled = false, 3);
         }
 

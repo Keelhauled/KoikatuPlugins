@@ -1,8 +1,8 @@
+using BepInEx.Logging;
+using IllusionUtility.GetUtility;
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using IllusionUtility.GetUtility;
-using BepInEx.Logging;
 using static BepInEx.Logger;
 
 namespace TogglePOVKK
@@ -111,7 +111,7 @@ namespace TogglePOVKK
                 Restore();
                 return;
             }
-            
+
             if(!CameraEnabled)
             {
                 if(Input.GetMouseButton(1))
@@ -332,11 +332,11 @@ namespace TogglePOVKK
                 switch(eyeObject.eyeLR)
                 {
                     case EYE_LR.EYE_L:
-                    leftEye = eyeObject.eyeTransform;
-                    break;
+                        leftEye = eyeObject.eyeTransform;
+                        break;
                     case EYE_LR.EYE_R:
-                    rightEye = eyeObject.eyeTransform;
-                    break;
+                        rightEye = eyeObject.eyeTransform;
+                        break;
                 }
             }
         }

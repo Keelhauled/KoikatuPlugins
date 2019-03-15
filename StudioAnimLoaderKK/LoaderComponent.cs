@@ -1,11 +1,11 @@
-﻿using System;
+﻿using BepInEx;
+using BepInEx.Logging;
+using Studio;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Studio;
 using UnityEngine;
-using BepInEx.Logging;
 using Logger = BepInEx.Logger;
-using BepInEx;
 
 namespace StudioAnimLoader
 {

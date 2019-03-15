@@ -1,9 +1,9 @@
-﻿using System;
+﻿using BepInEx;
+using Harmony;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BepInEx;
-using Harmony;
 using UnityEngine;
 
 namespace StudioAnimLoader

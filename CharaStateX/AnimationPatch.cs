@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Harmony;
+﻿using Harmony;
 using Studio;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CharaStateX
@@ -38,7 +38,7 @@ namespace CharaStateX
                     chara.animeOptionParam2 = param2;
                 }
             }
-            
+
             float animeOptionParam1 = __instance.ociChar.animeOptionParam1;
             float animeOptionParam2 = __instance.ociChar.animeOptionParam2;
 

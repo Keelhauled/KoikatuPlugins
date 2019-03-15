@@ -15,7 +15,7 @@ namespace UILib
 
         private static IEnumerator ExecuteDelayed_Routine(Action action, int waitCount)
         {
-            for (int i = 0; i < waitCount; ++i)
+            for(int i = 0; i < waitCount; ++i)
                 yield return null;
             action();
         }

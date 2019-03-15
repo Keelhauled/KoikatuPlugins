@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using BepInEx.Logging;
 using Harmony;
 using Studio;
+using System.Linq;
 using static BepInEx.Logger;
-using BepInEx.Logging;
 
 namespace DefaultParamEditor
 {
@@ -22,7 +22,7 @@ namespace DefaultParamEditor
             var selected = GuideObjectManager.Instance.selectObjectKey
                 .Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
 
-            if (selected.Count > 0)
+            if(selected.Count > 0)
             {
                 var status = selected[0].charFileStatus;
 
@@ -57,7 +57,7 @@ namespace DefaultParamEditor
         [HarmonyPostfix, HarmonyPatch(typeof(ChaFileStatus), nameof(ChaFileStatus.MemberInit))]
         public static void HarmonyPatch_ChaFileStatus_MemberInit(ChaFileStatus __instance)
         {
-            if (_charaData.saved)
+            if(_charaData.saved)
             {
                 Log(LogLevel.Debug, "Loading defaults for a new character");
 

@@ -45,14 +45,14 @@ namespace UILib
 
         public static void Init(string resourceNamespace)
         {
-            if (_initCalled)
+            if(_initCalled)
                 return;
             _initCalled = true;
             Resource.Namespace = resourceNamespace;
             AssetBundle bundle = AssetBundle.LoadFromMemory(Resource.DefaultResourceKOI);
-            foreach (Sprite sprite in bundle.LoadAllAssets<Sprite>())
+            foreach(Sprite sprite in bundle.LoadAllAssets<Sprite>())
             {
-                switch (sprite.name)
+                switch(sprite.name)
                 {
                     case "Background":
                         backgroundSprite = sprite;
@@ -78,7 +78,7 @@ namespace UILib
                 }
             }
             defaultFont = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            resources = new DefaultControls.Resources {background = backgroundSprite, checkmark = checkMark, dropdown = dropdownArrow, inputField = inputFieldBackground, knob = knob, mask = mask, standard = standardSprite};
+            resources = new DefaultControls.Resources { background = backgroundSprite, checkmark = checkMark, dropdown = dropdownArrow, inputField = inputFieldBackground, knob = knob, mask = mask, standard = standardSprite };
             defaultFontSize = 16;
             bundle.Unload(false);
         }
@@ -104,9 +104,9 @@ namespace UILib
 
         public static void SetCustomFont(string customFontName)
         {
-            foreach (Font font in Resources.FindObjectsOfTypeAll<Font>())
+            foreach(Font font in Resources.FindObjectsOfTypeAll<Font>())
             {
-                if (font.name.Equals(customFontName))
+                if(font.name.Equals(customFontName))
                     defaultFont = font;
             }
         }
@@ -129,7 +129,7 @@ namespace UILib
         public static RectTransform CreateNewUIObject(Transform parent, string name)
         {
             RectTransform t = new GameObject(name, typeof(RectTransform)).GetComponent<RectTransform>();
-            if (parent != null)
+            if(parent != null)
             {
                 t.SetParent(parent, false);
                 t.localPosition = Vector3.zero;
@@ -142,7 +142,7 @@ namespace UILib
         {
             GameObject go = DefaultControls.CreateInputField(resources);
             go.name = objectName;
-            foreach (Text text in go.GetComponentsInChildren<Text>(true))
+            foreach(Text text in go.GetComponentsInChildren<Text>(true))
             {
                 text.font = defaultFont;
                 text.resizeTextForBestFit = true;
@@ -229,14 +229,14 @@ namespace UILib
             GameObject go = DefaultControls.CreateDropdown(resources);
             go.name = objectName;
 
-            foreach (Text text in go.GetComponentsInChildren<Text>(true))
+            foreach(Text text in go.GetComponentsInChildren<Text>(true))
             {
                 text.font = defaultFont;
                 text.resizeTextForBestFit = true;
                 text.resizeTextMinSize = 2;
                 text.resizeTextMaxSize = 100;
                 text.alignment = TextAnchor.MiddleLeft;
-                if (text.name.Equals("Label"))
+                if(text.name.Equals("Label"))
                     text.rectTransform.SetRect(Vector2.zero, Vector2.one, new Vector2(10f, 6f), new Vector2(-25f, -7f));
                 else
                     text.rectTransform.SetRect(Vector2.zero, Vector2.one, new Vector2(20f, 1f), new Vector2(-10f, -2f));
@@ -421,7 +421,7 @@ namespace UILib
         public static Button LinkButtonTo(this Transform root, string path, UnityAction onClick)
         {
             Button b = root.Find(path).GetComponent<Button>();
-            if (onClick != null)
+            if(onClick != null)
                 b.onClick.AddListener(onClick);
             return b;
         }
@@ -429,7 +429,7 @@ namespace UILib
         public static Dropdown LinkDropdownTo(this Transform root, string path, UnityAction<int> onValueChanged)
         {
             Dropdown b = root.Find(path).GetComponent<Dropdown>();
-            if (onValueChanged != null)
+            if(onValueChanged != null)
                 b.onValueChanged.AddListener(onValueChanged);
             return b;
 
@@ -438,9 +438,9 @@ namespace UILib
         public static InputField LinkInputFieldTo(this Transform root, string path, UnityAction<string> onValueChanged, UnityAction<string> onEndEdit)
         {
             InputField b = root.Find(path).GetComponent<InputField>();
-            if (onValueChanged != null)
+            if(onValueChanged != null)
                 b.onValueChanged.AddListener(onValueChanged);
-            if (onEndEdit != null)
+            if(onEndEdit != null)
                 b.onEndEdit.AddListener(onEndEdit);
             return b;
 
@@ -449,7 +449,7 @@ namespace UILib
         public static ScrollRect LinkScrollViewTo(this Transform root, string path, UnityAction<Vector2> onValueChanged)
         {
             ScrollRect b = root.Find(path).GetComponent<ScrollRect>();
-            if (onValueChanged != null)
+            if(onValueChanged != null)
                 b.onValueChanged.AddListener(onValueChanged);
             return b;
 
@@ -458,7 +458,7 @@ namespace UILib
         public static Scrollbar LinkScrollbarTo(this Transform root, string path, UnityAction<float> onValueChanged)
         {
             Scrollbar b = root.Find(path).GetComponent<Scrollbar>();
-            if (onValueChanged != null)
+            if(onValueChanged != null)
                 b.onValueChanged.AddListener(onValueChanged);
             return b;
 
@@ -467,7 +467,7 @@ namespace UILib
         public static Slider LinkSliderTo(this Transform root, string path, UnityAction<float> onValueChanged)
         {
             Slider b = root.Find(path).GetComponent<Slider>();
-            if (onValueChanged != null)
+            if(onValueChanged != null)
                 b.onValueChanged.AddListener(onValueChanged);
             return b;
 
@@ -476,7 +476,7 @@ namespace UILib
         public static Toggle LinkToggleTo(this Transform root, string path, UnityAction<bool> onValueChanged)
         {
             Toggle b = root.Find(path).GetComponent<Toggle>();
-            if (onValueChanged != null)
+            if(onValueChanged != null)
                 b.onValueChanged.AddListener(onValueChanged);
             return b;
 

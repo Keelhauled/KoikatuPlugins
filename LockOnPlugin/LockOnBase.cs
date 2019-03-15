@@ -24,7 +24,7 @@ namespace LockOnPluginKK
         protected virtual Vector3 LockOnTargetPos => lockOnTarget.transform.position;
         protected virtual bool AllowTracking => true;
         protected virtual bool InputFieldSelected => EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<InputField>() != null;
-        
+
         protected Hotkey lockOnHotkey;
         protected Hotkey lockOnGUIHotkey;
         protected Hotkey prevCharaHotkey;
@@ -63,7 +63,7 @@ namespace LockOnPluginKK
                 Console.WriteLine("Reset LockOnPlugin");
                 ResetModState();
             }
-            
+
             lockOnHotkey.KeyHoldAction(LockOnRelease);
             lockOnHotkey.KeyUpAction(() => LockOn());
             lockOnGUIHotkey.KeyDownAction(ToggleLockOnGUI);
@@ -125,7 +125,7 @@ namespace LockOnPluginKK
                         }
                     }
                 }
-                
+
                 bool RightArrow = Input.GetKey(KeyCode.RightArrow), LeftArrow = Input.GetKey(KeyCode.LeftArrow);
                 bool UpArrow = Input.GetKey(KeyCode.UpArrow), DownArrow = Input.GetKey(KeyCode.DownArrow);
                 bool PageUp = Input.GetKey(KeyCode.PageUp), PageDown = Input.GetKey(KeyCode.PageDown);
@@ -144,7 +144,7 @@ namespace LockOnPluginKK
                     else if(DownArrow) targetOffsetSize += CameraForward * -speed;
 
                     if(PageUp) targetOffsetSize += CameraUp * speed;
-                    else if(PageDown)targetOffsetSize += CameraUp * -speed;
+                    else if(PageDown) targetOffsetSize += CameraUp * -speed;
                 }
                 else
                 {
@@ -158,7 +158,7 @@ namespace LockOnPluginKK
                     if(targetOffsetSize.magnitude > 0.00001f)
                     {
                         float trackingSpeed = CameraTargetManager.IsMovementPoint(lockOnTarget) ? trackingSpeedMax : LockOnPlugin.TrackingSpeedNormal.Value;
-                        targetOffsetSize = Vector3.MoveTowards(targetOffsetSize, new Vector3(), targetOffsetSize.magnitude / (1f / trackingSpeed)); 
+                        targetOffsetSize = Vector3.MoveTowards(targetOffsetSize, new Vector3(), targetOffsetSize.magnitude / (1f / trackingSpeed));
                     }
                     else
                     {
@@ -188,7 +188,7 @@ namespace LockOnPluginKK
                         CameraTargetPos = Vector3.MoveTowards(CameraTargetPos, LockOnTargetPos + targetOffsetSize, (distance - leash) * trackingSpeed * Time.deltaTime * 60f);
                     CameraTargetPos += targetOffsetSize - targetOffsetSizeAdded;
                     targetOffsetSizeAdded = targetOffsetSize;
-                    lastTargetPos = LockOnTargetPos + targetOffsetSize; 
+                    lastTargetPos = LockOnTargetPos + targetOffsetSize;
                 }
             }
 
@@ -197,7 +197,7 @@ namespace LockOnPluginKK
                 HideLockOnTargets();
             }
         }
-        
+
         protected virtual void OnGUI()
         {
             if(LockOnPlugin.ShowInfoMsg.Value && Guitime.info > 0f)
@@ -250,7 +250,7 @@ namespace LockOnPluginKK
                     reduceOffset = true;
                     return true;
                 }
-                
+
                 if(!lockOnTarget)
                 {
                     return LockOn(targets[0]);
@@ -265,7 +265,7 @@ namespace LockOnPluginKK
                             return LockOn(targets[next]);
                         }
                     }
-                    
+
                     return LockOn(targets[0]);
                 }
             }

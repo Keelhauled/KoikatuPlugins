@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using IllusionUtility.GetUtility;
+﻿using IllusionUtility.GetUtility;
+using UnityEngine;
 
 namespace LockOnPluginKK
 {

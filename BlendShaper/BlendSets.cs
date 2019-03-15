@@ -1,12 +1,12 @@
 ﻿#pragma warning disable 649 // disable never assigned warning
 
+using ParadoxNotion.Serialization;
+using Studio;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ParadoxNotion.Serialization;
-using Studio;
 using UnityEngine;
 
 namespace BlendShaper
@@ -52,7 +52,7 @@ namespace BlendShaper
 
                 var firstShape = Shapes.First();
                 Value = skinnedMeshRenderers.FirstOrDefault((x) => x.name == firstShape.Renderer).GetBlendShapeWeight(firstShape.Index);
-                
+
                 foreach(var renderer in skinnedMeshRenderers)
                 {
                     foreach(var shape in Shapes)

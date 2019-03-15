@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using Harmony;
+﻿using Harmony;
 using Studio;
+using System;
+using System.Linq;
 using UnityEngine.UI;
 
 namespace CharaStateX

@@ -1,8 +1,8 @@
-﻿using Harmony;
+﻿using BepInEx.Logging;
+using Harmony;
 using Studio;
-using static BepInEx.Logger;
-using BepInEx.Logging;
 using UnityEngine;
+using static BepInEx.Logger;
 
 namespace DefaultParamEditor
 {

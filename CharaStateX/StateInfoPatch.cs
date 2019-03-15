@@ -1,6 +1,6 @@
-﻿using System;
-using Harmony;
+﻿using Harmony;
 using Studio;
+using System;
 
 namespace CharaStateX
 {

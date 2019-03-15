@@ -1,7 +1,7 @@
-﻿using System;
+﻿using BepInEx;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using BepInEx;
 
 namespace StudioAddonLite
 {
@@ -14,7 +14,7 @@ namespace StudioAddonLite
         public static ConfigWrapper<float> ROTATE_RATIO { get; set; }
         [AcceptableValueRange(0f, 2f, true)]
         public static ConfigWrapper<float> SCALE_RATIO { get; set; }
-        
+
         public static SavedKeyboardShortcut KEY_OBJ_MOVE_XZ { get; set; }
         public static SavedKeyboardShortcut KEY_OBJ_MOVE_Y { get; set; }
 

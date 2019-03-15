@@ -1,13 +1,13 @@
-﻿using System;
+﻿using BepInEx.Logging;
+using Harmony;
+using Studio;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using static BepInEx.Logger;
-using BepInEx.Logging;
-using Studio;
-using Harmony;
 
 namespace MakerBridge
 {
@@ -84,7 +84,7 @@ namespace MakerBridge
             if(characters.Count > 0)
             {
                 Log(LogLevel.Message, "Character received");
-                
+
                 foreach(var chara in characters)
                 {
                     chara.ChangeChara(MakerBridge.MakerCardPath);

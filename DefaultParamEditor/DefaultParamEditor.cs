@@ -1,12 +1,12 @@
-﻿using System;
+﻿using BepInEx;
+using BepInEx.Logging;
+using ParadoxNotion.Serialization;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using BepInEx;
-using BepInEx.Logging;
 using UnityEngine;
 using Logger = BepInEx.Logger;
-using ParadoxNotion.Serialization;
 
 namespace DefaultParamEditor
 {
@@ -27,7 +27,7 @@ namespace DefaultParamEditor
             get => null;
             set
             {
-                if (value == ResetValue)
+                if(value == ResetValue)
                 {
                     Logger.Log(LogLevel.Debug, "Resetting charaParam");
                     charaParam.Reset();
@@ -47,7 +47,7 @@ namespace DefaultParamEditor
             get => null;
             set
             {
-                if (value == ResetValue)
+                if(value == ResetValue)
                 {
                     Logger.Log(LogLevel.Debug, "Resetting sceneParam");
                     sceneParam.Reset();
@@ -75,7 +75,7 @@ namespace DefaultParamEditor
 
         private void CharaParamSettingDrawer()
         {
-            if (GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
+            if(GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
             {
                 charaParam.Save();
                 SaveToFile();
@@ -84,7 +84,7 @@ namespace DefaultParamEditor
 
         private void SceneParamSettingDrawer()
         {
-            if (GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
+            if(GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
             {
                 sceneParam.Save();
                 SaveToFile();
@@ -93,14 +93,14 @@ namespace DefaultParamEditor
 
         protected void Awake()
         {
-            if (File.Exists(savePath))
+            if(File.Exists(savePath))
             {
                 try
                 {
                     var json = File.ReadAllText(savePath);
                     data = JSONSerializer.Deserialize<ParamData>(json);
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     Logger.Log(LogLevel.Error, $"[DefaultParamEditor] Failed to load settings from {savePath} with error: " + ex);
                     data = new ParamData();
