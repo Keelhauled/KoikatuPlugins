@@ -49,7 +49,7 @@ namespace GraphicsSettings
         [Category(CATEGORY_RENDER)]
         [DisplayName("Anti-aliasing")]
         [Description("Smooths out jagged edges on objects.")]
-        [AcceptableValueList(new object[]{0, 2, 4, 8})]
+        [AcceptableValueList(new object[] { 0, 2, 4, 8 })]
         ConfigWrapper<int> AntiAliasing { get; }
 
         [Category(CATEGORY_RENDER)]
@@ -74,7 +74,7 @@ namespace GraphicsSettings
         [Category(CATEGORY_SHADOW)]
         [DisplayName("Shadow cascades")]
         [Description("Increasing the number of cascades lessens the effects of perspective aliasing on shadows.")]
-        [AcceptableValueList(new object[]{0, 2, 4})]
+        [AcceptableValueList(new object[] { 0, 2, 4 })]
         ConfigWrapper<int> ShadowCascades { get; }
 
         [Category(CATEGORY_SHADOW)]
@@ -99,9 +99,9 @@ namespace GraphicsSettings
 
         [Category(CATEGORY_MISC)]
         [DisplayName("Run game in background")]
-        [Description("Should the game be running when it is in the background (when the window is not focused)?\n\n" + 
+        [Description("Should the game be running when it is in the background (when the window is not focused)?\n\n" +
                      "On \"no\", the game will stop completely when it is in the background.\n\n" +
-                     "On \"limited\", the game will only stop if it has been unfocused in a specific scene (studio, maker, H).")]
+                     "On \"limited\", the game will stop if it has been unfocused and not loading anything for a couple seconds.")]
         ConfigWrapper<BackgroundRun> RunInBackground { get; }
 
         //[Category(CATEGORY_NEW)]
@@ -126,7 +126,7 @@ namespace GraphicsSettings
             ShadowDistance = new ConfigWrapper<float>("ShadowDistance", this, 50f);
             ShadowNearPlaneOffset = new ConfigWrapper<float>("ShadowNearPlaneOffset", this, 2f);
             CameraNearClipPlane = new ConfigWrapper<float>("CameraNearClipPlane", this, 0.06f);
-            RunInBackground = new ConfigWrapper<BackgroundRun>("RunInBackground", this, BackgroundRun.Yes);
+            RunInBackground = new ConfigWrapper<BackgroundRun>("RunInBackground", this, BackgroundRun.Limited);
             //BloomIntensity = new ConfigWrapper<float>("BloomIntensity", this, 1f);
             //AOIntensity = new ConfigWrapper<float>("AOIntensity", this, 1f);
         }
@@ -164,7 +164,7 @@ namespace GraphicsSettings
 
             if(LimitFrameRate.Value) Application.targetFrameRate = TargetFrameRate.Value;
             LimitFrameRate.SettingChanged += (sender, args) => Application.targetFrameRate = LimitFrameRate.Value ? TargetFrameRate.Value : -1;
-            TargetFrameRate.SettingChanged += (sender, args) => { if(LimitFrameRate.Value) Application.targetFrameRate = TargetFrameRate.Value; };
+            TargetFrameRate.SettingChanged += (sender, args) => { if (LimitFrameRate.Value) Application.targetFrameRate = TargetFrameRate.Value; };
 
             QualitySettings.antiAliasing = AntiAliasing.Value;
             AntiAliasing.SettingChanged += (sender, args) => QualitySettings.antiAliasing = AntiAliasing.Value;
@@ -183,7 +183,7 @@ namespace GraphicsSettings
 
             QualitySettings.shadowCascades = ShadowCascades.Value;
             ShadowCascades.SettingChanged += (sender, args) => QualitySettings.shadowCascades = ShadowCascades.Value;
-            
+
             QualitySettings.shadowDistance = ShadowDistance.Value;
             ShadowDistance.SettingChanged += (sender, args) => QualitySettings.shadowDistance = ShadowDistance.Value;
 
@@ -191,8 +191,8 @@ namespace GraphicsSettings
             ShadowNearPlaneOffset.SettingChanged += (sender, args) => QualitySettings.shadowNearPlaneOffset = ShadowNearPlaneOffset.Value;
 
             //SceneManager.sceneLoaded += (scene, mode) => { if(Camera.main) Camera.main.nearClipPlane = CameraNearClipPlane.Value; };
-            CameraNearClipPlane.SettingChanged += (sender, args) => { if(Camera.main) Camera.main.nearClipPlane = CameraNearClipPlane.Value; };
-            
+            CameraNearClipPlane.SettingChanged += (sender, args) => { if (Camera.main) Camera.main.nearClipPlane = CameraNearClipPlane.Value; };
+
             if(RunInBackground.Value == BackgroundRun.No)
                 Application.runInBackground = false;
 
@@ -200,14 +200,11 @@ namespace GraphicsSettings
             {
                 switch(RunInBackground.Value)
                 {
-                    case BackgroundRun.Limited:
-                        Application.runInBackground = true;
-                        break;
-
                     case BackgroundRun.No:
                         Application.runInBackground = false;
                         break;
 
+                    case BackgroundRun.Limited:
                     case BackgroundRun.Yes:
                         Application.runInBackground = true;
                         break;
@@ -217,24 +214,30 @@ namespace GraphicsSettings
             //BloomIntensity.SettingChanged += (sender, args) => { if(bloom) bloom.bloomIntensity = BloomIntensity.Value; };
             //AOIntensity.SettingChanged += (sender, args) => { if(amplifyOcclus) amplifyOcclus.Intensity = AOIntensity.Value; };
         }
+        
+        int _focusFrameCounter;
+
+        void Update()
+        {
+            if (RunInBackground.Value != BackgroundRun.Limited) return;
+
+            if (!Manager.Scene.Instance.IsNowLoadingFade)
+            {
+                // Run for a bunch of frames to let the game load anything it's currently loading (scenes, cards, etc)
+                // When loading it sometimes advances a frame at which point it would stop without this
+                if (_focusFrameCounter < 100)
+                    _focusFrameCounter++;
+                else if (_focusFrameCounter == 100)
+                    Application.runInBackground = false;
+            }
+        }
 
         void OnApplicationFocus(bool hasFocus)
         {
-            if(RunInBackground.Value == BackgroundRun.Limited)
-            {
-                if(hasFocus)
-                {
-                    Application.runInBackground = true;
-                }
-                else
-                {
-                    if((FindObjectOfType<StudioScene>() || FindObjectOfType<HSceneProc>() || FindObjectOfType<CustomScene>()) &&
-                       (!Scene.Instance.IsNowLoading && !Scene.Instance.IsNowLoadingFade))
-                    {
-                        Application.runInBackground = false;
-                    }
-                }
-            }
+            if (RunInBackground.Value != BackgroundRun.Limited) return;
+
+            Application.runInBackground = true;
+            _focusFrameCounter = 0;
         }
 
         //[HarmonyPrefix, HarmonyPatch(typeof(Studio.CameraControl), "Start")]
