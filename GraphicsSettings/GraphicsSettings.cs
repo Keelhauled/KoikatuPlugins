@@ -110,7 +110,7 @@ namespace GraphicsSettings
             ShadowDistance = new ConfigWrapper<float>("ShadowDistance", this, 50f);
             ShadowNearPlaneOffset = new ConfigWrapper<float>("ShadowNearPlaneOffset", this, 2f);
             CameraNearClipPlane = new ConfigWrapper<float>("CameraNearClipPlane", this, 0.06f);
-            RunInBackground = new ConfigWrapper<BackgroundRun>("RunInBackground", this, BackgroundRun.Limited);
+            RunInBackground = new ConfigWrapper<BackgroundRun>("RunInBackground", this, BackgroundRun.Yes);
         }
 
         bool fullscreen = Screen.fullScreen;
