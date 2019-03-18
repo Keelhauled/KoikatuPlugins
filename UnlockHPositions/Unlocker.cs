@@ -7,9 +7,11 @@ using UnityEngine;
 
 namespace UnlockHPositions
 {
-    [BepInPlugin("keelhauled.unlockhpositions", "UnlockHPositions", "1.1.0")]
+    [BepInPlugin("keelhauled.unlockhpositions", "UnlockHPositions", Version)]
     public class Unlocker : BaseUnityPlugin
     {
+        public const string Version = "1.1.0";
+
         [DisplayName("Unlock all positions")]
         [Description("Unlocks every possible position, including ones that are not supposed to be used in that spot.\n" +
                      "Warning: May break everything.\n" +

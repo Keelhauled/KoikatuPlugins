@@ -1,6 +1,5 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
-using System;
 using System.Collections;
 using System.ComponentModel;
 using UnityEngine;
@@ -10,10 +9,12 @@ using static BepInEx.Logger;
 
 namespace TitleShortcuts
 {
-    [BepInPlugin("keelhauled.titleshortcuts", "TitleShortcuts", "1.1.1")]
+    [BepInPlugin("keelhauled.titleshortcuts", "TitleShortcuts", Version)]
     [BepInProcess("Koikatu")]
     class TitleShortcuts : BaseUnityPlugin
     {
+        public const string Version = "1.1.1";
+
         [DisplayName("Automatic start mode")]
         [Description("Choose which mode to start automatically when launching.\nDuring startup, hold esc or F1 to cancel automatic behaviour or hold another shortcut to use that instead.")]
         ConfigWrapper<AutoStartOption> AutoStart { get; }

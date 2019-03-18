@@ -9,10 +9,9 @@ using UnityEngine;
 namespace Spectacular
 {
     [BepInProcess("Koikatu")]
-    [BepInPlugin(GUID, "Spectacular", Version)]
+    [BepInPlugin("keelhauled.spectacular", "Spectacular", Version)]
     public class Spectacular : BaseUnityPlugin
     {
-        public const string GUID = "keelhauled.spectacular";
         public const string Version = "1.0.0";
 
         HarmonyInstance harmony;

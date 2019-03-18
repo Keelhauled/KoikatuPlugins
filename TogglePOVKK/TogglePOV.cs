@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 
 namespace TogglePOVKK
 {
-    [BepInPlugin("togglepovkk", "TogglePOV", "1.0.0")]
+    [BepInPlugin("togglepovkk", "TogglePOV", Version)]
     public class TogglePOV : BaseUnityPlugin
     {
+        public const string Version = "1.0.0";
+
         [DisplayName("Toggle POV")]
         public static SavedKeyboardShortcut POVKey { get; set; }
 

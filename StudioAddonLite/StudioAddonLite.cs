@@ -1,13 +1,14 @@
 ﻿using BepInEx;
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace StudioAddonLite
 {
-    [BepInPlugin("studioaddonlite", "StudioAddonLite", "1.0.0")]
+    [BepInPlugin("studioaddonlite", "StudioAddonLite", Version)]
     public class StudioAddonLite : BaseUnityPlugin
     {
+        public const string Version = "1.0.0";
+
         [AcceptableValueRange(0f, 10f, true)]
         public static ConfigWrapper<float> MOVE_RATIO { get; set; }
         [AcceptableValueRange(0f, 360f, true)]
@@ -70,7 +71,7 @@ namespace StudioAddonLite
             {
                 done = true;
                 gameObject.AddComponent<ObjMoveRotAssistMgr>();
-                gameObject.AddComponent<FKIKAssistMgr>();
+                //gameObject.AddComponent<FKIKAssistMgr>();
             }
         }
     }

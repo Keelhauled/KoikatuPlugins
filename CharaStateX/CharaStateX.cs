@@ -3,9 +3,11 @@ using Harmony;
 
 namespace CharaStateX
 {
-    [BepInPlugin("keelhauled.charastatex", "CharaStateX", "1.0.1")]
+    [BepInPlugin("keelhauled.charastatex", "CharaStateX", Version)]
     class CharaStateX : BaseUnityPlugin
     {
+        public const string Version = "1.0.1";
+
         void Awake()
         {
             var harmony = HarmonyInstance.Create("keelhauled.charastatex.harmony");

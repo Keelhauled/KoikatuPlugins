@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 
 namespace LockOnPluginKK
 {
-    [BepInPlugin("keelhauled.lockonpluginkk", "LockOnPlugin", "1.0.0")]
+    [BepInPlugin("keelhauled.lockonpluginkk", "LockOnPlugin", Version)]
     class LockOnPlugin : BaseUnityPlugin
     {
+        public const string Version = "1.0.0";
+
         [DisplayName("!Tracking speed")]
         [Description("The speed at which the target is followed.")]
         [AcceptableValueRange(0.01f, 0.3f, false)]

@@ -9,9 +9,11 @@ using UnityEngine.SceneManagement;
 
 namespace HideUIKK
 {
-    [BepInPlugin("keelhauled.hideuibep", "HideUI", "1.0.0")]
+    [BepInPlugin("keelhauled.hideuibep", "HideUI", Version)]
     class HideUI : BaseUnityPlugin
     {
+        public const string Version = "1.0.0";
+
         string path;
         Dictionary<string, CacheObject> canvasCache;
         SavedKeyboardShortcut HideUIHotkey { get; }

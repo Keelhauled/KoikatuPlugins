@@ -4,11 +4,9 @@ using UnityEngine.SceneManagement;
 namespace StudioAnimLoader
 {
     [BepInProcess("CharaStudio")]
-    [BepInPlugin(GUID, Name, Version)]
+    [BepInPlugin("studioanimloaderkk", "StudioAnimLoader", Version)]
     class StudioAnimLoader : BaseUnityPlugin
     {
-        public const string GUID = "studioanimloaderkk";
-        public const string Name = "StudioAnimLoader";
         public const string Version = "1.0.0";
 
         public static ConfigWrapper<string> OtherGameDir { get; set; }

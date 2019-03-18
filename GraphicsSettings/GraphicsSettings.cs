@@ -4,9 +4,11 @@ using UnityEngine;
 
 namespace GraphicsSettings
 {
-    [BepInPlugin("keelhauled.graphicssettings", "Graphics Settings", "1.0.3")]
+    [BepInPlugin("keelhauled.graphicssettings", "Graphics Settings", Version)]
     public class GraphicsSettings : BaseUnityPlugin
     {
+        public const string Version = "1.0.3";
+
         // settings to add
         // rimlighting toggle
         // max fov adjustment

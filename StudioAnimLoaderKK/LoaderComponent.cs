@@ -35,7 +35,7 @@ namespace StudioAnimLoader
         {
             Hooks.Patch();
 
-            dir = Path.Combine(Paths.PluginPath, StudioAnimLoader.Name);
+            dir = Path.Combine(Paths.PluginPath, "StudioAnimLoader");
             extDir = Path.Combine(StudioAnimLoader.OtherGameDir.Value, "abdata");
             groupOffset = StudioAnimLoader.GroupOffset.Value;
             groupSuffix = StudioAnimLoader.GroupSuffix.Value;

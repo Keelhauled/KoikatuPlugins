@@ -13,9 +13,11 @@ using static BepInEx.Logger;
 namespace CharaEditTool
 {
     [BepInProcess("Koikatu.exe")]
-    [BepInPlugin("keelhauled.charaedittool", "CharaEditTool", "1.0.0")]
+    [BepInPlugin("keelhauled.charaedittool", "CharaEditTool", Version)]
     class CharaEditTool : BaseUnityPlugin
     {
+        public const string Version = "1.0.0";
+
         Color? savedColor;
         bool inScene = false;
         bool checkMoreAcc = true;

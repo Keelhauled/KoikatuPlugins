@@ -9,9 +9,11 @@ using Logger = BepInEx.Logger;
 
 namespace FixCompilation
 {
-    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.1.3")]
+    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", Version)]
     public class FixCompilation : BaseUnityPlugin
     {
+        public const string Version = "1.1.3";
+
         [DisplayName("Disable \"NEW\" indicator animation")]
         [Description("Major performance improvement in maker if there are many new items. Almost no visual effect.")]
         public static ConfigWrapper<bool> DisableNewAnimation { get; private set; }

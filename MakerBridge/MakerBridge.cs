@@ -6,9 +6,11 @@ using UnityEngine;
 
 namespace MakerBridge
 {
-    [BepInPlugin("keelhauled.makerbridge", "MakerBridge", "1.0.0")]
+    [BepInPlugin("keelhauled.makerbridge", "MakerBridge", Version)]
     public class MakerBridge : BaseUnityPlugin
     {
+        public const string Version = "1.0.0";
+
         public static string MakerCardPath;
         public static string OtherCardPath;
         static GameObject container;

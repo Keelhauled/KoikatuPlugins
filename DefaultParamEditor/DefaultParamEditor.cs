@@ -11,9 +11,10 @@ using Logger = BepInEx.Logger;
 namespace DefaultParamEditor
 {
     [BepInProcess("CharaStudio")]
-    [BepInPlugin("keelhauled.defaultparameditor", "DefaultParamEditor", "1.1.0")]
+    [BepInPlugin("keelhauled.defaultparameditor", "DefaultParamEditor", Version)]
     internal class DefaultParamEditor : BaseUnityPlugin
     {
+        public const string Version = "1.1.0";
         private const string ResetValue = "Reset";
 
         [Browsable(true)]
