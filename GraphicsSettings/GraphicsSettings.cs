@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GraphicsSettings
 {
-    [BepInPlugin("keelhauled.graphicssettings", "Graphics Settings", "1.0.2")]
+    [BepInPlugin("keelhauled.graphicssettings", "Graphics Settings", "1.0.3")]
     public class GraphicsSettings : BaseUnityPlugin
     {
         // settings to add
