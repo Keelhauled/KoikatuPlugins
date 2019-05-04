@@ -47,7 +47,7 @@ namespace UnlockHPositions
                 {
                     for(int j = 0; j < lstAnimInfo[i].Count; j++)
                     {
-                        if(UnlockAll.Value || lstAnimInfo[i][j].lstCategory.Any(c => __instance.categorys.Contains(c.category)))
+                        if((UnlockAll.Value && __instance.flags.lstHeroine.Count < 2) || lstAnimInfo[i][j].lstCategory.Any(c => __instance.categorys.Contains(c.category)))
                         {
                             lstUseAnimInfo[i].Add(lstAnimInfo[i][j]);
                         }
