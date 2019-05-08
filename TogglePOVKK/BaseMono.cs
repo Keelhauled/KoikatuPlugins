@@ -1,8 +1,6 @@
 using BepInEx.Logging;
 using IllusionUtility.GetUtility;
-using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using static BepInEx.Logger;
 
 namespace TogglePOVKK
@@ -22,6 +20,7 @@ namespace TogglePOVKK
         private float MALE_OFFSET;
         private float FEMALE_OFFSET;
         private bool SHOW_HAIR;
+        private bool clampRotation = true;
 
         private float currentfov;
         private bool currentHairState = true;
@@ -175,11 +174,10 @@ namespace TogglePOVKK
             NeckLookCalcVer2 neckLookScript = neckLookCtrl.neckLookScript;
             NeckTypeStateVer2 param = neckLookScript.neckTypeStates[neckLookCtrl.ptnNo];
             angle = new Vector2(rot.x, rot.y);
-            for(int i = neckLookScript.aBones.Length - 1; i > -1; i--)
-            {
-                NeckObjectVer2 bone = neckLookScript.aBones[i];
-                RotateToAngle(param, i, bone);
-            }
+
+            var last = neckLookScript.aBones.Length - 1;
+            NeckObjectVer2 bone = neckLookScript.aBones[last];
+            RotateToAngle(param, last, bone);
         }
 
         private void UpdateCamPos()
@@ -274,8 +272,19 @@ namespace TogglePOVKK
             b.x = Mathf.DeltaAngle(0f, bone.neckBone.localEulerAngles.x);
             b.y = Mathf.DeltaAngle(0f, bone.neckBone.localEulerAngles.y);
             angle += b;
-            float y = Mathf.Clamp(angle.y, param.aParam[boneNum].minBendingAngle, param.aParam[boneNum].maxBendingAngle);
-            float x = Mathf.Clamp(angle.x, param.aParam[boneNum].upBendingAngle, param.aParam[boneNum].downBendingAngle);
+
+            float x, y;
+            if(clampRotation)
+            {
+                y = Mathf.Clamp(angle.y, param.aParam[boneNum].minBendingAngle, param.aParam[boneNum].maxBendingAngle);
+                x = Mathf.Clamp(angle.x, param.aParam[boneNum].upBendingAngle, param.aParam[boneNum].downBendingAngle);
+            }
+            else
+            {
+                y = angle.y;
+                x = angle.x;
+            }
+
             angle -= new Vector2(x, y);
             float z = bone.neckBone.localEulerAngles.z;
             bone.neckBone.localRotation = Quaternion.Euler(x, y, z);
