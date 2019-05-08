@@ -18,6 +18,8 @@ namespace UnlockHPositions
                      "Scene restart required for changes to take effect.")]
         static ConfigWrapper<bool> UnlockAll { get; set; }
 
+        static bool fixUI = false;
+
         Unlocker()
         {
             UnlockAll = new ConfigWrapper<bool>("UnlockAll", this, false);
@@ -34,6 +36,9 @@ namespace UnlockHPositions
         {
             var traverse = Traverse.Create(__instance);
 
+            fixUI = false;
+            var oneFem = __instance.flags.lstHeroine.Count == 1;
+
             if(_isAnimListCreate)
                 traverse.Method("CreateAllAnimationList").GetValue();
 
@@ -47,8 +52,9 @@ namespace UnlockHPositions
                 {
                     for(int j = 0; j < lstAnimInfo[i].Count; j++)
                     {
-                        if((UnlockAll.Value && __instance.flags.lstHeroine.Count < 2) || lstAnimInfo[i][j].lstCategory.Any(c => __instance.categorys.Contains(c.category)))
+                        if((UnlockAll.Value && oneFem) || lstAnimInfo[i][j].lstCategory.Any(c => __instance.categorys.Contains(c.category)))
                         {
+                            if(oneFem) fixUI = true;
                             lstUseAnimInfo[i].Add(lstAnimInfo[i][j]);
                         }
                     }
@@ -61,7 +67,7 @@ namespace UnlockHPositions
         [HarmonyPostfix, HarmonyPatch(typeof(HSprite), "CreateMotionList")]
         public static void HarmonyPatch_HSprite_CreateMotionList(HSprite __instance, ref int _kind)
         {
-            if(_kind == 2 && UnlockAll.Value && __instance.menuActionSub.GetActive(5))
+            if(fixUI && _kind == 2 && UnlockAll.Value && __instance.menuActionSub.GetActive(5))
             {
                 var go = __instance.menuAction.GetObject(_kind);
                 var rectTransform = go.transform as RectTransform;
