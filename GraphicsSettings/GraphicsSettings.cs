@@ -98,6 +98,11 @@ namespace GraphicsSettings
                      "On \"limited\", the game will stop if it has been unfocused and not loading anything for a couple seconds.")]
         ConfigWrapper<BackgroundRun> RunInBackground { get; }
 
+        [Category(CATEGORY_MISC)]
+        [DisplayName("Optimize game in background")]
+        [Description("Optimize the game when it is the background and unfocused. Settings such as anti-aliasing will be turned off or reduced in this state.")]
+        ConfigWrapper<bool> OptimizeInBackground { get; }
+
         GraphicsSettings()
         {
             VSyncCount = new ConfigWrapper<VSyncType>("VSyncCount", this, VSyncType.Enabled);
@@ -113,6 +118,7 @@ namespace GraphicsSettings
             ShadowNearPlaneOffset = new ConfigWrapper<float>("ShadowNearPlaneOffset", this, 2f);
             CameraNearClipPlane = new ConfigWrapper<float>("CameraNearClipPlane", this, 0.06f);
             RunInBackground = new ConfigWrapper<BackgroundRun>("RunInBackground", this, BackgroundRun.Yes);
+            OptimizeInBackground = new ConfigWrapper<bool>("OptimizeInBackground", this, true);
         }
 
         bool fullscreen = Screen.fullScreen;
@@ -212,6 +218,11 @@ namespace GraphicsSettings
 
         void OnApplicationFocus(bool hasFocus)
         {
+            if(OptimizeInBackground.Value)
+            {
+                QualitySettings.antiAliasing = hasFocus ? AntiAliasing.Value : 0;
+            }
+
             if(RunInBackground.Value != BackgroundRun.Limited) return;
 
             Application.runInBackground = true;
