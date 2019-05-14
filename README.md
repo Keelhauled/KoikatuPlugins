@@ -57,6 +57,10 @@ Pretty much the same as the [HS version](https://keelhauled.github.io/LockOnPlug
 The only changes are that now data files are contained inside the dll and that individual FK/IK points can be locked on to.  
 Default hotkey to lock on is one of the extra mouse buttons. If you don't have those, change the key with ConfigurationManager.
 
+#### MakerBridge
+Press the hotkey to send the selected character from maker to studio and vice versa.  
+Default hotkey is B.
+
 #### StudioAddonLite (*Not yet released*)
 A few HSStudioAddon features ported over to KK.  
 Simultaneous FK & IK and better object manipulation controls.

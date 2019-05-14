@@ -68,4 +68,7 @@
     <Compile Include="StudioHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo F|xcopy "$(ProjectDir)obj\Debug\$(TargetFileName)" "$(SolutionDir)PackingFolder\$(TargetFileName)" /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>
