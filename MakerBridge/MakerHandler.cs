@@ -1,4 +1,5 @@
 ﻿using ChaCustom;
+using Harmony;
 using System;
 using System.IO;
 using System.Threading;
@@ -13,11 +14,12 @@ namespace MakerBridge
             var watcher = new FileSystemWatcher
             {
                 Path = Path.GetDirectoryName(MakerBridge.OtherCardPath),
-                Filter = Path.GetFileName(MakerBridge.OtherCardPath),
-                EnableRaisingEvents = true
+                Filter = Path.GetFileName(MakerBridge.OtherCardPath)
             };
 
+            watcher.Created += FileChanged;
             watcher.Changed += FileChanged;
+            watcher.EnableRaisingEvents = true;
         }
 
         void FileChanged(object sender, FileSystemEventArgs e)
@@ -32,49 +34,51 @@ namespace MakerBridge
                 }
                 catch(IOException)
                 {
-                    //The file is still arriving, give it time to finish copying and check again
                     Console.WriteLine("File is still being written to, retrying.");
                     Thread.Sleep(100);
                 }
             }
 
-            UnityMainThreadDispatcher.instance.Enqueue(() => LoadChara(MakerBridge.OtherCardPath, true, true, true, true, true));
+            UnityMainThreadDispatcher.instance.Enqueue(LoadChara);
         }
 
         void Update()
         {
             if(MakerBridge.SendChara.IsDown())
-            {
-                if(CustomBase.Instance)
-                {
-                    SaveCharacter(MakerBridge.MakerCardPath);
-                }
-            }
+                SaveCharacter();
         }
 
-        void LoadChara(string path, bool loadFace, bool loadBody, bool loadHair, bool parameter, bool loadCoord)
+        void LoadChara()
         {
-            var chaCtrl = CustomBase.Instance.chaCtrl;
-            chaCtrl.chaFile.LoadFileLimited(path, chaCtrl.sex, loadFace, loadBody, loadHair, parameter, loadCoord);
-            chaCtrl.ChangeCoordinateType(true);
-            chaCtrl.Reload(!loadCoord, !loadFace && !loadCoord, !loadHair, !loadBody);
-            CustomBase.Instance.updateCustomUI = true;
-            CustomHistory.Instance.Add5(chaCtrl, chaCtrl.Reload, !loadCoord, !loadFace && !loadCoord, !loadHair, !loadBody);
+            var customCharaFile = FindObjectOfType<CustomCharaFile>();
+            var traverse = Traverse.Create(customCharaFile);
+            var fileWindow = traverse.Field("fileWindow").GetValue<CustomFileWindow>();
+            var listCtrl = traverse.Field("listCtrl").GetValue<CustomFileListCtrl>();
+
+            var index = listCtrl.GetInclusiveCount() + 1;
+            listCtrl.AddList(index, "", "", "", MakerBridge.OtherCardPath, "", new DateTime());
+            listCtrl.Create(customCharaFile.OnChangeSelect);
+            listCtrl.SelectItem(index);
+            fileWindow.btnChaLoadLoad.onClick.Invoke();
+            listCtrl.RemoveList(index);
+            listCtrl.Create(customCharaFile.OnChangeSelect);
         }
 
-        public void SaveCharacter(string path)
+        public void SaveCharacter()
         {
             var customBase = CustomBase.Instance;
+            if(customBase)
+            {
+                var empty = new Texture2D(1, 1, TextureFormat.ARGB32, false);
+                empty.SetPixel(0, 0, Color.black);
+                empty.Apply();
 
-            var empty = new Texture2D(1, 1, TextureFormat.ARGB32, false);
-            empty.SetPixel(0, 0, Color.black);
-            empty.Apply();
+                var charFile = customBase.chaCtrl.chaFile;
+                charFile.pngData = empty.EncodeToPNG();
+                charFile.facePngData = empty.EncodeToPNG();
 
-            var charFile = customBase.chaCtrl.chaFile;
-            charFile.pngData = empty.EncodeToPNG();
-            charFile.facePngData = empty.EncodeToPNG();
-
-            customBase.chaCtrl.chaFile.SaveCharaFile(path, byte.MaxValue, false);
+                customBase.chaCtrl.chaFile.SaveCharaFile(MakerBridge.MakerCardPath, byte.MaxValue, false); 
+            }
         }
     }
 }

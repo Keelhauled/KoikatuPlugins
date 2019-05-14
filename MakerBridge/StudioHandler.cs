@@ -18,11 +18,12 @@ namespace MakerBridge
             var watcher = new FileSystemWatcher
             {
                 Path = Path.GetDirectoryName(MakerBridge.MakerCardPath),
-                Filter = Path.GetFileName(MakerBridge.MakerCardPath),
-                EnableRaisingEvents = true
+                Filter = Path.GetFileName(MakerBridge.MakerCardPath)
             };
 
+            watcher.Created += FileChanged;
             watcher.Changed += FileChanged;
+            watcher.EnableRaisingEvents = true;
         }
 
         void FileChanged(object sender, FileSystemEventArgs e)
@@ -37,21 +38,18 @@ namespace MakerBridge
                 }
                 catch(IOException)
                 {
-                    //The file is still arriving, give it time to finish copying and check again
                     Console.WriteLine("File is still being written to, retrying.");
                     Thread.Sleep(100);
                 }
             }
 
-            UnityMainThreadDispatcher.instance.Enqueue(() => LoadCharas());
+            UnityMainThreadDispatcher.instance.Enqueue(LoadCharas);
         }
 
         void Update()
         {
             if(MakerBridge.SendChara.IsDown())
-            {
                 SaveChara();
-            }
         }
 
         void SaveChara()
@@ -68,9 +66,7 @@ namespace MakerBridge
                 charFile.facePngData = empty.EncodeToPNG();
 
                 using(var fileStream = new FileStream(MakerBridge.OtherCardPath, FileMode.Create, FileAccess.Write))
-                {
                     charFile.SaveCharaFile(fileStream, true);
-                }
             }
             else
             {
@@ -86,9 +82,7 @@ namespace MakerBridge
                 Log(LogLevel.Message, "Character received");
 
                 foreach(var chara in characters)
-                {
                     chara.ChangeChara(MakerBridge.MakerCardPath);
-                }
 
                 UpdateStateInfo();
             }

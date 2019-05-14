@@ -20,13 +20,14 @@ namespace MakerBridge
 
         MakerBridge()
         {
-            SendChara = new SavedKeyboardShortcut("SendChara", this, new KeyboardShortcut(KeyCode.C));
+            SendChara = new SavedKeyboardShortcut("SendChara", this, new KeyboardShortcut(KeyCode.B));
         }
 
         void Awake()
         {
-            MakerCardPath = Path.Combine(Paths.PluginPath, "makerbridgecard.png");
-            OtherCardPath = Path.Combine(Paths.PluginPath, "makerbridgecard2.png");
+            var tempPath = Path.GetTempPath();
+            MakerCardPath = Path.Combine(tempPath, "makerbridge1.png");
+            OtherCardPath = Path.Combine(tempPath, "makerbridge2.png");
 
             container = new GameObject("MakerBridge");
             container.transform.SetParent(gameObject.transform);
