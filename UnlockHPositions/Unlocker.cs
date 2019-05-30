@@ -38,6 +38,7 @@ namespace UnlockHPositions
 
             fixUI = false;
             var oneFem = __instance.flags.lstHeroine.Count == 1;
+            var peeping = __instance.dataH.peepCategory?.FirstOrDefault() != 0;
 
             if(_isAnimListCreate)
                 traverse.Method("CreateAllAnimationList").GetValue();
@@ -52,7 +53,7 @@ namespace UnlockHPositions
                 {
                     for(int j = 0; j < lstAnimInfo[i].Count; j++)
                     {
-                        if((UnlockAll.Value && oneFem) || lstAnimInfo[i][j].lstCategory.Any(c => __instance.categorys.Contains(c.category)))
+                        if((UnlockAll.Value && oneFem && !peeping) || lstAnimInfo[i][j].lstCategory.Any(c => __instance.categorys.Contains(c.category)))
                         {
                             if(oneFem) fixUI = true;
                             lstUseAnimInfo[i].Add(lstAnimInfo[i][j]);
