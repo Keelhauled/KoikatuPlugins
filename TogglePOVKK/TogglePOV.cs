@@ -44,10 +44,12 @@ namespace TogglePOVKK
             SceneManager.sceneLoaded += SceneLoaded;
         }
 
+        #if DEBUG
         void OnDestroy()
         {
             SceneManager.sceneLoaded -= SceneLoaded;
         }
+        #endif
 
         void SceneLoaded(Scene scene, LoadSceneMode mode)
         {

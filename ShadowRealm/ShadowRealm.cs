@@ -1,9 +1,11 @@
 ﻿using BepInEx;
 using Harmony;
+using IllusionUtility.GetUtility;
 using Studio;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using UnityEngine;
 
 namespace ShadowRealm
 {
@@ -51,6 +53,13 @@ namespace ShadowRealm
             codes[3].opcode = OpCodes.Br;
 
             return codes;
+        }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(ChaControl), nameof(ChaControl.CreateReferenceInfo))]
+        public static void DisableShadowcaster(ChaControl __instance, GameObject objRef)
+        {
+            if(__instance.objBody != null && __instance.objBody == objRef)
+                objRef.transform.FindLoop("o_shadowcaster")?.SetActive(false);
         }
     }
 }
