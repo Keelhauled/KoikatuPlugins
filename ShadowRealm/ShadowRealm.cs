@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using UnityEngine;
+using Logger = BepInEx.Logger;
+using BepInEx.Logging;
+using System.Collections;
 
 namespace ShadowRealm
 {
@@ -15,7 +18,8 @@ namespace ShadowRealm
     {
         public const string Version = "1.0.0";
         HarmonyInstance harmony;
-        static int layerValue = 1 << 10;
+        static int mapLayer = 1 << 9;
+        static int charaLayer = 1 << 10;
 
         void Start()
         {
@@ -33,13 +37,13 @@ namespace ShadowRealm
         [HarmonyPostfix, HarmonyPatch(typeof(AddObjectLight), nameof(AddObjectLight.Load), new[] { typeof(OILightInfo), typeof(ObjectCtrlInfo), typeof(TreeNodeObject) })]
         public static void LoadLightCullingMask(OCILight __result)
         {
-            __result.light.cullingMask |= layerValue;
+            __result.light.cullingMask |= charaLayer;
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(AddObjectLight), nameof(AddObjectLight.Add), new[] { typeof(int) })]
         public static void AddLightCullingMask(OCILight __result)
         {
-            __result.light.cullingMask |= layerValue;
+            __result.light.cullingMask |= charaLayer;
         }
 
         [HarmonyTranspiler, HarmonyPatch(typeof(Studio.Studio), nameof(Studio.Studio.AddLight), new[] { typeof(int) })]
@@ -60,6 +64,13 @@ namespace ShadowRealm
         {
             if(__instance.objBody != null && __instance.objBody == objRef)
                 objRef.transform.FindLoop("o_shadowcaster")?.SetActive(false);
+        }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(Map), "Reserve")]
+        public static void RemoveSunlight(Map __instance)
+        {
+            if(__instance.isSunLightInfo && __instance.sunLightInfo.targetLight)
+                __instance.sunLightInfo.targetLight.enabled = false;
         }
     }
 }
