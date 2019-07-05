@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\Games\Koikatu\BepInEx\</OutputPath>
+    <OutputPath>..\..\..\..\Games\Koikatu\BepInEx\plugins\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,6 +33,7 @@
   <ItemGroup>
     <Compile Include="StudioUX.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BoundsUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
