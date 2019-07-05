@@ -31,13 +31,34 @@ namespace FreeHControl
             harmony.UnpatchAll();
         }
 
-        void Update()
+        // Patch something in HSceneProc.Start
+        // Stops lightCamera movement
+        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "SetShortcutKey")]
+        public static void SetLightParent(HSceneProc __instance)
+        {
+            __instance.lightCamera.transform.SetParent(__instance.transform);
+        }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "Update")]
+        public static void HSceneProcUpdate()
         {
             if(Input.GetMouseButtonDown(1))
                 CheckHit();
         }
 
-        void CheckHit()
+        [HarmonyPostfix, HarmonyPatch(typeof(GameCursor), "SetCursorTexture")]
+        public static void CenterCursor(GameCursor __instance, ref int _kind)
+        {
+            if(_kind == -2)
+            {
+                var sizeWindow = Traverse.Create(__instance).Field("sizeWindow").GetValue<int>();
+                var tex = __instance.iconDefalutTextures[sizeWindow];
+                var center = new Vector2(tex.width / 2, tex.height / 2);
+                Cursor.SetCursor(tex, center, CursorMode.ForceSoftware);
+            }
+        }
+
+        static void CheckHit()
         {
             if(EventSystem.current.IsPointerOverGameObject())
                 return;
@@ -117,26 +138,6 @@ namespace FreeHControl
                 }
             }
         }
-
-        // Patch something in HSceneProc.Start
-        // Stops lightCamera movement
-        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "SetShortcutKey")]
-        public static void HSceneProcStart(HSceneProc __instance)
-        {
-            __instance.lightCamera.transform.parent = __instance.transform;
-        }
-
-        [HarmonyPostfix, HarmonyPatch(typeof(GameCursor), "SetCursorTexture")]
-        public static void CursorFix(GameCursor __instance, ref int _kind)
-        {
-            if(_kind == -2)
-            {
-                var sizeWindow = Traverse.Create(__instance).Field("sizeWindow").GetValue<int>();
-                var tex = __instance.iconDefalutTextures[sizeWindow];
-                var center = new Vector2(tex.width / 2, tex.height / 2);
-                Cursor.SetCursor(tex, center, CursorMode.ForceSoftware);
-            }
-        }
     }
 
     public static class Extensions
@@ -160,13 +161,15 @@ namespace FreeHControl
         Pantsu,
         Gloves,
         Pantyhose,
-        Socks
+        Socks,
+        Shoes
     }
 
     public enum ClothingState
     {
         On,
         Half,
-        Off
+        Off,
+        Special
     }
 }
