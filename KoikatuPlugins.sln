@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShadowRealm", "ShadowRealm\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioUX", "StudioUX\StudioUX.csproj", "{E6630C43-A642-4485-B69E-792414CE85CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeHControl", "FreeHControl\FreeHControl.csproj", "{0358B313-1F18-4A67-BC4E-2C8E7F0B1BC0}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		UILib\UILib.projitems*{044c35db-98ca-4a9f-905d-93b61c8057a1}*SharedItemsImports = 13
@@ -146,6 +148,10 @@ Global
 		{E6630C43-A642-4485-B69E-792414CE85CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6630C43-A642-4485-B69E-792414CE85CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6630C43-A642-4485-B69E-792414CE85CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0358B313-1F18-4A67-BC4E-2C8E7F0B1BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0358B313-1F18-4A67-BC4E-2C8E7F0B1BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0358B313-1F18-4A67-BC4E-2C8E7F0B1BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0358B313-1F18-4A67-BC4E-2C8E7F0B1BC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
