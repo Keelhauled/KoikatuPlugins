@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BepInEx;
-using HarmonyLib;
+﻿using BepInEx;
 using BepInEx.Harmony;
 using BepInEx.Logging;
+using HarmonyLib;
+using Manager;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using H;
 
 namespace FreeHControl
 {
@@ -22,14 +24,36 @@ namespace FreeHControl
         void Awake()
         {
             Logger = base.Logger;
-            harmony = new Harmony("keelhauled.freehcontrol.harmony");
+            harmony = new Harmony($"keelhauled.freehcontrol.harmony.{Guid.NewGuid()}");
+            Logger.LogInfo(harmony.Id);
             harmony.PatchAll(GetType());
         }
 
+        #if DEBUG
         void OnDestroy()
         {
             harmony.UnpatchAll();
         }
+        #endif
+
+        //[HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "CreateListAnimationFileName")]
+        //public static bool UnlockAnim(HSceneProc __instance, ref bool _isAnimListCreate, ref int _list)
+        //{
+        //    var traverse = Traverse.Create(__instance);
+        //    var lstAnimInfo = traverse.Field("lstAnimInfo").GetValue<List<HSceneProc.AnimationListInfo>[]>();
+        //    var lstUseAnimInfo = traverse.Field("lstUseAnimInfo").GetValue<List<HSceneProc.AnimationListInfo>[]>();
+
+        //    if(_isAnimListCreate)
+        //        traverse.Method("CreateAllAnimationList").GetValue();
+
+        //    for(int i = 0; i < lstAnimInfo.Length; i++)
+        //    {
+        //        var anims = lstAnimInfo[i].Where(x => x.lstCategory.Select(y => y.category).Any(__instance.categorys.Contains));
+        //        lstUseAnimInfo[i] = new List<HSceneProc.AnimationListInfo>(anims);
+        //    }
+
+        //    return false;
+        //}
 
         // Patch something in HSceneProc.Start
         // Stops lightCamera movement
@@ -63,7 +87,8 @@ namespace FreeHControl
             if(EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            var hit = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).Where(x => x.collider.tag.Contains("H/Aibu/Hit/")).OrderBy(x => x.distance).FirstOrDefault();
+            var hit = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition))
+                .Where(x => x.collider.tag.Contains("H/Aibu/Hit/")).OrderBy(x => x.distance).FirstOrDefault();
             if(!hit.collider)
                 return;
 
