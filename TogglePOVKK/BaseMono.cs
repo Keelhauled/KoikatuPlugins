@@ -1,7 +1,7 @@
 using BepInEx.Logging;
 using IllusionUtility.GetUtility;
 using UnityEngine;
-using static BepInEx.Logger;
+using Logger = BepInEx.Logger;
 
 namespace TogglePOVKK
 {
@@ -39,11 +39,13 @@ namespace TogglePOVKK
         private bool lastDOF;
         private bool hideObstacle;
         private NECK_LOOK_TYPE_VER2 lastNeck;
-        protected bool povActive = false;
+        public bool povActive = false;
         private DragManager dragManager;
+        public static BaseMono instance;
 
         protected virtual void Awake()
         {
+            instance = this;
             dragManager = gameObject.AddComponent<DragManager>();
             currentfov = TogglePOV.DefaultFov.Value;
             SHOW_HAIR = TogglePOV.ShowHair.Value;
@@ -64,7 +66,7 @@ namespace TogglePOVKK
             if(currentBody == null && povActive)
             {
                 Restore();
-                Log(LogLevel.Debug, "TogglePOV reset");
+                Logger.Log(LogLevel.Info, "TogglePOV reset");
             }
 
             if(TogglePOV.POVKey.IsDown())
@@ -196,7 +198,7 @@ namespace TogglePOVKK
             lastNeck = GetNeckLook(body);
         }
 
-        protected void Restore()
+        public void Restore()
         {
             if(currentBody)
             {
@@ -300,10 +302,7 @@ namespace TogglePOVKK
             for(int i = 0; i < currentBody.neckLookCtrl.neckLookScript.neckTypeStates.Length; i++)
             {
                 if(currentBody.neckLookCtrl.neckLookScript.neckTypeStates[i].lookType == necktype)
-                {
                     currentBody.neckLookCtrl.ptnNo = i;
-                    return;
-                }
             }
         }
 

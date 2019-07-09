@@ -1,12 +1,8 @@
-﻿using BepInEx.Logging;
+﻿using Harmony;
 using Studio;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.Events;
-using static BepInEx.Logger;
 
 namespace TogglePOVKK
 {
@@ -15,22 +11,6 @@ namespace TogglePOVKK
         Studio.Studio studio = Studio.Studio.Instance;
         Studio.CameraControl camera = Studio.Studio.Instance.cameraCtrl;
         TreeNodeCtrl treeNodeCtrl = Studio.Studio.Instance.treeNodeCtrl;
-        UnityAction UpdateDOF = null;
-
-        void Start()
-        {
-            try
-            {
-                var field = studio.systemButtonCtrl.GetType().GetField("dofInfo", BindingFlags.NonPublic | BindingFlags.Instance);
-                var method = field.FieldType.GetMethod("UpdateInfo", BindingFlags.Instance | BindingFlags.Public);
-                UpdateDOF = () => method.Invoke(field.GetValue(studio.systemButtonCtrl), null);
-            }
-            catch(Exception ex)
-            {
-                Log(LogLevel.Error, ex);
-                UpdateDOF = null;
-            }
-        }
 
         protected override bool CameraEnabled
         {
@@ -45,14 +25,11 @@ namespace TogglePOVKK
 
         protected override bool DepthOfField
         {
-            get { return studio.sceneInfo.enableDepth; }
+            get => studio.sceneInfo.enableDepth;
             set
             {
-                if(UpdateDOF != null)
-                {
-                    studio.sceneInfo.enableDepth = value;
-                    UpdateDOF.Invoke();
-                }
+                studio.sceneInfo.enableDepth = value;
+                Traverse.Create(studio.systemButtonCtrl).Field("dofInfo").Method("UpdateInfo").GetValue();
             }
         }
 

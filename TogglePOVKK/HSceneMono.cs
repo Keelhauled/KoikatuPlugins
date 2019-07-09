@@ -1,4 +1,5 @@
-﻿using Manager;
+﻿using Harmony;
+using Manager;
 using System.Linq;
 using UnityEngine;
 
@@ -44,6 +45,14 @@ namespace TogglePOVKK
         protected override ChaInfo GetChara(Vector3 targetPos)
         {
             return Character.Instance.dictEntryChara.Values.ToList()[1];
+        }
+
+        // Restore camera when changing spot in H
+        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "GotoPointMoveScene")]
+        public static void MovePointRestore()
+        {
+            if(instance && instance.povActive)
+                instance.Restore();
         }
     }
 }

@@ -29,7 +29,6 @@ namespace TogglePOVKK
         [Advanced(true)]
         public static ConfigWrapper<float> FemaleOffset { get; set; }
 
-        static HarmonyInstance harmony;
         static GameObject bepinex;
 
         TogglePOV()
@@ -44,8 +43,9 @@ namespace TogglePOVKK
         void Awake()
         {
             bepinex = gameObject;
-            harmony = HarmonyInstance.Create("togglepovkk.harmony");
+            var harmony = HarmonyInstance.Create("togglepovkk.harmony");
             harmony.PatchAll(GetType());
+            harmony.PatchAll(typeof(BaseMono));
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(Studio.Studio), "Awake")]
