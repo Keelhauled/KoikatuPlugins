@@ -38,11 +38,10 @@ namespace TogglePOVKK
             bool result = false;
             if(noCtrlCondition != null)
                 result = noCtrlCondition();
-
             return result;
         }
 
-        protected override ChaInfo GetChara(Vector3 targetPos)
+        protected override ChaInfo GetChara()
         {
             return Character.Instance.dictEntryChara.Values.ToList()[1];
         }

@@ -45,7 +45,7 @@ namespace TogglePOVKK
             bepinex = gameObject;
             var harmony = HarmonyInstance.Create("togglepovkk.harmony");
             harmony.PatchAll(GetType());
-            harmony.PatchAll(typeof(BaseMono));
+            harmony.PatchAll(typeof(HSceneMono));
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(Studio.Studio), "Awake")]

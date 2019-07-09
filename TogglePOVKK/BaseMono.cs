@@ -12,7 +12,7 @@ namespace TogglePOVKK
         protected abstract bool DepthOfField { get; set; }
         protected abstract bool Shield { get; set; }
         protected abstract bool CameraStopMoving();
-        protected abstract ChaInfo GetChara(Vector3 targetPos);
+        protected abstract ChaInfo GetChara();
 
         private float sensitivityX = 0.5f;
         private float sensitivityY = 0.5f;
@@ -61,7 +61,7 @@ namespace TogglePOVKK
                 Restore();
         }
 
-        protected virtual void Update()
+        protected virtual void LateUpdate()
         {
             if(currentBody == null && povActive)
             {
@@ -84,7 +84,7 @@ namespace TogglePOVKK
         {
             if(currentBody == null)
             {
-                var chara = GetChara(CameraTargetPos);
+                var chara = GetChara();
                 if(chara)
                 {
                     Backup(chara);

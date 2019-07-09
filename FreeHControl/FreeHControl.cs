@@ -61,9 +61,10 @@ namespace FreeHControl
         public static void SetLightParent(HSceneProc __instance)
         {
             __instance.lightCamera.transform.SetParent(__instance.transform);
+            __instance.lightCamera.transform.localRotation = new Quaternion();
         }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "Update")]
+        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "LateUpdate")]
         public static void HSceneProcUpdate()
         {
             if(Input.GetMouseButtonDown(1))

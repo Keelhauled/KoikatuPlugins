@@ -49,7 +49,7 @@ namespace TogglePOVKK
             return result;
         }
 
-        protected override ChaInfo GetChara(Vector3 targetPos)
+        protected override ChaInfo GetChara()
         {
             var characters = GetSelectedCharacters();
             return characters.Count > 0 ? characters[0].charInfo : null;
