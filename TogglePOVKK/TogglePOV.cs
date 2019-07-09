@@ -1,7 +1,7 @@
 ﻿using BepInEx;
+using Harmony;
 using System.ComponentModel;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace TogglePOVKK
 {
@@ -29,6 +29,9 @@ namespace TogglePOVKK
         [Advanced(true)]
         public static ConfigWrapper<float> FemaleOffset { get; set; }
 
+        static HarmonyInstance harmony;
+        static GameObject bepinex;
+
         TogglePOV()
         {
             POVKey = new SavedKeyboardShortcut("POVKey", this, new KeyboardShortcut(KeyCode.Backspace));
@@ -40,39 +43,27 @@ namespace TogglePOVKK
 
         void Awake()
         {
-            SceneLoaded();
-            SceneManager.sceneLoaded += SceneLoaded;
+            bepinex = gameObject;
+            harmony = HarmonyInstance.Create("togglepovkk.harmony");
+            harmony.PatchAll(GetType());
         }
 
-        #if DEBUG
-        void OnDestroy()
+        [HarmonyPrefix, HarmonyPatch(typeof(Studio.Studio), "Awake")]
+        public static void StudioStart()
         {
-            SceneManager.sceneLoaded -= SceneLoaded;
-        }
-        #endif
-
-        void SceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            SceneLoaded();
+            bepinex.GetOrAddComponent<StudioMono>();
         }
 
-        void SceneLoaded()
+        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "SetShortcutKey")]
+        public static void HSceneStart()
         {
-            var comp = gameObject.GetComponent<BaseMono>();
+            bepinex.GetOrAddComponent<HSceneMono>();
+        }
 
-            if(FindObjectOfType<HScene>())
-            {
-                if(!comp) gameObject.AddComponent<HSceneMono>();
-            }
-            if(FindObjectOfType<StudioScene>())
-            {
-                if(!comp) gameObject.AddComponent<StudioMono>();
-            }
-            else if(comp)
-            {
-                Destroy(comp);
-                Destroy(gameObject.GetComponent<DragManager>());
-            }
+        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "OnDestroy")]
+        public static void HSceneEnd()
+        {
+            Destroy(bepinex.GetComponent<HSceneMono>());
         }
     }
 }

@@ -36,9 +36,8 @@ namespace TogglePOVKK
             var noCtrlCondition = camera.NoCtrlCondition;
             bool result = false;
             if(noCtrlCondition != null)
-            {
                 result = noCtrlCondition();
-            }
+
             return result;
         }
 

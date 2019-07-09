@@ -67,17 +67,15 @@ namespace TogglePOVKK
             var noCtrlCondition = camera.noCtrlCondition;
             bool result = false;
             if(noCtrlCondition != null)
-            {
                 result = noCtrlCondition();
-            }
+
             return result;
         }
 
         protected override ChaInfo GetChara(Vector3 targetPos)
         {
             var characters = GetSelectedCharacters();
-            if(characters.Count > 0) return characters[0].charInfo;
-            return null;
+            return characters.Count > 0 ? characters[0].charInfo : null;
         }
 
         List<OCIChar> GetSelectedCharacters()

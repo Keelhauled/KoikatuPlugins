@@ -26,30 +26,8 @@ namespace StudioUX
             var characters = GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null);
             foreach(var chara in characters)
             {
-                var skins = chara.charInfo.GetComponentsInChildren<SkinnedMeshRenderer>();
-                foreach(var skin in skins) skin.updateWhenOffscreen = true;
-                var updateSkins = new List<SkinnedMeshRenderer> { chara.charInfo.rendBody as SkinnedMeshRenderer, chara.charInfo.rendFace as SkinnedMeshRenderer };
-
-                //var bounds3d = new VectorLineUpdater();
-                //bounds3d.VectorLine = new VectorLine("Bounds3D", new List<Vector3>(24), 1f, LineType.Discrete);
-                //bounds3d.Update = () =>
-                //{
-                //    var bounds = BoundsUtils.CombineBounds(new Stack<SkinnedMeshRenderer>(updateSkins));
-                //    bounds3d.VectorLine.MakeCube(bounds.center, bounds.size.x, bounds.size.y, bounds.size.z);
-                //    bounds3d.VectorLine.SetColor(Color.red);
-                //    bounds3d.VectorLine.Draw();
-                //};
-
-                var bounds2d = new VectorLineUpdater();
-                bounds2d.VectorLine = new VectorLine("Bounds2D", new List<Vector2>(8), 1f, LineType.Discrete);
-                bounds2d.Update = () =>
-                {
-                    var bounds = BoundsUtils.CombineBounds(new Stack<SkinnedMeshRenderer>(updateSkins));
-                    var rect = BoundsUtils.BoundsToScreenRect(bounds, Camera.main);
-                    bounds2d.VectorLine.MakeRect(rect);
-                    bounds2d.VectorLine.SetColor(Color.green);
-                    bounds2d.VectorLine.Draw();
-                };
+                var skins = new List<Renderer> { chara.charInfo.rendBody, chara.charInfo.rendFace };
+                BoundsUtils.VisualizeRenderers(skins, 2);
             }
         }
 
