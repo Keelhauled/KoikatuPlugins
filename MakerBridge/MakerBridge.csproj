@@ -64,7 +64,6 @@
     <Compile Include="MakerBridge.cs" />
     <Compile Include="MakerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnityMainThreadDispatcher.cs" />
     <Compile Include="StudioHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

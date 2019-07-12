@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using UniRx;
 using UnityEngine;
-using static BepInEx.Logger;
+using Logger = BepInEx.Logger;
 
 namespace MakerBridge
 {
@@ -43,7 +44,7 @@ namespace MakerBridge
                 }
             }
 
-            UnityMainThreadDispatcher.instance.Enqueue(LoadCharas);
+            MainThreadDispatcher.Post(LoadCharas, null);
         }
 
         void Update()
@@ -70,16 +71,16 @@ namespace MakerBridge
             }
             else
             {
-                Log(LogLevel.Message, "Select a character to send to maker");
+                Logger.Log(LogLevel.Message, "Select a character to send to maker");
             }
         }
 
-        void LoadCharas()
+        void LoadCharas(object x)
         {
             var characters = GetSelectedCharacters();
             if(characters.Count > 0)
             {
-                Log(LogLevel.Message, "Character received");
+                Logger.Log(LogLevel.Message, "Character received");
 
                 foreach(var chara in characters)
                     chara.ChangeChara(MakerBridge.MakerCardPath);
@@ -88,7 +89,7 @@ namespace MakerBridge
             }
             else
             {
-                Log(LogLevel.Message, "Select a character before replacing it");
+                Logger.Log(LogLevel.Message, "Select a character before replacing it");
             }
         }
 

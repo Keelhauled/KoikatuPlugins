@@ -3,6 +3,7 @@ using Harmony;
 using System;
 using System.IO;
 using System.Threading;
+using UniRx;
 using UnityEngine;
 
 namespace MakerBridge
@@ -39,7 +40,7 @@ namespace MakerBridge
                 }
             }
 
-            UnityMainThreadDispatcher.instance.Enqueue(LoadChara);
+            MainThreadDispatcher.Post(LoadChara, null);
         }
 
         void Update()
@@ -48,7 +49,7 @@ namespace MakerBridge
                 SaveCharacter();
         }
 
-        void LoadChara()
+        void LoadChara(object x)
         {
             var customCharaFile = FindObjectOfType<CustomCharaFile>();
             var traverse = Traverse.Create(customCharaFile);
@@ -77,7 +78,7 @@ namespace MakerBridge
                 charFile.pngData = empty.EncodeToPNG();
                 charFile.facePngData = empty.EncodeToPNG();
 
-                customBase.chaCtrl.chaFile.SaveCharaFile(MakerBridge.MakerCardPath, byte.MaxValue, false); 
+                customBase.chaCtrl.chaFile.SaveCharaFile(MakerBridge.MakerCardPath, byte.MaxValue, false);
             }
         }
     }

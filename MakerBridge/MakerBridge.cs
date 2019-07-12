@@ -6,14 +6,15 @@ using UnityEngine;
 
 namespace MakerBridge
 {
-    [BepInPlugin("keelhauled.makerbridge", "MakerBridge", Version)]
+    [BepInPlugin(GUID, "MakerBridge", Version)]
     public class MakerBridge : BaseUnityPlugin
     {
+        public const string GUID = "keelhauled.makerbridge";
         public const string Version = "1.0.0";
 
         public static string MakerCardPath;
         public static string OtherCardPath;
-        static GameObject container;
+        static GameObject bepinex;
 
         [DisplayName("Send character")]
         public static SavedKeyboardShortcut SendChara { get; set; }
@@ -25,13 +26,11 @@ namespace MakerBridge
 
         void Awake()
         {
+            bepinex = gameObject;
+
             var tempPath = Path.GetTempPath();
             MakerCardPath = Path.Combine(tempPath, "makerbridge1.png");
             OtherCardPath = Path.Combine(tempPath, "makerbridge2.png");
-
-            container = new GameObject("MakerBridge");
-            container.transform.SetParent(gameObject.transform);
-            container.AddComponent<UnityMainThreadDispatcher>();
 
             var harmony = HarmonyInstance.Create("keelhauled.makerbridge.harmony");
             harmony.PatchAll(typeof(MakerBridge));
@@ -40,22 +39,19 @@ namespace MakerBridge
         [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "Start")]
         public static void CustomSceneInit()
         {
-            var comp = container.GetComponent<MakerHandler>();
-            if(!comp) container.AddComponent<MakerHandler>();
+            bepinex.GetOrAddComponent<MakerHandler>();
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "OnDestroy")]
         public static void CustomSceneStop()
         {
-            var comp = container.GetComponent<MakerHandler>();
-            if(comp) Destroy(comp);
+            Destroy(bepinex.GetComponent<MakerHandler>());
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(StudioScene), "Start")]
         public static void StudioSceneInit()
         {
-            var comp = container.GetComponent<StudioHandler>();
-            if(!comp) container.AddComponent<StudioHandler>();
+            bepinex.GetOrAddComponent<StudioHandler>();
         }
     }
 }
