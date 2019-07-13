@@ -1,23 +1,15 @@
 ﻿using Harmony;
 using Manager;
 using System.Linq;
-using UnityEngine;
 
 namespace TogglePOVKK
 {
     class HView : CommonView
     {
-        private CameraControl_Ver2 camera => Singleton<CameraControl_Ver2>.Instance;
-
         protected override bool CameraEnabled
         {
-            get { return camera.enabled; }
-            set { camera.enabled = value; }
-        }
-
-        protected override Vector3 CameraTargetPos
-        {
-            get { return camera.TargetPos; }
+            get { return Singleton<CameraControl_Ver2>.Instance.enabled; }
+            set { Singleton<CameraControl_Ver2>.Instance.enabled = value; }
         }
 
         protected override bool DepthOfField
@@ -32,16 +24,7 @@ namespace TogglePOVKK
             set { Manager.Config.EtcData.Shield = value; }
         }
 
-        protected override bool CameraStopMoving()
-        {
-            var noCtrlCondition = camera.NoCtrlCondition;
-            bool result = false;
-            if(noCtrlCondition != null)
-                result = noCtrlCondition();
-            return result;
-        }
-
-        protected override ChaInfo GetChara()
+        protected override ChaControl GetChara()
         {
             return Character.Instance.dictEntryChara.Values.ToList()[1];
         }

@@ -5,14 +5,12 @@ using Logger = BepInEx.Logger;
 
 namespace TogglePOVKK
 {
-    internal abstract class CommonView : MonoBehaviour
+    abstract class CommonView : MonoBehaviour
     {
         protected abstract bool CameraEnabled { get; set; }
-        protected abstract Vector3 CameraTargetPos { get; }
         protected abstract bool DepthOfField { get; set; }
         protected abstract bool Shield { get; set; }
-        protected abstract bool CameraStopMoving();
-        protected abstract ChaInfo GetChara();
+        protected abstract ChaControl GetChara();
 
         float sensitivityX = 0.5f;
         float sensitivityY = 0.5f;
@@ -24,7 +22,7 @@ namespace TogglePOVKK
 
         float currentfov;
         bool currentHairState = true;
-        ChaInfo currentBody;
+        ChaControl currentBody;
         Vector2 angle;
         Vector2 rot;
         float offset;
@@ -70,7 +68,7 @@ namespace TogglePOVKK
             if(currentBody == null && povActive)
             {
                 Restore();
-                Logger.Log(LogLevel.Info, "TogglePOV reset");
+                Logger.Log(LogLevel.Info, "TogglePOV force reset");
             }
             else if(povActive)
             {
@@ -198,31 +196,27 @@ namespace TogglePOVKK
             rot = new Vector2(rot.x - angle.x, rot.y - angle.y);
         }
 
-        void Backup(ChaInfo body)
-        {
-            lastFOV = Camera.main.fieldOfView;
-            lastNearClip = Camera.main.nearClipPlane;
-            lastRotation = Camera.main.transform.rotation;
-            lastPosition = Camera.main.transform.position;
-            lastDOF = DepthOfField;
-            hideObstacle = Shield;
-            lastNeck = body.GetNeckLook();
-        }
-
         void ShowHair(bool show)
         {
             currentHairState = show;
             currentBody.transform.FindLoop("cf_j_head")?.SetActive(show);
         }
 
-        void Apply(ChaInfo body)
+        void Apply(ChaControl body)
         {
-            Backup(body);
+            currentBody = body;
+
+            lastFOV = Camera.main.fieldOfView;
+            lastNearClip = Camera.main.nearClipPlane;
+            lastRotation = Camera.main.transform.rotation;
+            lastPosition = Camera.main.transform.position;
+            lastDOF = DepthOfField;
+            hideObstacle = Shield;
+            lastNeck = currentBody.GetNeckLook();
 
             if(!currentHairState)
                 ShowHair(true);
 
-            currentBody = body;
             FindBones();
             angle = Vector2.zero;
             rot = Vector3.zero;
@@ -245,8 +239,9 @@ namespace TogglePOVKK
             float x, y;
             if(clampRotation)
             {
-                y = Mathf.Clamp(angle.y, param.aParam[boneNum].minBendingAngle, param.aParam[boneNum].maxBendingAngle);
-                x = Mathf.Clamp(angle.x, param.aParam[boneNum].upBendingAngle, param.aParam[boneNum].downBendingAngle);
+                var neckParam = param.aParam[boneNum];
+                y = Mathf.Clamp(angle.y, neckParam.minBendingAngle, neckParam.maxBendingAngle);
+                x = Mathf.Clamp(angle.x, neckParam.upBendingAngle, neckParam.downBendingAngle);
             }
             else
             {

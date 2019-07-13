@@ -2,32 +2,32 @@
 {
     public static class CharaUtils
     {
-        public static void SetNeckLook(this ChaInfo body, NECK_LOOK_TYPE_VER2 necktype)
+        public static void SetNeckLook(this ChaControl chara, NECK_LOOK_TYPE_VER2 necktype)
         {
-            for(int i = 0; i < body.neckLookCtrl.neckLookScript.neckTypeStates.Length; i++)
+            for(int i = 0; i < chara.neckLookCtrl.neckLookScript.neckTypeStates.Length; i++)
             {
-                if(body.neckLookCtrl.neckLookScript.neckTypeStates[i].lookType == necktype)
-                    body.neckLookCtrl.ptnNo = i;
+                if(chara.neckLookCtrl.neckLookScript.neckTypeStates[i].lookType == necktype)
+                    chara.neckLookCtrl.ptnNo = i;
             }
         }
 
-        public static void SetEyeLook(this ChaInfo body, EYE_LOOK_TYPE eyetype)
+        public static void SetEyeLook(this ChaControl chara, EYE_LOOK_TYPE eyetype)
         {
-            for(int i = 0; i < body.eyeLookCtrl.eyeLookScript.eyeTypeStates.Length; i++)
+            for(int i = 0; i < chara.eyeLookCtrl.eyeLookScript.eyeTypeStates.Length; i++)
             {
-                if(body.eyeLookCtrl.eyeLookScript.eyeTypeStates[i].lookType == eyetype)
-                    body.eyeLookCtrl.ptnNo = i;
+                if(chara.eyeLookCtrl.eyeLookScript.eyeTypeStates[i].lookType == eyetype)
+                    chara.eyeLookCtrl.ptnNo = i;
             }
         }
 
-        public static NECK_LOOK_TYPE_VER2 GetNeckLook(this ChaInfo body)
+        public static NECK_LOOK_TYPE_VER2 GetNeckLook(this ChaControl chara)
         {
-            return body.neckLookCtrl.neckLookScript.neckTypeStates[body.neckLookCtrl.ptnNo].lookType;
+            return chara.neckLookCtrl.neckLookScript.neckTypeStates[chara.neckLookCtrl.ptnNo].lookType;
         }
 
-        public static EYE_LOOK_TYPE GetEyeLook(this ChaInfo body)
+        public static EYE_LOOK_TYPE GetEyeLook(this ChaControl chara)
         {
-            return body.eyeLookCtrl.eyeLookScript.eyeTypeStates[body.eyeLookCtrl.ptnNo].lookType;
+            return chara.eyeLookCtrl.eyeLookScript.eyeTypeStates[chara.eyeLookCtrl.ptnNo].lookType;
         }
     }
 }

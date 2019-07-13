@@ -2,34 +2,24 @@
 using Studio;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace TogglePOVKK
 {
     class StudioView : CommonView
     {
-        Studio.Studio studio = Studio.Studio.Instance;
-        Studio.CameraControl camera = Studio.Studio.Instance.cameraCtrl;
-        TreeNodeCtrl treeNodeCtrl = Studio.Studio.Instance.treeNodeCtrl;
-
         protected override bool CameraEnabled
         {
-            get { return camera.enabled; }
-            set { camera.enabled = value; }
-        }
-
-        protected override Vector3 CameraTargetPos
-        {
-            get { return camera.targetPos; }
+            get { return Studio.Studio.Instance.cameraCtrl.enabled; }
+            set { Studio.Studio.Instance.cameraCtrl.enabled = value; }
         }
 
         protected override bool DepthOfField
         {
-            get => studio.sceneInfo.enableDepth;
+            get => Studio.Studio.Instance.sceneInfo.enableDepth;
             set
             {
-                studio.sceneInfo.enableDepth = value;
-                Traverse.Create(studio.systemButtonCtrl).Field("dofInfo").Method("UpdateInfo").GetValue();
+                Studio.Studio.Instance.sceneInfo.enableDepth = value;
+                Traverse.Create(Studio.Studio.Instance.systemButtonCtrl).Field("dofInfo").Method("UpdateInfo").GetValue();
             }
         }
 
@@ -39,17 +29,7 @@ namespace TogglePOVKK
             set { Manager.Config.EtcData.Shield = value; }
         }
 
-        protected override bool CameraStopMoving()
-        {
-            var noCtrlCondition = camera.noCtrlCondition;
-            bool result = false;
-            if(noCtrlCondition != null)
-                result = noCtrlCondition();
-
-            return result;
-        }
-
-        protected override ChaInfo GetChara()
+        protected override ChaControl GetChara()
         {
             var characters = GetSelectedCharacters();
             return characters.Count > 0 ? characters[0].charInfo : null;
