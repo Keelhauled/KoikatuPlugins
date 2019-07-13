@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TogglePOVKK
 {
-    class HSceneMono : BaseMono
+    class HView : CommonView
     {
         private CameraControl_Ver2 camera => Singleton<CameraControl_Ver2>.Instance;
 

@@ -5,7 +5,7 @@ using Logger = BepInEx.Logger;
 
 namespace TogglePOVKK
 {
-    internal abstract class BaseMono : MonoBehaviour
+    internal abstract class CommonView : MonoBehaviour
     {
         protected abstract bool CameraEnabled { get; set; }
         protected abstract Vector3 CameraTargetPos { get; }
@@ -42,7 +42,7 @@ namespace TogglePOVKK
         DragManager dragManager;
 
         public bool povActive = false;
-        public static BaseMono instance;
+        public static CommonView instance;
 
         void Awake()
         {

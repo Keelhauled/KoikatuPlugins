@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace TogglePOVKK
 {
-    class StudioMono : BaseMono
+    class StudioView : CommonView
     {
         Studio.Studio studio = Studio.Studio.Instance;
         Studio.CameraControl camera = Studio.Studio.Instance.cameraCtrl;

@@ -46,25 +46,25 @@ namespace TogglePOVKK
             bepinex = gameObject;
             var harmony = HarmonyInstance.Create("togglepovkk.harmony");
             harmony.PatchAll(GetType());
-            harmony.PatchAll(typeof(HSceneMono));
+            harmony.PatchAll(typeof(HView));
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(Studio.Studio), "Awake")]
         public static void StudioStart()
         {
-            bepinex.GetOrAddComponent<StudioMono>();
+            bepinex.GetOrAddComponent<StudioView>();
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "SetShortcutKey")]
         public static void HSceneStart()
         {
-            bepinex.GetOrAddComponent<HSceneMono>();
+            bepinex.GetOrAddComponent<HView>();
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "OnDestroy")]
         public static void HSceneEnd()
         {
-            Destroy(bepinex.GetComponent<HSceneMono>());
+            Destroy(bepinex.GetComponent<HView>());
         }
     }
 }
