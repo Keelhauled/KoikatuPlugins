@@ -14,36 +14,37 @@ namespace TogglePOVKK
         protected abstract bool CameraStopMoving();
         protected abstract ChaInfo GetChara();
 
-        private float sensitivityX = 0.5f;
-        private float sensitivityY = 0.5f;
-        private float MAXFOV = 120f;
-        private float MALE_OFFSET;
-        private float FEMALE_OFFSET;
-        private bool SHOW_HAIR;
-        private bool clampRotation = true;
+        float sensitivityX = 0.5f;
+        float sensitivityY = 0.5f;
+        float MAXFOV = 120f;
+        float MALE_OFFSET;
+        float FEMALE_OFFSET;
+        bool SHOW_HAIR;
+        bool clampRotation = true;
 
-        private float currentfov;
-        private bool currentHairState = true;
-        protected ChaInfo currentBody;
-        private Vector2 angle;
-        private Vector2 rot;
-        private float offset;
-        private Transform neckBone;
-        private Transform leftEye;
-        private Transform rightEye;
-        private float nearClip = 0.005f;
-        private float lastFOV;
-        private float lastNearClip;
-        private Quaternion lastRotation;
-        private Vector3 lastPosition;
-        private bool lastDOF;
-        private bool hideObstacle;
-        private NECK_LOOK_TYPE_VER2 lastNeck;
+        float currentfov;
+        bool currentHairState = true;
+        ChaInfo currentBody;
+        Vector2 angle;
+        Vector2 rot;
+        float offset;
+        Transform neckBone;
+        Transform leftEye;
+        Transform rightEye;
+        float nearClip = 0.005f;
+        float lastFOV;
+        float lastNearClip;
+        Quaternion lastRotation;
+        Vector3 lastPosition;
+        bool lastDOF;
+        bool hideObstacle;
+        NECK_LOOK_TYPE_VER2 lastNeck;
+        DragManager dragManager;
+
         public bool povActive = false;
-        private DragManager dragManager;
         public static BaseMono instance;
 
-        protected virtual void Awake()
+        void Awake()
         {
             instance = this;
             dragManager = gameObject.AddComponent<DragManager>();
@@ -61,22 +62,20 @@ namespace TogglePOVKK
                 Restore();
         }
 
-        protected virtual void LateUpdate()
+        void LateUpdate()
         {
+            if(TogglePOV.POVKey.IsDown())
+                SetPOV();
+
             if(currentBody == null && povActive)
             {
                 Restore();
                 Logger.Log(LogLevel.Info, "TogglePOV reset");
             }
-
-            if(TogglePOV.POVKey.IsDown())
-                SetPOV();
-
-            if(currentBody != null)
+            else if(povActive)
             {
-                EyesNeckUpdate();
+                currentBody.SetNeckLook(NECK_LOOK_TYPE_VER2.ANIMATION);
                 UpdateCamera();
-                UpdateCamPos();
             }
         }
 
@@ -86,10 +85,7 @@ namespace TogglePOVKK
             {
                 var chara = GetChara();
                 if(chara)
-                {
-                    Backup(chara);
                     Apply(chara);
-                }
             }
             else
             {
@@ -97,49 +93,67 @@ namespace TogglePOVKK
             }
         }
 
-        protected void ToggleHair()
+        public void Restore()
+        {
+            if(currentBody)
+            {
+                currentBody.SetNeckLook(lastNeck);
+
+                if(!currentHairState)
+                    ShowHair(true);
+
+                currentBody = null;
+            }
+
+            if(Camera.main)
+            {
+                Camera.main.fieldOfView = lastFOV;
+                Camera.main.nearClipPlane = lastNearClip;
+                Camera.main.transform.rotation = lastRotation;
+                Camera.main.transform.position = lastPosition;
+            }
+
+            DepthOfField = lastDOF;
+            Shield = hideObstacle;
+            CameraEnabled = true;
+            povActive = false;
+            currentHairState = true;
+        }
+
+        void ToggleHair()
         {
             SHOW_HAIR = !SHOW_HAIR;
             if(currentBody != null && currentHairState != SHOW_HAIR)
                 ShowHair(SHOW_HAIR);
         }
 
-        private void UpdateCamera()
+        void UpdateCamera()
         {
-            if(leftEye == null || rightEye == null)
+            if(Input.GetMouseButton(1))
             {
-                Restore();
-                return;
+                GameCursor.Instance.SetCursorLock(true);
+                currentfov = Mathf.Clamp(currentfov + Input.GetAxis("Mouse X") * Time.deltaTime * 30f, 1f, MAXFOV);
             }
-
-            if(!CameraEnabled)
+            else if(Input.GetMouseButton(0) && DragManager.allowCamera)
             {
-                if(Input.GetMouseButton(1))
-                {
-                    GameCursor.Instance.SetCursorLock(true);
-                    currentfov = Mathf.Clamp(currentfov + Input.GetAxis("Mouse X") * Time.deltaTime * 30f, 1f, MAXFOV);
-                }
-                else if(Input.GetMouseButton(0) && DragManager.allowCamera)
-                {
-                    GameCursor.Instance.SetCursorLock(true);
-                    float rateaddspeed = 2.5f;
-                    float mx = Input.GetAxis("Mouse X") * rateaddspeed;
-                    float my = Input.GetAxis("Mouse Y") * rateaddspeed;
-                    rot += new Vector2(-my, mx) * new Vector2(sensitivityX, sensitivityY).magnitude;
-                }
-                else
-                {
-                    GameCursor.Instance.SetCursorLock(false);
-                }
+                GameCursor.Instance.SetCursorLock(true);
+                float rateaddspeed = 2.5f;
+                float mx = Input.GetAxis("Mouse X") * rateaddspeed;
+                float my = Input.GetAxis("Mouse Y") * rateaddspeed;
+                rot += new Vector2(-my, mx) * new Vector2(sensitivityX, sensitivityY).magnitude;
+            }
+            else
+            {
+                GameCursor.Instance.SetCursorLock(false);
             }
 
             if(Input.GetKeyDown(KeyCode.Semicolon))
                 currentfov = TogglePOV.DefaultFov.Value;
 
             if(Input.GetKey(KeyCode.Equals))
-                currentfov = Mathf.Max(currentfov - Time.deltaTime * 15f, 1f);
+                currentfov = Mathf.Max(currentfov - Time.deltaTime * 15f, 5f);
             else if(Input.GetKey(KeyCode.RightBracket))
-                currentfov = Mathf.Min(currentfov + Time.deltaTime * 15f, 100f);
+                currentfov = Mathf.Min(currentfov + Time.deltaTime * 15f, 120f);
 
             if(Input.GetKeyDown(KeyCode.UpArrow))
             {
@@ -173,10 +187,7 @@ namespace TogglePOVKK
             var last = neckLookScript.aBones.Length - 1;
             var bone = neckLookScript.aBones[last];
             RotateToAngle(param, last, bone);
-        }
 
-        private void UpdateCamPos()
-        {
             Camera.main.transform.rotation = neckBone.rotation;
             Camera.main.transform.position = (leftEye.position + rightEye.position) / 2f;
             Camera.main.transform.Translate(Vector3.forward * offset);
@@ -187,7 +198,7 @@ namespace TogglePOVKK
             rot = new Vector2(rot.x - angle.x, rot.y - angle.y);
         }
 
-        private void Backup(ChaInfo body)
+        void Backup(ChaInfo body)
         {
             lastFOV = Camera.main.fieldOfView;
             lastNearClip = Camera.main.nearClipPlane;
@@ -195,67 +206,36 @@ namespace TogglePOVKK
             lastPosition = Camera.main.transform.position;
             lastDOF = DepthOfField;
             hideObstacle = Shield;
-            lastNeck = GetNeckLook(body);
+            lastNeck = body.GetNeckLook();
         }
 
-        public void Restore()
-        {
-            if(currentBody)
-            {
-                SetNeckLook(lastNeck);
-
-                if(!currentHairState)
-                    ShowHair(true);
-            }
-
-            currentBody = null;
-
-            if(Camera.main)
-            {
-                Camera.main.fieldOfView = lastFOV;
-                Camera.main.nearClipPlane = lastNearClip;
-                Camera.main.transform.rotation = lastRotation;
-                Camera.main.transform.position = lastPosition;
-            }
-
-            CameraEnabled = true;
-
-            DepthOfField = lastDOF;
-            Shield = hideObstacle;
-
-            povActive = false;
-            currentHairState = true;
-        }
-
-        private void ShowHair(bool show)
+        void ShowHair(bool show)
         {
             currentHairState = show;
             currentBody.transform.FindLoop("cf_j_head")?.SetActive(show);
-            //currentBody.transform.FindLoop("cf_J_FaceBase")?.SetActive(show);
-            //currentBody.transform.FindLoop("cf_O_mayuge")?.SetActive(show);
         }
 
-        private void Apply(ChaInfo body)
+        void Apply(ChaInfo body)
         {
-            CameraEnabled = false;
+            Backup(body);
 
             if(!currentHairState)
                 ShowHair(true);
 
             currentBody = body;
-            FindNLR();
+            FindBones();
             angle = Vector2.zero;
             rot = Vector3.zero;
             offset = currentBody.sex == 0 ? MALE_OFFSET : FEMALE_OFFSET;
-            //UpdateCamPos();
 
             if(!SHOW_HAIR)
                 ShowHair(false);
 
+            CameraEnabled = false;
             povActive = true;
         }
 
-        private void RotateToAngle(NeckTypeStateVer2 param, int boneNum, NeckObjectVer2 bone)
+        void RotateToAngle(NeckTypeStateVer2 param, int boneNum, NeckObjectVer2 bone)
         {
             Vector2 b = default(Vector2);
             b.x = Mathf.DeltaAngle(0f, bone.neckBone.localEulerAngles.x);
@@ -279,39 +259,7 @@ namespace TogglePOVKK
             bone.neckBone.localRotation = Quaternion.Euler(x, y, z);
         }
 
-        private void EyesNeckUpdate()
-        {
-            //SetEyeLook(EYE_LOOK_TYPE.FORWARD);
-            SetNeckLook(NECK_LOOK_TYPE_VER2.ANIMATION);
-        }
-
-        private void SetEyeLook(EYE_LOOK_TYPE eyetype)
-        {
-            for(int i = 0; i < currentBody.eyeLookCtrl.eyeLookScript.eyeTypeStates.Length; i++)
-            {
-                if(currentBody.eyeLookCtrl.eyeLookScript.eyeTypeStates[i].lookType == eyetype)
-                {
-                    currentBody.eyeLookCtrl.ptnNo = i;
-                    return;
-                }
-            }
-        }
-
-        private void SetNeckLook(NECK_LOOK_TYPE_VER2 necktype)
-        {
-            for(int i = 0; i < currentBody.neckLookCtrl.neckLookScript.neckTypeStates.Length; i++)
-            {
-                if(currentBody.neckLookCtrl.neckLookScript.neckTypeStates[i].lookType == necktype)
-                    currentBody.neckLookCtrl.ptnNo = i;
-            }
-        }
-
-        private NECK_LOOK_TYPE_VER2 GetNeckLook(ChaInfo body)
-        {
-            return body.neckLookCtrl.neckLookScript.neckTypeStates[body.neckLookCtrl.ptnNo].lookType;
-        }
-
-        private void FindNLR()
+        void FindBones()
         {
             foreach(NeckObjectVer2 neckObjectVer in currentBody.neckLookCtrl.neckLookScript.aBones)
             {

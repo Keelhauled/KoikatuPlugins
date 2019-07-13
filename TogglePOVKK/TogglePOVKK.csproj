@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseMono.cs" />
+    <Compile Include="CharaUtils.cs" />
     <Compile Include="DragManager.cs" />
     <Compile Include="HSceneMono.cs" />
     <Compile Include="StudioMono.cs" />

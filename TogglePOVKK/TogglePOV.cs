@@ -5,9 +5,10 @@ using UnityEngine;
 
 namespace TogglePOVKK
 {
-    [BepInPlugin("togglepovkk", "TogglePOV", Version)]
+    [BepInPlugin(GUID, "TogglePOV", Version)]
     public class TogglePOV : BaseUnityPlugin
     {
+        public const string GUID = "togglepovkk";
         public const string Version = "1.0.0";
 
         [DisplayName("Toggle POV")]
