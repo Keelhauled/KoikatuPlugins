@@ -1,5 +1,4 @@
 using BepInEx.Logging;
-using IllusionUtility.GetUtility;
 using UnityEngine;
 using Logger = BepInEx.Logger;
 
@@ -7,38 +6,30 @@ namespace TogglePOVKK
 {
     abstract class CommonView : MonoBehaviour
     {
+        public const float MinFov = 5f;
+        public const float MaxFov = 120f;
+
         protected abstract bool CameraEnabled { get; set; }
         protected abstract bool DepthOfField { get; set; }
         protected abstract bool Shield { get; set; }
         protected abstract ChaControl GetChara();
 
-        float sensitivityX = 0.5f;
-        float sensitivityY = 0.5f;
-        float MAXFOV = 120f;
-        float MALE_OFFSET;
-        float FEMALE_OFFSET;
-        bool SHOW_HAIR;
-        bool clampRotation = true;
+        float backupFov;
+        float backupNearClip;
+        Quaternion backupRot;
+        Vector3 backupPos;
+        bool backupShield;
+        bool backupDOF;
+        NECK_LOOK_TYPE_VER2 backupNeck;
 
-        float currentfov;
-        bool currentHairState = true;
-        ChaControl currentBody;
-        Vector2 angle;
-        Vector2 rot;
-        float offset;
+        float currentFov;
+        ChaControl currentChara;
         Transform neckBone;
         Transform leftEye;
         Transform rightEye;
-        float nearClip = 0.005f;
-        float lastFOV;
-        float lastNearClip;
-        Quaternion lastRotation;
-        Vector3 lastPosition;
-        bool lastDOF;
-        bool hideObstacle;
-        NECK_LOOK_TYPE_VER2 lastNeck;
+        Vector2 angle;
+        Vector2 rot;
         DragManager dragManager;
-
         public bool povActive = false;
         public static CommonView instance;
 
@@ -46,17 +37,14 @@ namespace TogglePOVKK
         {
             instance = this;
             dragManager = gameObject.AddComponent<DragManager>();
-            currentfov = TogglePOV.DefaultFov.Value;
-            SHOW_HAIR = TogglePOV.ShowHair.Value;
-            MALE_OFFSET = TogglePOV.MaleOffset.Value;
-            FEMALE_OFFSET = TogglePOV.FemaleOffset.Value;
+            currentFov = TogglePOV.DefaultFov.Value;
         }
 
         void OnDestroy()
         {
             Destroy(dragManager);
 
-            if(currentBody != null)
+            if(currentChara != null)
                 Restore();
         }
 
@@ -65,21 +53,21 @@ namespace TogglePOVKK
             if(TogglePOV.POVKey.IsDown())
                 SetPOV();
 
-            if(currentBody == null && povActive)
+            if(currentChara == null && povActive)
             {
                 Restore();
                 Logger.Log(LogLevel.Info, "TogglePOV force reset");
             }
             else if(povActive)
             {
-                currentBody.SetNeckLook(NECK_LOOK_TYPE_VER2.ANIMATION);
+                currentChara.SetNeckLook(NECK_LOOK_TYPE_VER2.ANIMATION);
                 UpdateCamera();
             }
         }
 
         public void SetPOV()
         {
-            if(currentBody == null)
+            if(currentChara == null)
             {
                 var chara = GetChara();
                 if(chara)
@@ -91,38 +79,46 @@ namespace TogglePOVKK
             }
         }
 
+        void Apply(ChaControl chara)
+        {
+            currentChara = chara;
+
+            backupFov = Camera.main.fieldOfView;
+            backupNearClip = Camera.main.nearClipPlane;
+            backupRot = Camera.main.transform.rotation;
+            backupPos = Camera.main.transform.position;
+            backupDOF = DepthOfField;
+            backupShield = Shield;
+            backupNeck = currentChara.GetNeckLook();
+
+            FindBones();
+            angle = Vector2.zero;
+            rot = Vector3.zero;
+
+            CameraEnabled = false;
+            povActive = true;
+        }
+
         public void Restore()
         {
-            if(currentBody)
+            if(currentChara)
             {
-                currentBody.SetNeckLook(lastNeck);
-
-                if(!currentHairState)
-                    ShowHair(true);
-
-                currentBody = null;
+                currentChara.SetNeckLook(backupNeck);
+                currentChara = null;
             }
 
             if(Camera.main)
             {
-                Camera.main.fieldOfView = lastFOV;
-                Camera.main.nearClipPlane = lastNearClip;
-                Camera.main.transform.rotation = lastRotation;
-                Camera.main.transform.position = lastPosition;
+                Camera.main.fieldOfView = backupFov;
+                Camera.main.nearClipPlane = backupNearClip;
+                Camera.main.transform.rotation = backupRot;
+                Camera.main.transform.position = backupPos;
             }
 
-            DepthOfField = lastDOF;
-            Shield = hideObstacle;
+            DepthOfField = backupDOF;
+            Shield = backupShield;
             CameraEnabled = true;
             povActive = false;
-            currentHairState = true;
-        }
-
-        void ToggleHair()
-        {
-            SHOW_HAIR = !SHOW_HAIR;
-            if(currentBody != null && currentHairState != SHOW_HAIR)
-                ShowHair(SHOW_HAIR);
         }
 
         void UpdateCamera()
@@ -130,15 +126,14 @@ namespace TogglePOVKK
             if(Input.GetMouseButton(1))
             {
                 GameCursor.Instance.SetCursorLock(true);
-                currentfov = Mathf.Clamp(currentfov + Input.GetAxis("Mouse X") * Time.deltaTime * 30f, 1f, MAXFOV);
+                currentFov = Mathf.Clamp(currentFov + Input.GetAxis("Mouse X") * Time.deltaTime * 30f, MinFov, MaxFov);
             }
             else if(Input.GetMouseButton(0) && DragManager.allowCamera)
             {
                 GameCursor.Instance.SetCursorLock(true);
-                float rateaddspeed = 2.5f;
-                float mx = Input.GetAxis("Mouse X") * rateaddspeed;
-                float my = Input.GetAxis("Mouse Y") * rateaddspeed;
-                rot += new Vector2(-my, mx) * new Vector2(sensitivityX, sensitivityY).magnitude;
+                var mouseDir = new Vector2(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")) * 2.5f;
+                var mouseSens = new Vector2(TogglePOV.HorizontalSensitivity.Value, TogglePOV.VerticalSensitivity.Value).magnitude;
+                rot += mouseDir * mouseSens;
             }
             else
             {
@@ -146,38 +141,23 @@ namespace TogglePOVKK
             }
 
             if(Input.GetKeyDown(KeyCode.Semicolon))
-                currentfov = TogglePOV.DefaultFov.Value;
-
-            if(Input.GetKey(KeyCode.Equals))
-                currentfov = Mathf.Max(currentfov - Time.deltaTime * 15f, 5f);
+                currentFov = TogglePOV.DefaultFov.Value;
+            else if(Input.GetKey(KeyCode.Equals))
+                currentFov = Mathf.Max(currentFov - Time.deltaTime * 15f, 5f);
             else if(Input.GetKey(KeyCode.RightBracket))
-                currentfov = Mathf.Min(currentfov + Time.deltaTime * 15f, 120f);
+                currentFov = Mathf.Min(currentFov + Time.deltaTime * 15f, 120f);
 
             if(Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                offset = Mathf.Min(offset + 0.0005f, 2f);
-
-                if(currentBody.sex == 0)
-                    MALE_OFFSET = offset;
-                else
-                    FEMALE_OFFSET = offset;
-            }
+                TogglePOV.ViewOffset.Value = Mathf.Min(TogglePOV.ViewOffset.Value + 0.0005f, 2f);
             else if(Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                offset = Mathf.Max(offset - 0.0005f, -2f);
+                TogglePOV.ViewOffset.Value = Mathf.Max(TogglePOV.ViewOffset.Value - 0.0005f, -2f);
 
-                if(currentBody.sex == 0)
-                    MALE_OFFSET = offset;
-                else
-                    FEMALE_OFFSET = offset;
-            }
-
-            Camera.main.fieldOfView = currentfov;
-            Camera.main.nearClipPlane = nearClip;
+            Camera.main.fieldOfView = currentFov;
+            Camera.main.nearClipPlane = TogglePOV.NearClipPov.Value;
             DepthOfField = false;
             Shield = false;
 
-            var neckLookCtrl = currentBody.neckLookCtrl;
+            var neckLookCtrl = currentChara.neckLookCtrl;
             var neckLookScript = neckLookCtrl.neckLookScript;
             var param = neckLookScript.neckTypeStates[neckLookCtrl.ptnNo];
             angle = new Vector2(rot.x, rot.y);
@@ -188,7 +168,7 @@ namespace TogglePOVKK
 
             Camera.main.transform.rotation = neckBone.rotation;
             Camera.main.transform.position = (leftEye.position + rightEye.position) / 2f;
-            Camera.main.transform.Translate(Vector3.forward * offset);
+            Camera.main.transform.Translate(Vector3.forward * TogglePOV.ViewOffset.Value);
             float y = Mathf.Clamp(angle.y, -40f, 40f);
             float x = Mathf.Clamp(angle.x, -60f, 60f);
             angle -= new Vector2(x, y);
@@ -196,48 +176,15 @@ namespace TogglePOVKK
             rot = new Vector2(rot.x - angle.x, rot.y - angle.y);
         }
 
-        void ShowHair(bool show)
-        {
-            currentHairState = show;
-            currentBody.transform.FindLoop("cf_j_head")?.SetActive(show);
-        }
-
-        void Apply(ChaControl body)
-        {
-            currentBody = body;
-
-            lastFOV = Camera.main.fieldOfView;
-            lastNearClip = Camera.main.nearClipPlane;
-            lastRotation = Camera.main.transform.rotation;
-            lastPosition = Camera.main.transform.position;
-            lastDOF = DepthOfField;
-            hideObstacle = Shield;
-            lastNeck = currentBody.GetNeckLook();
-
-            if(!currentHairState)
-                ShowHair(true);
-
-            FindBones();
-            angle = Vector2.zero;
-            rot = Vector3.zero;
-            offset = currentBody.sex == 0 ? MALE_OFFSET : FEMALE_OFFSET;
-
-            if(!SHOW_HAIR)
-                ShowHair(false);
-
-            CameraEnabled = false;
-            povActive = true;
-        }
-
         void RotateToAngle(NeckTypeStateVer2 param, int boneNum, NeckObjectVer2 bone)
         {
-            Vector2 b = default(Vector2);
-            b.x = Mathf.DeltaAngle(0f, bone.neckBone.localEulerAngles.x);
-            b.y = Mathf.DeltaAngle(0f, bone.neckBone.localEulerAngles.y);
-            angle += b;
+            var delta = new Vector2();
+            delta.x = Mathf.DeltaAngle(0f, bone.neckBone.localEulerAngles.x);
+            delta.y = Mathf.DeltaAngle(0f, bone.neckBone.localEulerAngles.y);
+            angle += delta;
 
             float x, y;
-            if(clampRotation)
+            if(TogglePOV.ClampRotation.Value)
             {
                 var neckParam = param.aParam[boneNum];
                 y = Mathf.Clamp(angle.y, neckParam.minBendingAngle, neckParam.maxBendingAngle);
@@ -256,7 +203,7 @@ namespace TogglePOVKK
 
         void FindBones()
         {
-            foreach(NeckObjectVer2 neckObjectVer in currentBody.neckLookCtrl.neckLookScript.aBones)
+            foreach(var neckObjectVer in currentChara.neckLookCtrl.neckLookScript.aBones)
             {
                 if(neckObjectVer.neckBone.name.ToLower().Contains("head"))
                 {
@@ -265,7 +212,7 @@ namespace TogglePOVKK
                 }
             }
 
-            foreach(EyeObject eyeObject in currentBody.eyeLookCtrl.eyeLookScript.eyeObjs)
+            foreach(var eyeObject in currentChara.eyeLookCtrl.eyeLookScript.eyeObjs)
             {
                 switch(eyeObject.eyeLR)
                 {

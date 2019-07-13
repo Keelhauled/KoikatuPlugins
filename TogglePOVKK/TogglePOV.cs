@@ -14,21 +14,24 @@ namespace TogglePOVKK
         [DisplayName("Toggle POV")]
         public static SavedKeyboardShortcut POVKey { get; set; }
 
-        [DisplayName("Default fov")]
-        [AcceptableValueRange(20f, 120f, false)]
+        [DisplayName("Default FOV")]
+        [AcceptableValueRange(CommonView.MinFov, CommonView.MaxFov, false)]
         public static ConfigWrapper<float> DefaultFov { get; set; }
 
-        [DisplayName("Show hair")]
-        [Description("Controls if hair is left untouched when going into first person.")]
-        public static ConfigWrapper<bool> ShowHair { get; set; }
+        [DisplayName("POV view offset")]
+        public static ConfigWrapper<float> ViewOffset { get; set; }
 
-        [DisplayName("Male offset")]
-        [Advanced(true)]
-        public static ConfigWrapper<float> MaleOffset { get; set; }
+        [DisplayName("Horizontal mouse sensitivity")]
+        public static ConfigWrapper<float> VerticalSensitivity { get; set; }
 
-        [DisplayName("Female offset")]
-        [Advanced(true)]
-        public static ConfigWrapper<float> FemaleOffset { get; set; }
+        [DisplayName("Vertical mouse sensitivity")]
+        public static ConfigWrapper<float> HorizontalSensitivity { get; set; }
+
+        [DisplayName("POV camera near clip")]
+        public static ConfigWrapper<float> NearClipPov { get; set; }
+
+        [DisplayName("Clamp neck rotation")]
+        public static ConfigWrapper<bool> ClampRotation { get; set; }
 
         static GameObject bepinex;
 
@@ -36,9 +39,11 @@ namespace TogglePOVKK
         {
             POVKey = new SavedKeyboardShortcut("POVKey", this, new KeyboardShortcut(KeyCode.Backspace));
             DefaultFov = new ConfigWrapper<float>("DefaultFov", this, 70f);
-            ShowHair = new ConfigWrapper<bool>("ShowHair", this, false);
-            MaleOffset = new ConfigWrapper<float>("MaleOffset", this, 0.042f);
-            FemaleOffset = new ConfigWrapper<float>("FemaleOffset", this, 0.0315f);
+            ViewOffset = new ConfigWrapper<float>("ViewOffset", this, 0.0315f);
+            VerticalSensitivity = new ConfigWrapper<float>("VerticalSensitivity", this, 0.5f);
+            HorizontalSensitivity = new ConfigWrapper<float>("HorizontalSensitivity", this, 0.5f);
+            NearClipPov = new ConfigWrapper<float>("NearClipPov", this, 0.005f);
+            ClampRotation = new ConfigWrapper<bool>("ClampRotation", this, true);
         }
 
         void Awake()
