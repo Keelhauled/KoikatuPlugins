@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultParamEditor", "Defau
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsSettings", "GraphicsSettings\GraphicsSettings.csproj", "{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharaEditTool", "CharaEditTool\CharaEditTool.csproj", "{4DD21A67-6CAB-4A27-85AC-42930F1EC259}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakerBridge", "MakerBridge\MakerBridge.csproj", "{A6DBDBD8-29BC-47FD-B392-0E0460012C1D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{4A05B99A-D26F-444E-BA33-8B368140B368}"
@@ -105,8 +103,6 @@ Global
 		{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DD21A67-6CAB-4A27-85AC-42930F1EC259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DD21A67-6CAB-4A27-85AC-42930F1EC259}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6DBDBD8-29BC-47FD-B392-0E0460012C1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A6DBDBD8-29BC-47FD-B392-0E0460012C1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6DBDBD8-29BC-47FD-B392-0E0460012C1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
