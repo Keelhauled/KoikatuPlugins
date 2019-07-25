@@ -59,12 +59,12 @@ namespace ShadowRealm
             return codes;
         }
 
-        //[HarmonyPostfix, HarmonyPatch(typeof(ChaControl), nameof(ChaControl.CreateReferenceInfo))]
-        //public static void DisableShadowcaster(ChaControl __instance, GameObject objRef)
-        //{
-        //    if(__instance.objBody != null && __instance.objBody == objRef)
-        //        objRef.transform.FindLoop("o_shadowcaster")?.SetActive(false);
-        //}
+        [HarmonyPostfix, HarmonyPatch(typeof(ChaControl), nameof(ChaControl.CreateReferenceInfo))]
+        public static void DisableShadowcaster(ChaControl __instance, GameObject objRef)
+        {
+            if(__instance.objBody != null && __instance.objBody == objRef)
+                objRef.transform.FindLoop("o_shadowcaster")?.SetActive(false);
+        }
 
         //[HarmonyPostfix, HarmonyPatch(typeof(Map), "Reserve")]
         //public static void RemoveSunlight(Map __instance)

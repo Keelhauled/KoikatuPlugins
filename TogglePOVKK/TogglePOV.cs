@@ -34,6 +34,7 @@ namespace TogglePOVKK
         public static ConfigWrapper<bool> ClampRotation { get; set; }
 
         static GameObject bepinex;
+        static HarmonyInstance harmony;
 
         TogglePOV()
         {
@@ -49,10 +50,20 @@ namespace TogglePOVKK
         void Awake()
         {
             bepinex = gameObject;
-            var harmony = HarmonyInstance.Create("togglepovkk.harmony");
+            harmony = HarmonyInstance.Create("togglepovkk.harmony");
             harmony.PatchAll(GetType());
             harmony.PatchAll(typeof(HView));
+
+            bepinex.GetOrAddComponent<StudioView>();
         }
+
+        #if DEBUG
+        void OnDestroy()
+        {
+            harmony.UnpatchAll(GetType());
+            harmony.UnpatchAll(typeof(HView));
+        }
+        #endif
 
         [HarmonyPrefix, HarmonyPatch(typeof(Studio.Studio), "Awake")]
         public static void StudioStart()
