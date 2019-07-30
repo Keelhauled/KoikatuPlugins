@@ -49,7 +49,9 @@ namespace TitleShortcuts
             [Description("Male maker")]
             MaleMaker,
             [Description("Free H")]
-            FreeH
+            FreeH,
+            [Description("Live stage")]
+            LiveStage
         }
 
         TitleShortcuts()
@@ -140,6 +142,10 @@ namespace TitleShortcuts
 
                             case AutoStartOption.FreeH:
                                 StartMode(titleScene.OnOtherFreeH, "Automatically starting free H");
+                                break;
+
+                            case AutoStartOption.LiveStage:
+                                StartMode(titleScene.OnOtherIdolLive, "Automatically starting live show");
                                 break;
                         }
                     }
