@@ -3,67 +3,68 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\TestPlugin.csproj", "{14B2DA69-1DD3-482D-8D95-1722DBCE46F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "src\TestPlugin\TestPlugin.csproj", "{14B2DA69-1DD3-482D-8D95-1722DBCE46F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockOnPluginKK", "LockOnPlugin\LockOnPluginKK.csproj", "{D6A01FB7-318E-4FA6-BB4D-F8D2A58B9F84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockOnPluginKK", "src\LockOnPlugin\LockOnPluginKK.csproj", "{D6A01FB7-318E-4FA6-BB4D-F8D2A58B9F84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TogglePOVKK", "TogglePOVKK\TogglePOVKK.csproj", "{45ED5EB2-9F9B-4F43-B885-CA0695C8F40F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TogglePOVKK", "src\TogglePOVKK\TogglePOVKK.csproj", "{45ED5EB2-9F9B-4F43-B885-CA0695C8F40F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HideUIKK", "HideUIKK\HideUIKK.csproj", "{26DB5288-DD42-451C-91D8-6D0136461124}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HideUIKK", "src\HideUIKK\HideUIKK.csproj", "{26DB5288-DD42-451C-91D8-6D0136461124}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlockHPositions", "UnlockHPositions\UnlockHPositions.csproj", "{476E4113-AF49-45E0-9CDD-1D76EE51FA24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlockHPositions", "src\UnlockHPositions\UnlockHPositions.csproj", "{476E4113-AF49-45E0-9CDD-1D76EE51FA24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioAddonLite", "StudioAddonLite\StudioAddonLite.csproj", "{921651CF-6A2C-4064-91FE-AF949CFA9A16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioAddonLite", "src\StudioAddonLite\StudioAddonLite.csproj", "{921651CF-6A2C-4064-91FE-AF949CFA9A16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfieCam", "SelfieCam\SelfieCam.csproj", "{0AFE4F09-70F9-4A3E-81DC-A173E0406EDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfieCam", "src\SelfieCam\SelfieCam.csproj", "{0AFE4F09-70F9-4A3E-81DC-A173E0406EDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitleShortcuts", "TitleShortcuts\TitleShortcuts.csproj", "{7609FC13-64E8-4402-A3AF-383B4A7779BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitleShortcuts", "src\TitleShortcuts\TitleShortcuts.csproj", "{7609FC13-64E8-4402-A3AF-383B4A7779BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultParamEditor", "DefaultParamEditor\DefaultParamEditor.csproj", "{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultParamEditor", "src\DefaultParamEditor\DefaultParamEditor.csproj", "{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsSettings", "GraphicsSettings\GraphicsSettings.csproj", "{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsSettings", "src\GraphicsSettings\GraphicsSettings.csproj", "{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakerBridge", "MakerBridge\MakerBridge.csproj", "{A6DBDBD8-29BC-47FD-B392-0E0460012C1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakerBridge", "src\MakerBridge\MakerBridge.csproj", "{A6DBDBD8-29BC-47FD-B392-0E0460012C1D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{4A05B99A-D26F-444E-BA33-8B368140B368}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		BuildRelease.bat = BuildRelease.bat
+		src\Common.csproj = src\Common.csproj
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderMagic", "ShaderMagic\ShaderMagic.csproj", "{07AC9BF2-6784-42D1-B0D3-E1B6B4F8C2BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderMagic", "src\ShaderMagic\ShaderMagic.csproj", "{07AC9BF2-6784-42D1-B0D3-E1B6B4F8C2BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharaStateX", "CharaStateX\CharaStateX.csproj", "{5A84955A-E776-4E75-AA19-7D764A8C0554}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharaStateX", "src\CharaStateX\CharaStateX.csproj", "{5A84955A-E776-4E75-AA19-7D764A8C0554}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UILib", "UILib\UILib.shproj", "{044C35DB-98CA-4A9F-905D-93B61C8057A1}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UILib", "src\UILib\UILib.shproj", "{044C35DB-98CA-4A9F-905D-93B61C8057A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlendShaper", "BlendShaper\BlendShaper.csproj", "{158B291D-305B-4AFE-BCE7-6A3A229AB7AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlendShaper", "src\BlendShaper\BlendShaper.csproj", "{158B291D-305B-4AFE-BCE7-6A3A229AB7AE}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HarmonyExtension", "HarmonyExtension\HarmonyExtension.shproj", "{2A3E933B-07C2-48C4-B7CF-5458E5443D34}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HarmonyExtension", "src\HarmonyExtension\HarmonyExtension.shproj", "{2A3E933B-07C2-48C4-B7CF-5458E5443D34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PosePng", "PosePng\PosePng.csproj", "{E128A6BD-7BF1-4CF6-A4E5-6EDB86D6E963}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PosePng", "src\PosePng\PosePng.csproj", "{E128A6BD-7BF1-4CF6-A4E5-6EDB86D6E963}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShadowRealm", "ShadowRealm\ShadowRealm.csproj", "{FA9F9469-F548-4374-87FF-D373AE748D33}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShadowRealm", "src\ShadowRealm\ShadowRealm.csproj", "{FA9F9469-F548-4374-87FF-D373AE748D33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioUX", "StudioUX\StudioUX.csproj", "{E6630C43-A642-4485-B69E-792414CE85CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioUX", "src\StudioUX\StudioUX.csproj", "{E6630C43-A642-4485-B69E-792414CE85CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeHControl", "FreeHControl\FreeHControl.csproj", "{0358B313-1F18-4A67-BC4E-2C8E7F0B1BC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeHControl", "src\FreeHControl\FreeHControl.csproj", "{0358B313-1F18-4A67-BC4E-2C8E7F0B1BC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealPov", "RealPov\RealPov.csproj", "{E9B05374-8972-4D23-AE9F-EB01F3346EF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealPov", "src\RealPov\RealPov.csproj", "{E9B05374-8972-4D23-AE9F-EB01F3346EF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HideAllUI", "HideAllUI\HideAllUI.csproj", "{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HideAllUI", "src\HideAllUI\HideAllUI.csproj", "{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		UILib\UILib.projitems*{044c35db-98ca-4a9f-905d-93b61c8057a1}*SharedItemsImports = 13
-		HarmonyExtension\HarmonyExtension.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
-		UILib\UILib.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
-		HarmonyExtension\HarmonyExtension.projitems*{2a3e933b-07c2-48c4-b7cf-5458e5443d34}*SharedItemsImports = 13
-		HarmonyExtension\HarmonyExtension.projitems*{45ed5eb2-9f9b-4f43-b885-ca0695c8f40f}*SharedItemsImports = 4
-		HarmonyExtension\HarmonyExtension.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
-		HarmonyExtension\HarmonyExtension.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
-		HarmonyExtension\HarmonyExtension.projitems*{fa9f9469-f548-4374-87ff-d373ae748d33}*SharedItemsImports = 4
+		src\UILib\UILib.projitems*{044c35db-98ca-4a9f-905d-93b61c8057a1}*SharedItemsImports = 13
+		src\HarmonyExtension\HarmonyExtension.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
+		src\UILib\UILib.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
+		src\HarmonyExtension\HarmonyExtension.projitems*{2a3e933b-07c2-48c4-b7cf-5458e5443d34}*SharedItemsImports = 13
+		src\HarmonyExtension\HarmonyExtension.projitems*{45ed5eb2-9f9b-4f43-b885-ca0695c8f40f}*SharedItemsImports = 4
+		src\HarmonyExtension\HarmonyExtension.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
+		src\HarmonyExtension\HarmonyExtension.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
+		src\HarmonyExtension\HarmonyExtension.projitems*{fa9f9469-f548-4374-87ff-d373ae748d33}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,7 +82,6 @@ Global
 		{45ED5EB2-9F9B-4F43-B885-CA0695C8F40F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45ED5EB2-9F9B-4F43-B885-CA0695C8F40F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{26DB5288-DD42-451C-91D8-6D0136461124}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26DB5288-DD42-451C-91D8-6D0136461124}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26DB5288-DD42-451C-91D8-6D0136461124}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26DB5288-DD42-451C-91D8-6D0136461124}.Release|Any CPU.Build.0 = Release|Any CPU
 		{476E4113-AF49-45E0-9CDD-1D76EE51FA24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -132,9 +132,8 @@ Global
 		{E9B05374-8972-4D23-AE9F-EB01F3346EF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9B05374-8972-4D23-AE9F-EB01F3346EF7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,7 @@
+bin/
 libs/
 TestPlugin/
 SelfieCam/
-PackingFolder/
-KoikatuPlugins.zip
-GraphicsSettings/MadGoatSSAA
 ShaderMagic/
 
 ## Ignore Visual Studio temporary files, build results, and
