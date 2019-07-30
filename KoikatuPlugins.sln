@@ -52,6 +52,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeHControl", "FreeHContro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealPov", "RealPov\RealPov.csproj", "{E9B05374-8972-4D23-AE9F-EB01F3346EF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HideAllUI", "HideAllUI\HideAllUI.csproj", "{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		UILib\UILib.projitems*{044c35db-98ca-4a9f-905d-93b61c8057a1}*SharedItemsImports = 13
@@ -129,6 +131,10 @@ Global
 		{E9B05374-8972-4D23-AE9F-EB01F3346EF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9B05374-8972-4D23-AE9F-EB01F3346EF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9B05374-8972-4D23-AE9F-EB01F3346EF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
