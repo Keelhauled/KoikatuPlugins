@@ -23,6 +23,10 @@
       <HintPath>$(SolutionDir)libs\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(SolutionDir)libs\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="BepInEx">
       <HintPath>$(SolutionDir)libs\BepInEx.dll</HintPath>
       <Private>False</Private>
@@ -36,10 +40,19 @@
       <HintPath>$(SolutionDir)libs\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(SolutionDir)libs\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HideAllUI.cs" />
+    <Compile Include="HideHSceneUI.cs" />
+    <Compile Include="HideStageUI.cs" />
+    <Compile Include="HideStudioUI.cs" />
+    <Compile Include="HideUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <Import Project="..\HarmonyExtension\HarmonyExtension.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
