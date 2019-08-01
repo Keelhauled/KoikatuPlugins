@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
-using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace HideAllUI
 {
@@ -81,15 +79,6 @@ namespace HideAllUI
         public static void HSceneEnd()
         {
             currentUIHandler = null;
-        }
-
-        [HarmonyPostfix, HarmonyPatch(typeof(LiveCharaSelectSprite), "Start")]
-        public static void LiveStageStart(LiveCharaSelectSprite __instance)
-        {
-            currentUIHandler = new HideStageUI(__instance);
-
-            var btnReturn = Traverse.Create(__instance).Field("btnReturn").GetValue<Button>();
-            btnReturn.OnClickAsObservable().Subscribe((x) => currentUIHandler = null);
         }
     }
 }
