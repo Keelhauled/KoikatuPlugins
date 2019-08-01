@@ -60,7 +60,6 @@ Global
 		src\UILib\UILib.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
 		src\HarmonyExtension\HarmonyExtension.projitems*{2a3e933b-07c2-48c4-b7cf-5458e5443d34}*SharedItemsImports = 13
 		src\HarmonyExtension\HarmonyExtension.projitems*{45ed5eb2-9f9b-4f43-b885-ca0695c8f40f}*SharedItemsImports = 4
-		src\HarmonyExtension\HarmonyExtension.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
 		src\HarmonyExtension\HarmonyExtension.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
 		src\HarmonyExtension\HarmonyExtension.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
 		src\HarmonyExtension\HarmonyExtension.projitems*{fa9f9469-f548-4374-87ff-d373ae748d33}*SharedItemsImports = 4

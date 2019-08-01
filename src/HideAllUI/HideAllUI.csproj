@@ -44,6 +44,6 @@
     <Compile Include="HideUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <Import Project="..\HarmonyExtension\HarmonyExtension.projitems" Label="Shared" />
+  <Import Project="..\HarmonyExtension\HarmonyExtension.projitems" Label="Shared" Condition=" '$(Configuration)' == 'Debug' "/>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

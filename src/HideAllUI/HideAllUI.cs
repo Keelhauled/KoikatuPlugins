@@ -29,10 +29,12 @@ namespace HideAllUI
             harmony.PatchAll(GetType());
         }
 
+#if DEBUG
         void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
         }
+#endif
 
         void Update()
         {
