@@ -1,9 +1,9 @@
 ﻿using BepInEx;
+using BepInEx.Logging;
 using Harmony;
 using Studio;
 using System;
 using System.IO;
-using BepInEx.Logging;
 
 namespace PosePng
 {
@@ -26,12 +26,12 @@ namespace PosePng
             harmony.PatchAll(GetType());
         }
 
-        #if DEBUG
+#if DEBUG
         void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
         }
-        #endif
+#endif
 
         [HarmonyPrefix, HarmonyPatch(typeof(PauseCtrl), nameof(PauseCtrl.Save))]
         public static bool PoseSavePatch(OCIChar _ociChar, ref string _name)

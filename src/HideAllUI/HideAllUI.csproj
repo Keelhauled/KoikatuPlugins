@@ -42,8 +42,9 @@
     <Compile Include="HideHSceneUI.cs" />
     <Compile Include="HideStudioUI.cs" />
     <Compile Include="HideUI.cs" />
+    <Compile Include="IncompatiblePluginDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <Import Project="..\HarmonyExtension\HarmonyExtension.projitems" Label="Shared" Condition=" '$(Configuration)' == 'Debug' "/>
+  <Import Project="..\SharedPluginCode\SharedPluginCode.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

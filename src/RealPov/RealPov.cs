@@ -68,10 +68,12 @@ namespace RealPov
             }
         }
 
+#if DEBUG
         void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
         }
+#endif
 
         void TogglePov()
         {

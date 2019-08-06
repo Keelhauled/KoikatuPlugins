@@ -39,8 +39,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UILib", "src\UILib\UILib.sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlendShaper", "src\BlendShaper\BlendShaper.csproj", "{158B291D-305B-4AFE-BCE7-6A3A229AB7AE}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HarmonyExtension", "src\HarmonyExtension\HarmonyExtension.shproj", "{2A3E933B-07C2-48C4-B7CF-5458E5443D34}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PosePng", "src\PosePng\PosePng.csproj", "{E128A6BD-7BF1-4CF6-A4E5-6EDB86D6E963}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShadowRealm", "src\ShadowRealm\ShadowRealm.csproj", "{FA9F9469-F548-4374-87FF-D373AE748D33}"
@@ -53,17 +51,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealPov", "src\RealPov\Real
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HideAllUI", "src\HideAllUI\HideAllUI.csproj", "{B141F3CD-B048-42FD-B039-E3EA6CD9EED7}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedPluginCode", "src\SharedPluginCode\SharedPluginCode.shproj", "{FBAEED86-37C9-4932-99F6-926FC82047AD}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\UILib\UILib.projitems*{044c35db-98ca-4a9f-905d-93b61c8057a1}*SharedItemsImports = 13
-		src\HarmonyExtension\HarmonyExtension.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
-		src\HarmonyExtension\HarmonyExtension.projitems*{2a3e933b-07c2-48c4-b7cf-5458e5443d34}*SharedItemsImports = 13
-		src\HarmonyExtension\HarmonyExtension.projitems*{45ed5eb2-9f9b-4f43-b885-ca0695c8f40f}*SharedItemsImports = 4
-		src\HarmonyExtension\HarmonyExtension.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
-		src\HarmonyExtension\HarmonyExtension.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
-		src\HarmonyExtension\HarmonyExtension.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
-		src\HarmonyExtension\HarmonyExtension.projitems*{fa9f9469-f548-4374-87ff-d373ae748d33}*SharedItemsImports = 4
+		src\SharedPluginCode\SharedPluginCode.projitems*{45ed5eb2-9f9b-4f43-b885-ca0695c8f40f}*SharedItemsImports = 4
+		src\SharedPluginCode\SharedPluginCode.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
+		src\SharedPluginCode\SharedPluginCode.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
+		src\SharedPluginCode\SharedPluginCode.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
+		src\SharedPluginCode\SharedPluginCode.projitems*{fa9f9469-f548-4374-87ff-d373ae748d33}*SharedItemsImports = 4
+		src\SharedPluginCode\SharedPluginCode.projitems*{fbaeed86-37c9-4932-99f6-926fc82047ad}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

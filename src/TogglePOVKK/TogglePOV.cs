@@ -57,13 +57,13 @@ namespace TogglePOVKK
             bepinex.GetOrAddComponent<StudioView>();
         }
 
-        #if DEBUG
+#if DEBUG
         void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
             harmony.UnpatchAll(typeof(HView));
         }
-        #endif
+#endif
 
         [HarmonyPrefix, HarmonyPatch(typeof(Studio.Studio), "Awake")]
         public static void StudioStart()

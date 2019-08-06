@@ -1,14 +1,14 @@
 ﻿using BepInEx;
+using BepInEx.Logging;
 using Harmony;
 using IllusionUtility.GetUtility;
 using Studio;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using UnityEngine;
 using Logger = BepInEx.Logger;
-using BepInEx.Logging;
-using System.Collections;
 
 namespace ShadowRealm
 {
@@ -27,12 +27,12 @@ namespace ShadowRealm
             harmony.PatchAll(GetType());
         }
 
-        #if DEBUG
+#if DEBUG
         void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
         }
-        #endif
+#endif
 
         [HarmonyPostfix, HarmonyPatch(typeof(AddObjectLight), nameof(AddObjectLight.Load), new[] { typeof(OILightInfo), typeof(ObjectCtrlInfo), typeof(TreeNodeObject) })]
         public static void LoadLightCullingMask(OCILight __result)

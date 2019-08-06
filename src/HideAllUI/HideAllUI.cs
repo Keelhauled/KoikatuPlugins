@@ -21,8 +21,11 @@ namespace HideAllUI
         HarmonyInstance harmony;
         static HideUI currentUIHandler;
 
-        void Awake()
+        void Start()
         {
+            if(IncompatiblePluginDetector.AnyIncompatiblePlugins())
+                return;
+
             HideHotkey = new SavedKeyboardShortcut("HideHotkey", this, new KeyboardShortcut(KeyCode.Space));
 
             harmony = HarmonyInstance.Create("keelhauled.hideallui.harmony");

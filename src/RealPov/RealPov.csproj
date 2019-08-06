@@ -51,6 +51,6 @@
     <Compile Include="RealPov.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <Import Project="..\HarmonyExtension\HarmonyExtension.projitems" Label="Shared" />
+  <Import Project="..\SharedPluginCode\SharedPluginCode.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

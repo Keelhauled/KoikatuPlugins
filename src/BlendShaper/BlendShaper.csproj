@@ -50,6 +50,5 @@
     <EmbeddedResource Include="BlendSets.json" />
   </ItemGroup>
   <Import Project="..\UILib\UILib.projitems" Label="Shared" />
-  <Import Project="..\HarmonyExtension\HarmonyExtension.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
