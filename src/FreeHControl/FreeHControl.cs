@@ -5,9 +5,13 @@ using HarmonyLib;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using SharedPluginCode;
 
 namespace FreeHControl
 {
+    [BepInProcess(KoikatuConstants.KoikatuMainProcessName)]
+    [BepInProcess(KoikatuConstants.KoikatuSteamProcessName)]
+    [BepInProcess(KoikatuConstants.KoikatuVRProcessName)]
     [BepInPlugin(GUID, "FreeH Control", Version)]
     public class FreeHControl : BaseUnityPlugin
     {

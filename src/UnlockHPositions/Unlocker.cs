@@ -4,9 +4,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
+using SharedPluginCode;
 
 namespace UnlockHPositions
 {
+    [BepInProcess(KoikatuConstants.KoikatuMainProcessName)]
+    [BepInProcess(KoikatuConstants.KoikatuSteamProcessName)]
+    [BepInProcess(KoikatuConstants.KoikatuVRProcessName)]
     [BepInPlugin("keelhauled.unlockhpositions", "UnlockHPositions", Version)]
     public class Unlocker : BaseUnityPlugin
     {

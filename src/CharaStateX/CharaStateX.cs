@@ -1,8 +1,10 @@
 ﻿using BepInEx;
 using Harmony;
+using SharedPluginCode;
 
 namespace CharaStateX
 {
+    [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
     [BepInPlugin("keelhauled.charastatex", "CharaStateX", Version)]
     class CharaStateX : BaseUnityPlugin
     {

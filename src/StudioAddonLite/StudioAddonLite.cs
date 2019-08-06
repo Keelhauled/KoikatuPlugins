@@ -1,9 +1,11 @@
 ﻿using BepInEx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using SharedPluginCode;
 
 namespace StudioAddonLite
 {
+    [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
     [BepInPlugin("studioaddonlite", "StudioAddonLite", Version)]
     public class StudioAddonLite : BaseUnityPlugin
     {

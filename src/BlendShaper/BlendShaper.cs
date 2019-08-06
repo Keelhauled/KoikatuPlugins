@@ -1,10 +1,10 @@
 ﻿using BepInEx;
 using Studio;
-using System;
 using System.Collections.Generic;
 using UILib;
 using UnityEngine;
 using UnityEngine.UI;
+using SharedPluginCode;
 
 //cf_O_canine
 //cf_O_face
@@ -22,7 +22,7 @@ using UnityEngine.UI;
 
 namespace BlendShaper
 {
-    [BepInProcess("CharaStudio")]
+    [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
     [BepInPlugin("keelhauled.blendshaper", "BlendShaper", Version)]
     class BlendShaper : BaseUnityPlugin
     {

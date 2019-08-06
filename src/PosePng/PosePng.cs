@@ -4,10 +4,11 @@ using Harmony;
 using Studio;
 using System;
 using System.IO;
+using SharedPluginCode;
 
 namespace PosePng
 {
-    [BepInProcess("CharaStudio")]
+    [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
     [BepInPlugin("keelhauled.posepng", "PosePng", Version)]
     class PosePng : BaseUnityPlugin
     {

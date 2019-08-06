@@ -7,10 +7,11 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 using Logger = BepInEx.Logger;
+using SharedPluginCode;
 
 namespace DefaultParamEditor
 {
-    [BepInProcess("CharaStudio")]
+    [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
     [BepInPlugin("keelhauled.defaultparameditor", "DefaultParamEditor", Version)]
     internal class DefaultParamEditor : BaseUnityPlugin
     {

@@ -9,10 +9,11 @@ using System.Linq;
 using System.Reflection.Emit;
 using UnityEngine;
 using Logger = BepInEx.Logger;
+using SharedPluginCode;
 
 namespace ShadowRealm
 {
-    [BepInProcess("CharaStudio")]
+    [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
     [BepInPlugin("keelhauled.shadowrealm", "ShadowRealm", "1.0.0")]
     class ShadowRealm : BaseUnityPlugin
     {

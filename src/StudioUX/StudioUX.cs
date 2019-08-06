@@ -10,9 +10,11 @@ using System.Linq;
 using System.Reflection.Emit;
 using UnityEngine;
 using Vectrosity;
+using SharedPluginCode;
 
 namespace StudioUX
 {
+    [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
     [BepInPlugin("keelhauled.studiouxexperiment", "StudioUX", "1.0.0")]
     public class StudioUX : BaseUnityPlugin
     {

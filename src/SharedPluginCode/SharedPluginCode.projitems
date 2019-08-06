@@ -9,7 +9,6 @@
     <Import_RootNamespace>SharedPluginCode</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)HarmonyExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KoikatuConstants.cs" />
   </ItemGroup>
 </Project>

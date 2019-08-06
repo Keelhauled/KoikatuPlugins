@@ -6,11 +6,14 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using static BepInEx.Logger;
+using SharedPluginCode;
 
 namespace TitleShortcuts
 {
+    [BepInProcess(KoikatuConstants.KoikatuMainProcessName)]
+    [BepInProcess(KoikatuConstants.KoikatuSteamProcessName)]
+    [BepInProcess(KoikatuConstants.KoikatuVRProcessName)]
     [BepInPlugin("keelhauled.titleshortcuts", "TitleShortcuts", Version)]
-    [BepInProcess("Koikatu")]
     class TitleShortcuts : BaseUnityPlugin
     {
         public const string Version = "1.1.1";
