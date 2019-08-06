@@ -1,8 +1,10 @@
-﻿using ParadoxNotion.Serialization;
+﻿using BepInEx.Logging;
+using ParadoxNotion.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Logger = BepInEx.Logger;
 
 namespace LockOnPluginKK
 {
@@ -22,17 +24,17 @@ namespace LockOnPluginKK
                 {
                     var json = File.ReadAllText(dataPath);
                     data = JSONSerializer.Deserialize<TargetData>(json);
-                    Console.WriteLine("Loading custom target data.");
+                    Logger.Log(LogLevel.Info, "Loading custom target data.");
                 }
                 catch(Exception)
                 {
-                    Console.WriteLine("Failed to deserialize custom target data. Loading default target data.");
+                    Logger.Log(LogLevel.Info, "Failed to deserialize custom target data. Loading default target data.");
                     LoadResourceData();
                 }
             }
             else
             {
-                Console.WriteLine("Loading default target data.");
+                Logger.Log(LogLevel.Info, "Loading default target data.");
                 LoadResourceData();
             }
         }

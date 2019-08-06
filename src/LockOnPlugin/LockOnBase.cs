@@ -1,7 +1,8 @@
-﻿using System;
+﻿using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Logger = BepInEx.Logger;
 
 namespace LockOnPluginKK
 {
@@ -60,7 +61,7 @@ namespace LockOnPluginKK
         {
             if(!lockOnTarget && lockedOn)
             {
-                Console.WriteLine("Reset LockOnPlugin");
+                Logger.Log(LogLevel.Info, "Reset LockOnPlugin");
                 ResetModState();
             }
 
@@ -345,7 +346,7 @@ namespace LockOnPluginKK
 
         protected virtual void CharaSwitch(bool scrollDown = true)
         {
-            Console.WriteLine("Character switching not implemented in this version");
+            Logger.Log(LogLevel.Info, "Character switching not implemented in this version");
         }
 
         protected virtual void ResetModState()

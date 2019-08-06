@@ -1,8 +1,9 @@
-﻿using IllusionUtility.GetUtility;
-using System;
+﻿using BepInEx.Logging;
+using IllusionUtility.GetUtility;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Logger = BepInEx.Logger;
 
 namespace LockOnPluginKK
 {
@@ -75,7 +76,7 @@ namespace LockOnPluginKK
                         Vector3 pos = Camera.main.WorldToScreenPoint(boneList[i].transform.position);
                         if(pos.z > 0f && GUI.Button(new Rect(pos.x - targetSize / 2f, Screen.height - pos.y - targetSize / 2f, targetSize, targetSize), "L"))
                         {
-                            Console.WriteLine(boneList[i].name);
+                            Logger.Log(LogLevel.Info, boneList[i].name);
                         }
                     }
                 }
@@ -90,7 +91,7 @@ namespace LockOnPluginKK
                             //CameraTargetPos += targetOffsetSize;
                             //targetOffsetSize = new Vector3();
                             //LockOnBase.instance.LockOn(targets[i]);
-                            Console.WriteLine(targets[i].name);
+                            Logger.Log(LogLevel.Info, targets[i].name);
                         }
                     }
                 }
@@ -197,12 +198,12 @@ namespace LockOnPluginKK
                     }
                     else
                     {
-                        Console.WriteLine($"CustomTarget '{data.target}' failed");
+                        Logger.Log(LogLevel.Info, $"CustomTarget '{data.target}' failed");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"CustomTarget '{data.target}' skipped because it is not in use");
+                    Logger.Log(LogLevel.Info, $"CustomTarget '{data.target}' skipped because it is not in use");
                 }
             }
 
