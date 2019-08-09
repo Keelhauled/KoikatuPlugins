@@ -29,6 +29,10 @@ Now when loading a character or starting the studio these settings will be the d
 Exposes the game's graphics settings and some other values for editing.  
 The default settings on the plugin may be too heavy for some computers so remember to tweak them.
 
+#### HideAllUI
+Hide the UI with the same, adjustable hotkey in maker, studio and freeh.  
+This plugin combines the old ui hiding plugins into one and requires you to delete them.
+
 #### LockOnPlugin
 Pretty much the same as the [HS version](https://keelhauled.github.io/LockOnPlugin/).  
 The only changes are that now data files are contained inside the dll and that individual FK/IK points can be locked on to.  
