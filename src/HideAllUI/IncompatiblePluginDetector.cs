@@ -1,6 +1,5 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Logger = BepInEx.Logger;
@@ -21,7 +20,7 @@ namespace HideAllUI
 
             if(badPlugins.Length > 0)
             {
-                Logger.Log(LogLevel.Error | LogLevel.Message, $"ERROR - The following plugins are incompatible with {nameof(HideAllUI)}:" +
+                Logger.Log(LogLevel.Error | LogLevel.Message, $"ERROR - The following plugins are incompatible with {nameof(HideAllUI)}: " +
                     $"{string.Join(", ", badPlugins)}. Remove them and restart the game.");
 
                 return true;
