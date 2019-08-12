@@ -19,7 +19,6 @@ namespace ShadowRealm
     {
         public const string Version = "1.0.0";
         HarmonyInstance harmony;
-        static int mapLayer = 1 << 9;
         static int charaLayer = 1 << 10;
 
         void Start()
