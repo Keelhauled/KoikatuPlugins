@@ -18,13 +18,40 @@ namespace ItemLayerEdit
         public const string GUID = "keelhauled.itemlayeredit";
         public const string Version = "1.0.0";
 
-        GameObject panel;
-        List<GameObject> targetObjects = new List<GameObject>();
-        Slider layerSliderComponent;
-        TMP_InputField layerInputComponent;
+        static HarmonyInstance harmony;
+        static GameObject panel;
+        static List<GameObject> targetObjects = new List<GameObject>();
+        static Slider layerSliderComponent;
+        static TMP_InputField layerInputComponent;
+        static bool pluginSetup = false;
 
         void Awake()
         {
+            harmony = HarmonyInstance.Create($"{GUID}.harmony");
+            harmony.PatchAll(GetType());
+            //SetupStudio();
+        }
+
+#if DEBUG
+        void OnDestroy()
+        {
+            harmony.UnpatchAll(GetType());
+            DestroyImmediate(panel);
+            Studio.Studio.Instance.treeNodeCtrl.onSelect -= OnTreeNodeCtrlChange;
+            Studio.Studio.Instance.treeNodeCtrl.onSelectMultiple -= OnSelectMultiple;
+            Studio.Studio.Instance.treeNodeCtrl.onDeselect -= OnTreeNodeCtrlChange;
+            Studio.Studio.Instance.treeNodeCtrl.onDelete -= OnTreeNodeCtrlChange;
+        }
+#endif
+
+        [HarmonyPostfix, HarmonyPatch(typeof(ManipulatePanelCtrl), "OnSelect")]
+        public static void Entrypoint() => SetupStudio();
+
+        static void SetupStudio()
+        {
+            if(pluginSetup)
+                return;
+
             Studio.Studio.Instance.treeNodeCtrl.onSelect += OnTreeNodeCtrlChange;
             Studio.Studio.Instance.treeNodeCtrl.onSelectMultiple += OnSelectMultiple;
             Studio.Studio.Instance.treeNodeCtrl.onDeselect += OnTreeNodeCtrlChange;
@@ -81,24 +108,15 @@ namespace ItemLayerEdit
                 }
             });
 
-            //try { throw new ArithmeticException(); } catch{}
+            pluginSetup = true;
+
+            try { throw new ArithmeticException(); } catch { }
         }
 
-#if DEBUG
-        void OnDestroy()
-        {
-            DestroyImmediate(panel);
-            Studio.Studio.Instance.treeNodeCtrl.onSelect -= OnTreeNodeCtrlChange;
-            Studio.Studio.Instance.treeNodeCtrl.onSelectMultiple -= OnSelectMultiple;
-            Studio.Studio.Instance.treeNodeCtrl.onDeselect -= OnTreeNodeCtrlChange;
-            Studio.Studio.Instance.treeNodeCtrl.onDelete -= OnTreeNodeCtrlChange;
-        }
-#endif
+        static void OnTreeNodeCtrlChange(TreeNodeObject treeNodeObject) => UpdateTargetObjects();
+        static void OnSelectMultiple() => UpdateTargetObjects();
 
-        void OnTreeNodeCtrlChange(TreeNodeObject treeNodeObject) => UpdateTargetObjects();
-        void OnSelectMultiple() => UpdateTargetObjects();
-
-        void UpdateTargetObjects()
+        static void UpdateTargetObjects()
         {
             targetObjects.Clear();
 
@@ -118,7 +136,7 @@ namespace ItemLayerEdit
             }
         }
 
-        void SetTargetObjectLayer(int layer)
+        static void SetTargetObjectLayer(int layer)
         {
             foreach(var targetObject in targetObjects)
             {
