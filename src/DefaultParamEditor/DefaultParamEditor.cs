@@ -32,7 +32,7 @@ namespace DefaultParamEditor
                 if(value == ResetValue)
                 {
                     Logger.Log(LogLevel.Debug, "Resetting charaParam");
-                    charaParam.Reset();
+                    CharacterParam.Reset();
                     SaveToFile();
                 }
             }
@@ -52,21 +52,22 @@ namespace DefaultParamEditor
                 if(value == ResetValue)
                 {
                     Logger.Log(LogLevel.Debug, "Resetting sceneParam");
-                    sceneParam.Reset();
+                    SceneParam.Reset();
                     SaveToFile();
                 }
             }
         }
 
+        public SavedKeyboardShortcut LoadDefaultsKey { get; set; }
+
         private readonly string savePath;
         private ParamData data = new ParamData();
-        private CharacterParam charaParam;
-        private SceneParam sceneParam;
 
         public DefaultParamEditor()
         {
             var ass = Assembly.GetExecutingAssembly();
             savePath = Path.Combine(Path.GetDirectoryName(ass.Location), "DefaultParamEditorData.json");
+            LoadDefaultsKey = new SavedKeyboardShortcut("LoadDefaultsKey", this, new KeyboardShortcut(KeyCode.O));
         }
 
         private void SaveToFile()
@@ -79,7 +80,7 @@ namespace DefaultParamEditor
         {
             if(GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
             {
-                charaParam.Save();
+                CharacterParam.Save();
                 SaveToFile();
             }
         }
@@ -88,7 +89,7 @@ namespace DefaultParamEditor
         {
             if(GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
             {
-                sceneParam.Save();
+                SceneParam.Save();
                 SaveToFile();
             }
         }
@@ -108,9 +109,15 @@ namespace DefaultParamEditor
                     data = new ParamData();
                 }
             }
+            
+            CharacterParam.Init(data.charaParamData);
+            SceneParam.Init(data.sceneParamData);
+        }
 
-            charaParam = new CharacterParam(data.charaParamData);
-            sceneParam = new SceneParam(data.sceneParamData);
+        void Update()
+        {
+            if(LoadDefaultsKey.IsDown())
+                SceneParam.LoadDefaults();
         }
     }
 }

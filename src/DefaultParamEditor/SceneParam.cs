@@ -2,7 +2,7 @@
 using Harmony;
 using Studio;
 using UnityEngine;
-using static BepInEx.Logger;
+using Logger = BepInEx.Logger;
 
 namespace DefaultParamEditor
 {
@@ -10,14 +10,14 @@ namespace DefaultParamEditor
     {
         private static ParamData.SceneData _sceneData;
 
-        public SceneParam(ParamData.SceneData data)
+        public static void Init(ParamData.SceneData data)
         {
             _sceneData = data;
             var harmony = HarmonyInstance.Create("keelhauled.defaultparameditor.sceneparam.harmony");
             harmony.PatchAll(typeof(SceneParam));
         }
 
-        public void Save()
+        public static void Save()
         {
             var sceneInfo = Studio.Studio.Instance.sceneInfo;
             var systemButtonCtrl = Studio.Studio.Instance.systemButtonCtrl;
@@ -54,11 +54,11 @@ namespace DefaultParamEditor
                 _sceneData.fov = Studio.Studio.Instance.cameraCtrl.fieldOfView;
 
                 _sceneData.saved = true;
-                Log(LogLevel.Message, "Default scene settings saved");
+                Logger.Log(LogLevel.Message, "Default scene settings saved");
             }
         }
 
-        public void Reset()
+        public static void Reset()
         {
             _sceneData.saved = false;
         }
@@ -68,37 +68,51 @@ namespace DefaultParamEditor
         {
             if(_sceneData.saved)
             {
-                Log(LogLevel.Debug, "Loading defaults for a new scene");
-
-                __instance.aceNo = _sceneData.aceNo;
-                __instance.aceBlend = _sceneData.aceBlend;
-                __instance.enableAOE = _sceneData.enableAOE;
-                __instance.aoeColor = _sceneData.aoeColor;
-                __instance.aoeRadius = _sceneData.aoeRadius;
-                __instance.enableBloom = _sceneData.enableBloom;
-                __instance.bloomIntensity = _sceneData.bloomIntensity;
-                __instance.bloomThreshold = _sceneData.bloomThreshold;
-                __instance.bloomBlur = _sceneData.bloomBlur;
-                __instance.enableDepth = _sceneData.enableDepth;
-                __instance.depthFocalSize = _sceneData.depthFocalSize;
-                __instance.depthAperture = _sceneData.depthAperture;
-                __instance.enableVignette = _sceneData.enableVignette;
-                __instance.enableFog = _sceneData.enableFog;
-                __instance.fogColor = _sceneData.fogColor;
-                __instance.fogHeight = _sceneData.fogHeight;
-                __instance.fogStartDistance = _sceneData.fogStartDistance;
-                __instance.enableSunShafts = _sceneData.enableSunShafts;
-                __instance.sunThresholdColor = _sceneData.sunThresholdColor;
-                __instance.sunColor = _sceneData.sunColor;
-                __instance.enableShadow = _sceneData.enableShadow;
-                __instance.rampG = _sceneData.rampG;
-                __instance.ambientShadowG = _sceneData.ambientShadowG;
-                __instance.lineWidthG = _sceneData.lineWidthG;
-                __instance.lineColorG = _sceneData.lineColorG;
-                __instance.ambientShadow = _sceneData.ambientShadow;
+                Logger.Log(LogLevel.Debug, "Loading defaults for a new scene");
+                SetSceneInfoValues(__instance);
                 Camera.main.nearClipPlane = _sceneData.cameraNearClip;
                 Studio.Studio.Instance.cameraCtrl.fieldOfView = _sceneData.fov;
             }
+        }
+
+        public static void LoadDefaults()
+        {
+            if(_sceneData.saved && Studio.Studio.Instance)
+            {
+                Logger.Log(LogLevel.Info, "Loading defaults");
+                SetSceneInfoValues(Studio.Studio.Instance.sceneInfo);
+                Studio.Studio.Instance.systemButtonCtrl.UpdateInfo();
+            }
+        }
+
+        public static void SetSceneInfoValues(SceneInfo sceneInfo)
+        {
+            sceneInfo.aceNo = _sceneData.aceNo;
+            sceneInfo.aceBlend = _sceneData.aceBlend;
+            sceneInfo.enableAOE = _sceneData.enableAOE;
+            sceneInfo.aoeColor = _sceneData.aoeColor;
+            sceneInfo.aoeRadius = _sceneData.aoeRadius;
+            sceneInfo.enableBloom = _sceneData.enableBloom;
+            sceneInfo.bloomIntensity = _sceneData.bloomIntensity;
+            sceneInfo.bloomThreshold = _sceneData.bloomThreshold;
+            sceneInfo.bloomBlur = _sceneData.bloomBlur;
+            sceneInfo.enableDepth = _sceneData.enableDepth;
+            sceneInfo.depthFocalSize = _sceneData.depthFocalSize;
+            sceneInfo.depthAperture = _sceneData.depthAperture;
+            sceneInfo.enableVignette = _sceneData.enableVignette;
+            sceneInfo.enableFog = _sceneData.enableFog;
+            sceneInfo.fogColor = _sceneData.fogColor;
+            sceneInfo.fogHeight = _sceneData.fogHeight;
+            sceneInfo.fogStartDistance = _sceneData.fogStartDistance;
+            sceneInfo.enableSunShafts = _sceneData.enableSunShafts;
+            sceneInfo.sunThresholdColor = _sceneData.sunThresholdColor;
+            sceneInfo.sunColor = _sceneData.sunColor;
+            sceneInfo.enableShadow = _sceneData.enableShadow;
+            sceneInfo.rampG = _sceneData.rampG;
+            sceneInfo.ambientShadowG = _sceneData.ambientShadowG;
+            sceneInfo.lineWidthG = _sceneData.lineWidthG;
+            sceneInfo.lineColorG = _sceneData.lineColorG;
+            sceneInfo.ambientShadow = _sceneData.ambientShadow;
         }
     }
 }

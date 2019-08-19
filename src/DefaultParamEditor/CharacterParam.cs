@@ -2,7 +2,7 @@
 using Harmony;
 using Studio;
 using System.Linq;
-using static BepInEx.Logger;
+using Logger = BepInEx.Logger;
 
 namespace DefaultParamEditor
 {
@@ -10,14 +10,14 @@ namespace DefaultParamEditor
     {
         private static ParamData.CharaData _charaData;
 
-        public CharacterParam(ParamData.CharaData data)
+        public static void Init(ParamData.CharaData data)
         {
             _charaData = data;
             var harmony = HarmonyInstance.Create("keelhauled.defaultparameditor.characterparam.harmony");
             harmony.PatchAll(typeof(CharacterParam));
         }
 
-        public void Save()
+        public static void Save()
         {
             var selected = GuideObjectManager.Instance.selectObjectKey
                 .Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
@@ -41,15 +41,15 @@ namespace DefaultParamEditor
                 _charaData.mouthPtn = status.mouthPtn;
 
                 _charaData.saved = true;
-                Log(LogLevel.Message, "Default character settings saved");
+                Logger.Log(LogLevel.Message, "Default character settings saved");
             }
             else
             {
-                Log(LogLevel.Message, "Warning: Select character to save default settings");
+                Logger.Log(LogLevel.Message, "Warning: Select character to save default settings");
             }
         }
 
-        public void Reset()
+        public static void Reset()
         {
             _charaData.saved = false;
         }
@@ -59,7 +59,7 @@ namespace DefaultParamEditor
         {
             if(_charaData.saved)
             {
-                Log(LogLevel.Debug, "Loading defaults for a new character");
+                Logger.Log(LogLevel.Debug, "Loading defaults for a new character");
 
                 __instance.clothesState = _charaData.clothesState.ToArray();
                 __instance.shoesType = _charaData.shoesType;
