@@ -59,6 +59,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HarmonyExtensionsV1", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemLayerEdit", "src\ItemLayerEdit\ItemLayerEdit.csproj", "{36426C1C-FCA2-4E21-AD35-9B93965CEE96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightManager", "src\LightManager\LightManager.csproj", "{BF5529D8-D359-4D01-A58C-B44C82CF158A}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SharedPluginCode\SharedPluginCode.projitems*{0358b313-1f18-4a67-bc4e-2c8e7f0b1bc0}*SharedItemsImports = 4
@@ -79,6 +81,9 @@ Global
 		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
 		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{b2512c34-a879-4c2a-8cc9-778a05a1fa72}*SharedItemsImports = 13
+		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
+		src\SharedPluginCode\SharedPluginCode.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
+		src\UILib\UILib.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
 		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{e6630c43-a642-4485-b69e-792414ce85ca}*SharedItemsImports = 4
@@ -162,6 +167,10 @@ Global
 		{36426C1C-FCA2-4E21-AD35-9B93965CEE96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36426C1C-FCA2-4E21-AD35-9B93965CEE96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36426C1C-FCA2-4E21-AD35-9B93965CEE96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF5529D8-D359-4D01-A58C-B44C82CF158A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF5529D8-D359-4D01-A58C-B44C82CF158A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF5529D8-D359-4D01-A58C-B44C82CF158A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF5529D8-D359-4D01-A58C-B44C82CF158A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
