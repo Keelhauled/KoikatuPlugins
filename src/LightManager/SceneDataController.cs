@@ -17,27 +17,20 @@ namespace LightManager
             if(data == null)
                 return;
 
-            if(operation == SceneOperationKind.Load)
+            if(operation == SceneOperationKind.Load && data.data.TryGetValue(SavedLights, out var savedLightData))
             {
-                if(data.data.TryGetValue(SavedLights, out var savedLightData))
+                var savedLights = MessagePackSerializer.Deserialize<List<SavedLight>>((byte[])savedLightData);
+                foreach(var savedLight in savedLights)
                 {
-                    var savedLights = MessagePackSerializer.Deserialize<List<SavedLight>>((byte[])savedLightData);
-
-                    foreach(var savedLight in savedLights)
+                    if(loadedItems.TryGetValue(savedLight.LightId, out var lightInfo) && lightInfo is OCILight ocilight)
                     {
-                        if(loadedItems.TryGetValue(savedLight.LightId, out var lightInfo))
+                        if(loadedItems.TryGetValue(savedLight.TargetId, out var targetInfo) && targetInfo is OCIChar targetChara)
                         {
-                            if(lightInfo is OCILight ocilight)
-                            {
-                                if(loadedItems.TryGetValue(savedLight.TargetId, out var targetInfo))
-                                {
-                                    var tracker = ocilight.light.gameObject.AddComponent<TrackTransform>();
-                                    tracker.target = (targetInfo as OCIChar).charInfo.objBody.transform;
-                                    tracker.targetKey = targetInfo.objectInfo.dicKey;
-                                    tracker.rotationSpeed = savedLight.RotationSpeed;
-                                    tracker.targetName = savedLight.TargetName;
-                                }
-                            }
+                            var tracker = ocilight.light.gameObject.AddComponent<TrackTransform>();
+                            tracker.target = targetChara.charInfo.objBody.transform;
+                            tracker.targetKey = targetInfo.objectInfo.dicKey;
+                            tracker.rotationSpeed = savedLight.RotationSpeed;
+                            tracker.targetName = savedLight.TargetName;
                         }
                     }
                 }
@@ -56,15 +49,13 @@ namespace LightManager
                     var tracker = light.light.gameObject.GetComponent<TrackTransform>();
                     if(tracker && studio.dicObjectCtrl.TryGetValue(tracker.targetKey, out ObjectCtrlInfo info))
                     {
-                        var saveData = new SavedLight
+                        savedLights.Add(new SavedLight
                         {
                             LightId = objectCtrlInfo.objectInfo.dicKey,
                             TargetId = tracker.targetKey,
                             RotationSpeed = tracker.rotationSpeed,
                             TargetName = tracker.targetName
-                        };
-
-                        savedLights.Add(saveData);
+                        });
                     }
                 }
             }

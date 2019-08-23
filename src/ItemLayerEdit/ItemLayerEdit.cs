@@ -3,8 +3,8 @@ using Harmony;
 using KKAPI.Studio.SaveLoad;
 using SharedPluginCode;
 using Studio;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UILib;
 using UnityEngine;
@@ -97,6 +97,24 @@ namespace ItemLayerEdit
             layerDefButtonObject.transform.SetRect(0.86f, 0.15f, 0.97f, 0.85f);
             var layerDefButtonComponent = layerDefButtonObject.GetComponent<Button>();
 
+            layerDefButtonComponent.onClick.AddListener(() =>
+            {
+                foreach(var targetObject in targetObjects)
+                {
+                    var data = targetObject.GetComponent<LayerDataContainer>();
+                    if(data && targetObject.layer != data.DefaultLayer)
+                    {
+                        targetObject.layer = data.DefaultLayer;
+                        foreach(Transform child in targetObject.transform)
+                            child.gameObject.layer = data.DefaultLayer;
+                    }
+                }
+
+                var defaultLayer = targetObjects.First().layer;
+                layerInputComponent.text = defaultLayer.ToString();
+                layerSliderComponent.value = defaultLayer;
+            });
+
             layerSliderComponent.onValueChanged.AddListener((x) =>
             {
                 SetTargetObjectLayer((int)x);
@@ -112,6 +130,7 @@ namespace ItemLayerEdit
                 }
             });
 
+            UpdateTargetObjects();
             pluginSetup = true;
         }
 
@@ -152,8 +171,6 @@ namespace ItemLayerEdit
                 targetObject.layer = layer;
                 foreach(Transform child in targetObject.transform)
                     child.gameObject.layer = layer;
-
-                Console.WriteLine($"{targetObject.name} is now in the {LayerMask.LayerToName(layer)} ({layer}) layer.");
             }
         }
     }
