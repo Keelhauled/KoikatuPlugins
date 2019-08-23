@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using Harmony;
+using KKAPI.Studio.SaveLoad;
 using SharedPluginCode;
 using Studio;
 using System;
@@ -29,7 +30,7 @@ namespace ItemLayerEdit
         {
             harmony = HarmonyInstance.Create($"{GUID}.harmony");
             harmony.PatchAll(GetType());
-            //SetupStudio();
+            StudioSaveLoadApi.RegisterExtraBehaviour<SceneDataController>(GUID);
         }
 
 #if DEBUG
@@ -37,10 +38,12 @@ namespace ItemLayerEdit
         {
             harmony.UnpatchAll(GetType());
             DestroyImmediate(panel);
-            Studio.Studio.Instance.treeNodeCtrl.onSelect -= OnTreeNodeCtrlChange;
-            Studio.Studio.Instance.treeNodeCtrl.onSelectMultiple -= OnSelectMultiple;
-            Studio.Studio.Instance.treeNodeCtrl.onDeselect -= OnTreeNodeCtrlChange;
-            Studio.Studio.Instance.treeNodeCtrl.onDelete -= OnTreeNodeCtrlChange;
+
+            var studio = Studio.Studio.Instance;
+            studio.treeNodeCtrl.onSelect -= OnTreeNodeCtrlChange;
+            studio.treeNodeCtrl.onSelectMultiple -= OnSelectMultiple;
+            studio.treeNodeCtrl.onDeselect -= OnTreeNodeCtrlChange;
+            studio.treeNodeCtrl.onDelete -= OnTreeNodeCtrlChange;
         }
 #endif
 
@@ -52,10 +55,11 @@ namespace ItemLayerEdit
             if(pluginSetup)
                 return;
 
-            Studio.Studio.Instance.treeNodeCtrl.onSelect += OnTreeNodeCtrlChange;
-            Studio.Studio.Instance.treeNodeCtrl.onSelectMultiple += OnSelectMultiple;
-            Studio.Studio.Instance.treeNodeCtrl.onDeselect += OnTreeNodeCtrlChange;
-            Studio.Studio.Instance.treeNodeCtrl.onDelete += OnTreeNodeCtrlChange;
+            var studio = Studio.Studio.Instance;
+            studio.treeNodeCtrl.onSelect += OnTreeNodeCtrlChange;
+            studio.treeNodeCtrl.onSelectMultiple += OnSelectMultiple;
+            studio.treeNodeCtrl.onDeselect += OnTreeNodeCtrlChange;
+            studio.treeNodeCtrl.onDelete += OnTreeNodeCtrlChange;
 
             var panelTemplate = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Color1 Background");
             var textTemplate = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/TextMeshPro Width");
@@ -109,8 +113,6 @@ namespace ItemLayerEdit
             });
 
             pluginSetup = true;
-
-            try { throw new ArithmeticException(); } catch { }
         }
 
         static void OnTreeNodeCtrlChange(TreeNodeObject treeNodeObject) => UpdateTargetObjects();
@@ -124,8 +126,8 @@ namespace ItemLayerEdit
             {
                 if(objectCtrl.kind == 1)
                 {
-                    var targetObject = Traverse.Create(objectCtrl).Field("objectItem").GetValue<GameObject>();
-                    targetObjects.Add(targetObject);
+                    var target = Traverse.Create(objectCtrl).Field("objectItem").GetValue<GameObject>();
+                    targetObjects.Add(target);
                 }
             }
 
@@ -140,6 +142,13 @@ namespace ItemLayerEdit
         {
             foreach(var targetObject in targetObjects)
             {
+                var data = targetObject.GetComponent<LayerDataContainer>();
+                if(!data)
+                {
+                    data = targetObject.AddComponent<LayerDataContainer>();
+                    data.DefaultLayer = targetObject.layer;
+                }
+
                 targetObject.layer = layer;
                 foreach(Transform child in targetObject.transform)
                     child.gameObject.layer = layer;

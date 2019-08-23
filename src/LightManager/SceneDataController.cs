@@ -17,7 +17,7 @@ namespace LightManager
             if(data == null)
                 return;
 
-            if(operation == SceneOperationKind.Load || operation == SceneOperationKind.Import)
+            if(operation == SceneOperationKind.Load)
             {
                 if(data.data.TryGetValue(SavedLights, out var savedLightData))
                 {
