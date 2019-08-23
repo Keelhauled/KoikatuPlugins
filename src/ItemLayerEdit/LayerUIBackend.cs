@@ -1,0 +1,81 @@
+﻿using TMPro;
+using UILib;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace ItemLayerEdit
+{
+    public static class LayerUIBackend
+    {
+        const string panelTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Color1 Background";
+        const string textTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/TextMeshPro Width";
+        const string sliderTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/Slider Width";
+        const string inputTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/TextMeshPro - InputField Width";
+        const string defButtonTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/Button Width Default";
+
+        public static GameObject CreatePanel()
+        {
+            var panelTemplate = GameObject.Find(panelTemplatePath);
+
+            var panel = GameObject.Instantiate(panelTemplate, panelTemplate.transform.parent, true);
+            panel.name = "ItemLayerEdit";
+            panel.transform.localScale = Vector3.one;
+            foreach(Transform child in panel.transform)
+                GameObject.Destroy(child.gameObject);
+
+            return panel;
+        }
+
+        public static TextMeshProUGUI CreateText(Transform parent)
+        {
+            var textTemplate = GameObject.Find(textTemplatePath);
+
+            var layerTextObject = GameObject.Instantiate(textTemplate, parent, true);
+            layerTextObject.name = "LayerTextObject";
+            layerTextObject.transform.SetRect(0.01f, 0.1f, 0.13f, 0.9f);
+            var layerTextComponent = layerTextObject.GetComponent<TextMeshProUGUI>();
+            layerTextComponent.text = "Layer";
+
+            return layerTextComponent;
+        }
+
+        public static Slider CreateSlider(Transform parent)
+        {
+            var sliderTemplate = GameObject.Find(sliderTemplatePath);
+
+            var layerSliderObject = GameObject.Instantiate(sliderTemplate, parent, true);
+            layerSliderObject.name = "LayerSliderObject";
+            layerSliderObject.transform.SetRect(0.15f, 0.35f, 0.71f, 0.65f);
+            var layerSliderComponent = layerSliderObject.GetComponent<Slider>();
+            layerSliderComponent.wholeNumbers = true;
+            layerSliderComponent.minValue = 0;
+            layerSliderComponent.maxValue = 30;
+
+            return layerSliderComponent;
+        }
+
+        public static TMP_InputField CreateInputfield(Transform parent)
+        {
+            var inputTemplate = GameObject.Find(inputTemplatePath);
+
+            var layerInputObject = GameObject.Instantiate(inputTemplate, parent, true);
+            layerInputObject.name = "LayerInputObject";
+            layerInputObject.transform.SetRect(0.73f, 0.15f, 0.84f, 0.85f);
+            var layerInputComponent = layerInputObject.GetComponent<TMP_InputField>();
+
+            return layerInputComponent;
+        }
+
+        public static Button CreateButton(Transform parent)
+        {
+            var defButtonTemplate = GameObject.Find(defButtonTemplatePath);
+
+            var layerDefButtonObject = GameObject.Instantiate(defButtonTemplate, parent, true);
+            layerDefButtonObject.name = "LayerDefButtonObject";
+            layerDefButtonObject.transform.SetRect(0.86f, 0.15f, 0.97f, 0.85f);
+            var layerDefButtonComponent = layerDefButtonObject.GetComponent<Button>();
+
+            return layerDefButtonComponent;
+        }
+    }
+}

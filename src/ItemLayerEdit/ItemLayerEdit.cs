@@ -6,7 +6,6 @@ using Studio;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using UILib;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +19,6 @@ namespace ItemLayerEdit
         public const string Version = "1.0.0";
 
         static HarmonyInstance harmony;
-        static GameObject panel;
         static List<GameObject> targetObjects = new List<GameObject>();
         static Slider layerSliderComponent;
         static TMP_InputField layerInputComponent;
@@ -61,54 +59,15 @@ namespace ItemLayerEdit
             studio.treeNodeCtrl.onDeselect += OnTreeNodeCtrlChange;
             studio.treeNodeCtrl.onDelete += OnTreeNodeCtrlChange;
 
-            var panelTemplate = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Color1 Background");
-            var textTemplate = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/TextMeshPro Width");
-            var sliderTemplate = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/Slider Width");
-            var inputTemplate = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/TextMeshPro - InputField Width");
-            var defButtonTemplate = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/Button Width Default");
-
-            panel = Instantiate(panelTemplate, panelTemplate.transform.parent, true);
-            panel.name = "ItemLayerEdit";
-            panel.transform.localScale = Vector3.one;
-            foreach(Transform child in panel.transform)
-                Destroy(child.gameObject);
-
-            var layerTextObject = Instantiate(textTemplate, panel.transform, true);
-            layerTextObject.name = "LayerTextObject";
-            layerTextObject.transform.SetRect(0.01f, 0.1f, 0.13f, 0.9f);
-            var layerTextComponent = layerTextObject.GetComponent<TextMeshProUGUI>();
-            layerTextComponent.text = "Layer";
-
-            var layerSliderObject = Instantiate(sliderTemplate, panel.transform, true);
-            layerSliderObject.name = "LayerSliderObject";
-            layerSliderObject.transform.SetRect(0.15f, 0.35f, 0.71f, 0.65f);
-            layerSliderComponent = layerSliderObject.GetComponent<Slider>();
-            layerSliderComponent.wholeNumbers = true;
-            layerSliderComponent.minValue = 0;
-            layerSliderComponent.maxValue = 30;
-
-            var layerInputObject = Instantiate(inputTemplate, panel.transform, true);
-            layerInputObject.name = "LayerInputObject";
-            layerInputObject.transform.SetRect(0.73f, 0.15f, 0.84f, 0.85f);
-            layerInputComponent = layerInputObject.GetComponent<TMP_InputField>();
-
-            var layerDefButtonObject = Instantiate(defButtonTemplate, panel.transform, true);
-            layerDefButtonObject.name = "LayerDefButtonObject";
-            layerDefButtonObject.transform.SetRect(0.86f, 0.15f, 0.97f, 0.85f);
-            var layerDefButtonComponent = layerDefButtonObject.GetComponent<Button>();
+            var panel = LayerUIBackend.CreatePanel();
+            LayerUIBackend.CreateText(panel.transform);
+            layerSliderComponent = LayerUIBackend.CreateSlider(panel.transform);
+            layerInputComponent = LayerUIBackend.CreateInputfield(panel.transform);
+            var layerDefButtonComponent = LayerUIBackend.CreateButton(panel.transform);
 
             layerDefButtonComponent.onClick.AddListener(() =>
             {
-                foreach(var targetObject in targetObjects)
-                {
-                    var data = targetObject.GetComponent<LayerDataContainer>();
-                    if(data && targetObject.layer != data.DefaultLayer)
-                    {
-                        targetObject.layer = data.DefaultLayer;
-                        foreach(Transform child in targetObject.transform)
-                            child.gameObject.layer = data.DefaultLayer;
-                    }
-                }
+                SetTargetObjectLayersDefault();
 
                 var defaultLayer = targetObjects.First().layer;
                 layerInputComponent.text = defaultLayer.ToString();
@@ -117,7 +76,7 @@ namespace ItemLayerEdit
 
             layerSliderComponent.onValueChanged.AddListener((x) =>
             {
-                SetTargetObjectLayer((int)x);
+                SetTargetObjectLayers((int)x);
                 layerInputComponent.text = x.ToString();
             });
 
@@ -125,7 +84,7 @@ namespace ItemLayerEdit
             {
                 if(int.TryParse(x, out int result))
                 {
-                    SetTargetObjectLayer(result);
+                    SetTargetObjectLayers(result);
                     layerSliderComponent.value = result;
                 }
             });
@@ -157,20 +116,27 @@ namespace ItemLayerEdit
             }
         }
 
-        static void SetTargetObjectLayer(int layer)
+        static void SetTargetObjectLayers(int layer)
         {
             foreach(var targetObject in targetObjects)
             {
-                var data = targetObject.GetComponent<LayerDataContainer>();
-                if(!data)
+                if(targetObject.AddComponentIfNotExist<LayerDataContainer>(out var data))
                 {
                     data = targetObject.AddComponent<LayerDataContainer>();
                     data.DefaultLayer = targetObject.layer;
                 }
 
-                targetObject.layer = layer;
-                foreach(Transform child in targetObject.transform)
-                    child.gameObject.layer = layer;
+                targetObject.SetLayers(layer);
+            }
+        }
+
+        static void SetTargetObjectLayersDefault()
+        {
+            foreach(var targetObject in targetObjects)
+            {
+                var data = targetObject.GetComponent<LayerDataContainer>();
+                if(data && targetObject.layer != data.DefaultLayer)
+                    targetObject.SetLayers(data.DefaultLayer);
             }
         }
     }

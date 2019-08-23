@@ -57,8 +57,10 @@
     <Compile Include="ItemLayerEdit.cs" />
     <Compile Include="LayerDataContainer.cs" />
     <Compile Include="LayerSaveData.cs" />
+    <Compile Include="LayerUIBackend.cs" />
     <Compile Include="SceneDataController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnityExtensions.cs" />
   </ItemGroup>
   <Import Project="..\SharedPluginCode\SharedPluginCode.projitems" Label="Shared" />
   <Import Project="..\UILib\UILib.projitems" Label="Shared" />
