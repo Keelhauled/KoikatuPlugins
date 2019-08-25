@@ -18,8 +18,12 @@ namespace ItemLayerEdit
             var panelTemplate = GameObject.Find(panelTemplatePath);
 
             var panel = GameObject.Instantiate(panelTemplate, panelTemplate.transform.parent, true);
+            panel.SetActive(true);
             panel.name = "ItemLayerEdit";
             panel.transform.localScale = Vector3.one;
+            var layoutElement = panel.GetComponent<LayoutElement>();
+            layoutElement.preferredHeight = 30f;
+            layoutElement.minHeight = 30f;
             foreach(Transform child in panel.transform)
                 GameObject.Destroy(child.gameObject);
 
@@ -60,7 +64,7 @@ namespace ItemLayerEdit
 
             var layerInputObject = GameObject.Instantiate(inputTemplate, parent, true);
             layerInputObject.name = "LayerInputObject";
-            layerInputObject.transform.SetRect(0.73f, 0.15f, 0.84f, 0.85f);
+            layerInputObject.transform.SetRect(0.72f, 0.15f, 0.84f, 0.85f);
             var layerInputComponent = layerInputObject.GetComponent<TMP_InputField>();
 
             return layerInputComponent;

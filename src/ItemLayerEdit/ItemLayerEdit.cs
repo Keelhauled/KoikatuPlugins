@@ -3,6 +3,7 @@ using Harmony;
 using KKAPI.Studio.SaveLoad;
 using SharedPluginCode;
 using Studio;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -20,6 +21,7 @@ namespace ItemLayerEdit
 
         static HarmonyInstance harmony;
         static List<GameObject> targetObjects = new List<GameObject>();
+        static GameObject panel;
         static Slider layerSliderComponent;
         static TMP_InputField layerInputComponent;
         static bool pluginSetup = false;
@@ -38,15 +40,30 @@ namespace ItemLayerEdit
             DestroyImmediate(panel);
 
             var studio = Studio.Studio.Instance;
-            studio.treeNodeCtrl.onSelect -= OnTreeNodeCtrlChange;
+            studio.treeNodeCtrl.onSelect -= OnSelect;
             studio.treeNodeCtrl.onSelectMultiple -= OnSelectMultiple;
-            studio.treeNodeCtrl.onDeselect -= OnTreeNodeCtrlChange;
-            studio.treeNodeCtrl.onDelete -= OnTreeNodeCtrlChange;
+            studio.treeNodeCtrl.onDeselect -= OnDeselect;
+            studio.treeNodeCtrl.onDelete -= OnDelete;
         }
 #endif
 
-        [HarmonyPostfix, HarmonyPatch(typeof(ManipulatePanelCtrl), "OnSelect")]
-        public static void Entrypoint() => SetupStudio();
+        [HarmonyPostfix, HarmonyPatch(typeof(ManipulatePanelCtrl), "SetActive")]
+        public static void ActivatePanel(ManipulatePanelCtrl __instance)
+        {
+            var traverse = Traverse.Create(__instance);
+            if(traverse.Field("kinds").GetValue<int[]>().Contains(1))
+            {
+                var rootPanel = traverse.Property("rootPanel").GetValue<IList>();
+                var rootObject = Traverse.Create(rootPanel[1]).Field("root").GetValue<GameObject>();
+                rootObject.SetActive(true);
+                SetupStudio();
+            }
+        }
+
+        static void OnSelect(TreeNodeObject node) => UpdateTargetObjects();
+        static void OnSelectMultiple() => UpdateTargetObjects();
+        static void OnDeselect(TreeNodeObject node) => UpdateTargetObjects();
+        static void OnDelete(TreeNodeObject node) => UpdateTargetObjects();
 
         static void SetupStudio()
         {
@@ -54,12 +71,12 @@ namespace ItemLayerEdit
                 return;
 
             var studio = Studio.Studio.Instance;
-            studio.treeNodeCtrl.onSelect += OnTreeNodeCtrlChange;
+            studio.treeNodeCtrl.onSelect += OnSelect;
             studio.treeNodeCtrl.onSelectMultiple += OnSelectMultiple;
-            studio.treeNodeCtrl.onDeselect += OnTreeNodeCtrlChange;
-            studio.treeNodeCtrl.onDelete += OnTreeNodeCtrlChange;
+            studio.treeNodeCtrl.onDeselect += OnDeselect;
+            studio.treeNodeCtrl.onDelete += OnDelete;
 
-            var panel = LayerUIBackend.CreatePanel();
+            panel = LayerUIBackend.CreatePanel();
             LayerUIBackend.CreateText(panel.transform);
             layerSliderComponent = LayerUIBackend.CreateSlider(panel.transform);
             layerInputComponent = LayerUIBackend.CreateInputfield(panel.transform);
@@ -93,20 +110,14 @@ namespace ItemLayerEdit
             pluginSetup = true;
         }
 
-        static void OnTreeNodeCtrlChange(TreeNodeObject treeNodeObject) => UpdateTargetObjects();
-        static void OnSelectMultiple() => UpdateTargetObjects();
-
         static void UpdateTargetObjects()
         {
             targetObjects.Clear();
 
             foreach(var objectCtrl in Studio.Studio.GetSelectObjectCtrl())
             {
-                if(objectCtrl.kind == 1)
-                {
-                    var target = Traverse.Create(objectCtrl).Field("objectItem").GetValue<GameObject>();
-                    targetObjects.Add(target);
-                }
+                if(objectCtrl is OCIItem item)
+                    targetObjects.Add(item.objectItem);
             }
 
             if(targetObjects.Count > 0)
@@ -121,10 +132,7 @@ namespace ItemLayerEdit
             foreach(var targetObject in targetObjects)
             {
                 if(targetObject.AddComponentIfNotExist<LayerDataContainer>(out var data))
-                {
-                    data = targetObject.AddComponent<LayerDataContainer>();
                     data.DefaultLayer = targetObject.layer;
-                }
 
                 targetObject.SetLayers(layer);
             }

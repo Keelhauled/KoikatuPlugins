@@ -66,6 +66,7 @@ Global
 		src\SharedPluginCode\SharedPluginCode.projitems*{0358b313-1f18-4a67-bc4e-2c8e7f0b1bc0}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{044c35db-98ca-4a9f-905d-93b61c8057a1}*SharedItemsImports = 13
 		src\SharedPluginCode\SharedPluginCode.projitems*{0afe4f09-70f9-4a3e-81dc-a173e0406eda}*SharedItemsImports = 4
+		src\UILib\UILib.projitems*{14b2da69-1dd3-482d-8d95-1722dbce46f3}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
 		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{36426c1c-fca2-4e21-ad35-9b93965cee96}*SharedItemsImports = 4
