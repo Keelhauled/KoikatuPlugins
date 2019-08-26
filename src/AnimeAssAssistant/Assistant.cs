@@ -1,16 +1,15 @@
 ﻿using BepInEx.Logging;
 using ChaCustom;
 using Harmony;
-using KKAPI.Maker;
 using KKAPI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using Logger = BepInEx.Logger;
-using UniRx;
 
 namespace AnimeAssAssistant
 {
@@ -18,42 +17,40 @@ namespace AnimeAssAssistant
     {
         string currentCharacter;
         List<string> loadedCharacters = new List<string>();
-        bool enableAAA = AssInit.sideBarToggle.Value;
+        TMP_Dropdown outfitDropDown;
 
         void Start()
         {
-            MakerAPI.AddSidebarControl(AssInit.sideBarToggle).ValueChanged.Subscribe(x => enableAAA = x);
+            outfitDropDown = Traverse.Create(Singleton<CustomControl>.Instance).Field("ddCoordinate").GetValue<TMP_Dropdown>();
         }
 
         void Update()
         {
-            if(enableAAA)
+            if(AssInit.EnableAAA)
             {
-                if(AssInit.HotkeyRandom.IsDown())
-                    LoadRandomChara();
-                else if(AssInit.HotkeyNext.IsDown())
+                if(AssInit.HotkeyNext.IsDown())
                     LoadNextChara();
                 else if(AssInit.HotkeyPrev.IsDown())
                     LoadPrevChara();
-                else if(AssInit.HotkeyRecycle.IsDown())
+                else if(AssInit.HotkeyKill.IsDown())
                     RecycleCurrentChara();
-                else if(AssInit.HotkeySecure.IsDown())
+                else if(AssInit.HotkeySave.IsDown())
                     SaveCurrentChara();
 
                 else if(AssInit.HotkeyOutfit1.IsDown())
-                    SetOutfit(0);
+                    outfitDropDown.value = 0;
                 else if(AssInit.HotkeyOutfit2.IsDown())
-                    SetOutfit(1);
+                    outfitDropDown.value = 1;
                 else if(AssInit.HotkeyOutfit3.IsDown())
-                    SetOutfit(2);
+                    outfitDropDown.value = 2;
                 else if(AssInit.HotkeyOutfit4.IsDown())
-                    SetOutfit(3);
+                    outfitDropDown.value = 3;
                 else if(AssInit.HotkeyOutfit5.IsDown())
-                    SetOutfit(4);
+                    outfitDropDown.value = 4;
                 else if(AssInit.HotkeyOutfit6.IsDown())
-                    SetOutfit(5);
+                    outfitDropDown.value = 5;
                 else if(AssInit.HotkeyOutfit7.IsDown())
-                    SetOutfit(6); 
+                    outfitDropDown.value = 6;
             }
         }
 
@@ -72,8 +69,9 @@ namespace AnimeAssAssistant
                 return;
             }
 
-            var random = UnityEngine.Random.Range(0, files.Length);
-            LoadChara(files[random]);
+            var path = files[UnityEngine.Random.Range(0, files.Length - 1)];
+            loadedCharacters.Add(path);
+            LoadChara(path);
         }
 
         void RecycleCurrentChara()
@@ -82,8 +80,8 @@ namespace AnimeAssAssistant
             {
                 RecycleBinUtil.MoveToRecycleBin(currentCharacter);
                 loadedCharacters.Remove(currentCharacter);
-                Logger.Log(LogLevel.Message, $"[AnimeAssAssistant] {currentCharacter} moved to the recycling bin.");
-                LoadRandomChara(); 
+                Logger.Log(LogLevel.Info, $"[AnimeAssAssistant] {currentCharacter} moved to the recycle bin.");
+                LoadRandomChara();
             }
         }
 
@@ -91,19 +89,26 @@ namespace AnimeAssAssistant
         {
             if(string.IsNullOrEmpty(AssInit.SaveFolder.Value))
             {
-                Logger.Log(LogLevel.Info, "[AnimeAssAssistant] Save folder has not been set, please set it in ConfigManager");
+                Logger.Log(LogLevel.Message, "[AnimeAssAssistant] Save folder has not been set, please set it in ConfigManager");
                 return;
             }
 
-            var dest = Path.Combine(AssInit.SaveFolder.Value, Path.GetFileName(currentCharacter));
-            File.Move(currentCharacter, dest);
-            LoadRandomChara();
+            if(!string.IsNullOrEmpty(currentCharacter))
+            {
+                var dest = Path.Combine(AssInit.SaveFolder.Value, Path.GetFileName(currentCharacter));
+                File.Move(currentCharacter, dest);
+                loadedCharacters.Remove(currentCharacter);
+                Logger.Log(LogLevel.Info, $"[AnimeAssAssistant] {currentCharacter} moved to save folder.");
+                LoadRandomChara();
+            }
         }
 
         void LoadNextChara()
         {
             var index = loadedCharacters.IndexOf(currentCharacter);
-            if(index != -1 && index != loadedCharacters.Count - 1)
+            if(index == -1 || index == loadedCharacters.Count - 1)
+                LoadRandomChara();
+            else
                 LoadChara(loadedCharacters[index + 1]);
         }
 
@@ -114,14 +119,10 @@ namespace AnimeAssAssistant
                 LoadChara(loadedCharacters[index - 1]);
         }
 
-        void SetOutfit(int index)
-        {
-            var dropdown = Traverse.Create(Singleton<CustomControl>.Instance).Field("ddCoordinate").GetValue<TMP_Dropdown>();
-            dropdown.value = index;
-        }
-
         void LoadChara(string path)
         {
+            currentCharacter = path;
+
             var cfw = GameObject.FindObjectsOfType<CustomFileWindow>().FirstOrDefault(x => x.fwType == CustomFileWindow.FileWindowType.CharaLoad);
             var loadFace = true;
             var loadBody = true;
@@ -154,8 +155,6 @@ namespace AnimeAssAssistant
             chaCtrl.ChangeCoordinateType(true);
             chaCtrl.Reload(!loadCoord, !loadFace && !loadCoord, !loadHair, !loadBody);
             CustomBase.Instance.updateCustomUI = true;
-
-            loadedCharacters.Add(currentCharacter = path);
         }
     }
 }

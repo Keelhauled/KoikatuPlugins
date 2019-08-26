@@ -1,13 +1,14 @@
 ﻿using BepInEx;
-using KKAPI;
 using KKAPI.Maker;
 using KKAPI.Maker.UI.Sidebar;
 using SharedPluginCode;
+using UniRx;
 using UnityEngine;
 
 namespace AnimeAssAssistant
 {
-    [BepInDependency(KoikatuAPI.GUID)]
+    [BepInDependency(KKAPI.KoikatuAPI.GUID)]
+    [BepInDependency(ConfigurationManager.ConfigurationManager.GUID)]
     [BepInProcess(KoikatuConstants.KoikatuMainProcessName)]
     [BepInProcess(KoikatuConstants.KoikatuVRProcessName)]
     [BepInProcess(KoikatuConstants.KoikatuSteamProcessName)]
@@ -26,24 +27,22 @@ namespace AnimeAssAssistant
         public static SavedKeyboardShortcut HotkeyOutfit6 { get; set; }
         public static SavedKeyboardShortcut HotkeyOutfit7 { get; set; }
 
-        public static SavedKeyboardShortcut HotkeyRecycle { get; set; }
+        public static SavedKeyboardShortcut HotkeyKill { get; set; }
         public static SavedKeyboardShortcut HotkeyNext { get; set; }
         public static SavedKeyboardShortcut HotkeyPrev { get; set; }
-        public static SavedKeyboardShortcut HotkeyRandom { get; set; }
-        public static SavedKeyboardShortcut HotkeySecure { get; set; }
+        public static SavedKeyboardShortcut HotkeySave { get; set; }
 
         public static ConfigWrapper<string> SearchFolder { get; set; }
         public static ConfigWrapper<string> SaveFolder { get; set; }
-        
-        public static SidebarToggle sideBarToggle;
+
+        public static bool EnableAAA;
 
         AssInit()
         {
-            HotkeyRandom = new SavedKeyboardShortcut(nameof(HotkeyRandom), this, new KeyboardShortcut(KeyCode.DownArrow));
             HotkeyNext = new SavedKeyboardShortcut(nameof(HotkeyNext), this, new KeyboardShortcut(KeyCode.RightArrow));
             HotkeyPrev = new SavedKeyboardShortcut(nameof(HotkeyPrev), this, new KeyboardShortcut(KeyCode.LeftArrow));
-            HotkeyRecycle = new SavedKeyboardShortcut(nameof(HotkeyRecycle), this, new KeyboardShortcut(KeyCode.Delete));
-            HotkeySecure = new SavedKeyboardShortcut(nameof(HotkeySecure), this, new KeyboardShortcut(KeyCode.UpArrow));
+            HotkeyKill = new SavedKeyboardShortcut(nameof(HotkeyKill), this, new KeyboardShortcut(KeyCode.DownArrow));
+            HotkeySave = new SavedKeyboardShortcut(nameof(HotkeySave), this, new KeyboardShortcut(KeyCode.UpArrow));
 
             HotkeyOutfit1 = new SavedKeyboardShortcut(nameof(HotkeyOutfit1), this, new KeyboardShortcut(KeyCode.Alpha1));
             HotkeyOutfit2 = new SavedKeyboardShortcut(nameof(HotkeyOutfit2), this, new KeyboardShortcut(KeyCode.Alpha2));
@@ -59,8 +58,15 @@ namespace AnimeAssAssistant
 
         void Start()
         {
-            sideBarToggle = new SidebarToggle("Enable AAA", false, this);
-            MakerAPI.RegisterCustomSubCategories += (sender, e) => gameObject.GetOrAddComponent<Assistant>();
+            var sideBarToggle = new SidebarToggle("Anime Ass Assistant", false, this);
+
+            MakerAPI.RegisterCustomSubCategories += (sender, e) =>
+            {
+                EnableAAA = false;
+                e.AddSidebarControl(sideBarToggle).ValueChanged.Subscribe(x => EnableAAA = x);
+                gameObject.GetOrAddComponent<Assistant>();
+            };
+
             MakerAPI.MakerExiting += (sender, e) => Destroy(gameObject.GetComponent<Assistant>());
         }
     }
