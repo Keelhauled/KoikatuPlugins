@@ -58,11 +58,12 @@ namespace AnimeAssAssistant
 
         void Start()
         {
+            var sideBarToggle = new SidebarToggle("Anime Ass Assistant", false, this);
+
             MakerAPI.RegisterCustomSubCategories += (sender, e) =>
             {
                 EnableAAA = false;
-                var toggle = new SidebarToggle("Anime Ass Assistant", false, this);
-                e.AddSidebarControl(toggle).ValueChanged.Subscribe(x => EnableAAA = x);
+                e.AddSidebarControl(sideBarToggle).ValueChanged.Subscribe(x => EnableAAA = x);
                 gameObject.GetOrAddComponent<Assistant>();
             };
 
