@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemLayerEdit", "src\ItemLa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightManager", "src\LightManager\LightManager.csproj", "{BF5529D8-D359-4D01-A58C-B44C82CF158A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeAssAssistant", "src\AnimeAssAssistant\AnimeAssAssistant.csproj", "{7BCB2A53-6172-496B-A915-DAEC90857B8E}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SharedPluginCode\SharedPluginCode.projitems*{0358b313-1f18-4a67-bc4e-2c8e7f0b1bc0}*SharedItemsImports = 4
@@ -78,6 +80,8 @@ Global
 		src\SharedPluginCode\SharedPluginCode.projitems*{5a84955a-e776-4e75-aa19-7d764a8c0554}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{5c371d71-e8a8-43ed-b913-fb7f9835ae3d}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{7609fc13-64e8-4402-a3af-383b4a7779bd}*SharedItemsImports = 4
+		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{7bcb2a53-6172-496b-a915-daec90857b8e}*SharedItemsImports = 4
+		src\SharedPluginCode\SharedPluginCode.projitems*{7bcb2a53-6172-496b-a915-daec90857b8e}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{921651cf-6a2c-4064-91fe-af949cfa9a16}*SharedItemsImports = 4
 		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
@@ -172,6 +176,10 @@ Global
 		{BF5529D8-D359-4D01-A58C-B44C82CF158A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF5529D8-D359-4D01-A58C-B44C82CF158A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF5529D8-D359-4D01-A58C-B44C82CF158A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BCB2A53-6172-496B-A915-DAEC90857B8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BCB2A53-6172-496B-A915-DAEC90857B8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BCB2A53-6172-496B-A915-DAEC90857B8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BCB2A53-6172-496B-A915-DAEC90857B8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
