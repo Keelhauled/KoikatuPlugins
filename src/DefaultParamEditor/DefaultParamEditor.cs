@@ -8,13 +8,17 @@ using System.Reflection;
 using UnityEngine;
 using Logger = BepInEx.Logger;
 using SharedPluginCode;
+using UnityEngine.UI;
+using Harmony;
+using UnityEngine.Events;
 
 namespace DefaultParamEditor
 {
     [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
-    [BepInPlugin("keelhauled.defaultparameditor", "DefaultParamEditor", Version)]
+    [BepInPlugin(GUID, "DefaultParamEditor", Version)]
     internal class DefaultParamEditor : BaseUnityPlugin
     {
+        public const string GUID = "keelhauled.defaultparameditor";
         public const string Version = "1.1.0";
         private const string ResetValue = "Reset";
 
@@ -57,20 +61,17 @@ namespace DefaultParamEditor
                 }
             }
         }
-
-        public SavedKeyboardShortcut LoadDefaultsKey { get; set; }
-
-        private readonly string savePath;
-        private ParamData data = new ParamData();
+        
+        private static string savePath;
+        private static ParamData data = new ParamData();
 
         public DefaultParamEditor()
         {
             var ass = Assembly.GetExecutingAssembly();
             savePath = Path.Combine(Path.GetDirectoryName(ass.Location), "DefaultParamEditorData.json");
-            LoadDefaultsKey = new SavedKeyboardShortcut("LoadDefaultsKey", this, new KeyboardShortcut(KeyCode.O));
         }
 
-        private void SaveToFile()
+        private static void SaveToFile()
         {
             var json = JSONSerializer.Serialize(data.GetType(), data, true);
             File.WriteAllText(savePath, json);
@@ -96,6 +97,9 @@ namespace DefaultParamEditor
 
         protected void Awake()
         {
+            var harmony = HarmonyInstance.Create($"{GUID}.harmony");
+            harmony.PatchAll(GetType());
+
             if(File.Exists(savePath))
             {
                 try
@@ -114,10 +118,63 @@ namespace DefaultParamEditor
             SceneParam.Init(data.sceneParamData);
         }
 
-        void Update()
+        [HarmonyPostfix, HarmonyPatch(typeof(Studio.Studio), nameof(Studio.Studio.Init))]
+        public static void CreateUI()
         {
-            if(LoadDefaultsKey.IsDown())
-                SceneParam.LoadDefaults();
+            var mainlist = SetupList("StudioScene/Canvas Main Menu/04_System");
+            CreateMainButton("Load scene param", mainlist, SceneParam.LoadDefaults);
+            CreateMainButton("Save scene param", mainlist, () =>
+            {
+                SceneParam.Save();
+                SaveToFile();
+            });
+
+            var charalist = SetupList("StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/00_Root");
+            CreateCharaButton("Save chara param", charalist, () =>
+            {
+                CharacterParam.Save();
+                SaveToFile();
+            });
+        }
+
+        public static ScrollRect SetupList(string goPath)
+        {
+            var listObject = GameObject.Find(goPath);
+            var scrollRect = listObject.GetComponent<ScrollRect>();
+            scrollRect.content.gameObject.GetOrAddComponent<VerticalLayoutGroup>();
+            scrollRect.content.gameObject.GetOrAddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            scrollRect.scrollSensitivity = 25;
+
+            foreach(Transform item in scrollRect.content.transform)
+            {
+                var layoutElement = item.gameObject.GetOrAddComponent<LayoutElement>();
+                layoutElement.preferredHeight = 40;
+            }
+
+            return scrollRect;
+        }
+
+        public static Button CreateMainButton(string name, ScrollRect scrollRect, UnityAction onClickEvent)
+        {
+            return CreateButton(name, scrollRect, onClickEvent, "StudioScene/Canvas Main Menu/04_System/Viewport/Content/End");
+        }
+
+        public static Button CreateCharaButton(string name, ScrollRect scrollRect, UnityAction onClickEvent)
+        {
+            return CreateButton(name, scrollRect, onClickEvent, "StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/00_Root/Viewport/Content/State");
+        }
+
+        public static Button CreateButton(string name, ScrollRect scrollRect, UnityAction onClickEvent, string goPath)
+        {
+            var template = GameObject.Find(goPath);
+            var newObject = GameObject.Instantiate(template, scrollRect.content.transform);
+            newObject.name = "NewObject";
+            var textComponent = newObject.GetComponentInChildren<Text>();
+            textComponent.text = name;
+            var buttonComponent = newObject.GetComponent<Button>();
+            buttonComponent.onClick.ActuallyRemoveAllListeners();
+            buttonComponent.onClick.AddListener(onClickEvent);
+            return buttonComponent;
         }
     }
 }
