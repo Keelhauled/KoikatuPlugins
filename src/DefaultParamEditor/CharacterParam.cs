@@ -2,6 +2,7 @@
 using Harmony;
 using Studio;
 using System.Linq;
+using UnityEngine;
 using Logger = BepInEx.Logger;
 
 namespace DefaultParamEditor
@@ -13,7 +14,7 @@ namespace DefaultParamEditor
         public static void Init(ParamData.CharaData data)
         {
             _charaData = data;
-            var harmony = HarmonyInstance.Create("keelhauled.defaultparameditor.characterparam.harmony");
+            var harmony = HarmonyInstance.Create($"{DefaultParamEditor.GUID}.characterparam.harmony");
             harmony.PatchAll(typeof(CharacterParam));
         }
 
@@ -60,20 +61,52 @@ namespace DefaultParamEditor
             if(_charaData.saved)
             {
                 Logger.Log(LogLevel.Debug, "Loading defaults for a new character");
+                SetCharaValues(__instance);
+            }
+        }
 
-                __instance.clothesState = _charaData.clothesState.ToArray();
-                __instance.shoesType = _charaData.shoesType;
-                __instance.hohoAkaRate = _charaData.hohoAkaRate;
-                __instance.nipStandRate = _charaData.nipStandRate;
-                __instance.tearsLv = _charaData.tearsLv;
+        public static void LoadDefaults()
+        {
+            if(_charaData.saved)
+            {
+                var selected = GuideObjectManager.Instance.selectObjectKey
+                    .Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
 
-                __instance.eyesLookPtn = _charaData.eyesLookPtn;
-                __instance.neckLookPtn = _charaData.neckLookPtn;
-                __instance.eyebrowPtn = _charaData.eyebrowPtn;
-                __instance.eyesPtn = _charaData.eyesPtn;
-                __instance.eyesOpenMax = _charaData.eyesOpenMax;
-                __instance.eyesBlink = _charaData.eyesBlink;
-                __instance.mouthPtn = _charaData.mouthPtn;
+                if(selected.Count > 0)
+                {
+                    foreach(var chara in selected)
+                        SetCharaValues(chara.charFileStatus);
+
+                    UpdateStateInfo();
+                    Logger.Log(LogLevel.Info, "Loading chara defaults");
+                }
+            }
+        }
+
+        static void SetCharaValues(ChaFileStatus chaFileStatus)
+        {
+            chaFileStatus.clothesState = _charaData.clothesState.ToArray();
+            chaFileStatus.shoesType = _charaData.shoesType;
+            chaFileStatus.hohoAkaRate = _charaData.hohoAkaRate;
+            chaFileStatus.nipStandRate = _charaData.nipStandRate;
+            chaFileStatus.tearsLv = _charaData.tearsLv;
+
+            chaFileStatus.eyesLookPtn = _charaData.eyesLookPtn;
+            chaFileStatus.neckLookPtn = _charaData.neckLookPtn;
+            chaFileStatus.eyebrowPtn = _charaData.eyebrowPtn;
+            chaFileStatus.eyesPtn = _charaData.eyesPtn;
+            chaFileStatus.eyesOpenMax = _charaData.eyesOpenMax;
+            chaFileStatus.eyesBlink = _charaData.eyesBlink;
+            chaFileStatus.mouthPtn = _charaData.mouthPtn;
+        }
+
+        static void UpdateStateInfo()
+        {
+            var mpCharCtrl = GameObject.FindObjectOfType<MPCharCtrl>();
+            if(mpCharCtrl)
+            {
+                int select = Traverse.Create(mpCharCtrl).Field("select").GetValue<int>();
+                if(select == 0) mpCharCtrl.OnClickRoot(0);
             }
         }
     }

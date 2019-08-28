@@ -13,7 +13,7 @@ namespace DefaultParamEditor
         public static void Init(ParamData.SceneData data)
         {
             _sceneData = data;
-            var harmony = HarmonyInstance.Create("keelhauled.defaultparameditor.sceneparam.harmony");
+            var harmony = HarmonyInstance.Create($"{DefaultParamEditor.GUID}.sceneparam.harmony");
             harmony.PatchAll(typeof(SceneParam));
         }
 
@@ -79,7 +79,7 @@ namespace DefaultParamEditor
         {
             if(_sceneData.saved && Studio.Studio.Instance)
             {
-                Logger.Log(LogLevel.Info, "Loading defaults");
+                Logger.Log(LogLevel.Info, "Loading scene defaults");
                 SetSceneInfoValues(Studio.Studio.Instance.sceneInfo);
                 Studio.Studio.Instance.systemButtonCtrl.UpdateInfo();
             }

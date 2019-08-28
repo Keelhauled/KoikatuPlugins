@@ -130,6 +130,7 @@ namespace DefaultParamEditor
             });
 
             var charalist = SetupList("StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/00_Root");
+            //CreateCharaButton("Load chara param", charalist, CharacterParam.LoadDefaults);
             CreateCharaButton("Save chara param", charalist, () =>
             {
                 CharacterParam.Save();
