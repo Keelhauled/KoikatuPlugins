@@ -59,6 +59,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeAssAssistant", "src\An
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Archive", "Archive", "{989129A6-1B32-43BB-A4B0-A727389E7882}"
 	ProjectSection(SolutionItems) = preProject
+		archive\AssetHelper.cs = archive\AssetHelper.cs
 		archive\SelfieCam.cs = archive\SelfieCam.cs
 		archive\ShadowRealm.cs = archive\ShadowRealm.cs
 	EndProjectSection
