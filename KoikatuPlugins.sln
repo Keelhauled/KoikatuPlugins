@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlockHPositions", "src\Unl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioAddonLite", "src\StudioAddonLite\StudioAddonLite.csproj", "{921651CF-6A2C-4064-91FE-AF949CFA9A16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfieCam", "src\SelfieCam\SelfieCam.csproj", "{0AFE4F09-70F9-4A3E-81DC-A173E0406EDA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitleShortcuts", "src\TitleShortcuts\TitleShortcuts.csproj", "{7609FC13-64E8-4402-A3AF-383B4A7779BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultParamEditor", "src\DefaultParamEditor\DefaultParamEditor.csproj", "{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}"
@@ -31,8 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFi
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderMagic", "src\ShaderMagic\ShaderMagic.csproj", "{07AC9BF2-6784-42D1-B0D3-E1B6B4F8C2BE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharaStateX", "src\CharaStateX\CharaStateX.csproj", "{5A84955A-E776-4E75-AA19-7D764A8C0554}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UILib", "src\UILib\UILib.shproj", "{044C35DB-98CA-4A9F-905D-93B61C8057A1}"
@@ -40,8 +36,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlendShaper", "src\BlendShaper\BlendShaper.csproj", "{158B291D-305B-4AFE-BCE7-6A3A229AB7AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PosePng", "src\PosePng\PosePng.csproj", "{E128A6BD-7BF1-4CF6-A4E5-6EDB86D6E963}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShadowRealm", "src\ShadowRealm\ShadowRealm.csproj", "{FA9F9469-F548-4374-87FF-D373AE748D33}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioUX", "src\StudioUX\StudioUX.csproj", "{E6630C43-A642-4485-B69E-792414CE85CA}"
 EndProject
@@ -63,11 +57,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightManager", "src\LightMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeAssAssistant", "src\AnimeAssAssistant\AnimeAssAssistant.csproj", "{7BCB2A53-6172-496B-A915-DAEC90857B8E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Archive", "Archive", "{989129A6-1B32-43BB-A4B0-A727389E7882}"
+	ProjectSection(SolutionItems) = preProject
+		archive\SelfieCam.cs = archive\SelfieCam.cs
+		archive\ShadowRealm.cs = archive\ShadowRealm.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SharedPluginCode\SharedPluginCode.projitems*{0358b313-1f18-4a67-bc4e-2c8e7f0b1bc0}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{044c35db-98ca-4a9f-905d-93b61c8057a1}*SharedItemsImports = 13
-		src\SharedPluginCode\SharedPluginCode.projitems*{0afe4f09-70f9-4a3e-81dc-a173e0406eda}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{14b2da69-1dd3-482d-8d95-1722dbce46f3}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
@@ -93,8 +92,6 @@ Global
 		src\SharedPluginCode\SharedPluginCode.projitems*{e6630c43-a642-4485-b69e-792414ce85ca}*SharedItemsImports = 4
 		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
-		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{fa9f9469-f548-4374-87ff-d373ae748d33}*SharedItemsImports = 4
-		src\SharedPluginCode\SharedPluginCode.projitems*{fa9f9469-f548-4374-87ff-d373ae748d33}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{fbaeed86-37c9-4932-99f6-926fc82047ad}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,9 +116,6 @@ Global
 		{921651CF-6A2C-4064-91FE-AF949CFA9A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{921651CF-6A2C-4064-91FE-AF949CFA9A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{921651CF-6A2C-4064-91FE-AF949CFA9A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0AFE4F09-70F9-4A3E-81DC-A173E0406EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0AFE4F09-70F9-4A3E-81DC-A173E0406EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0AFE4F09-70F9-4A3E-81DC-A173E0406EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7609FC13-64E8-4402-A3AF-383B4A7779BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7609FC13-64E8-4402-A3AF-383B4A7779BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7609FC13-64E8-4402-A3AF-383B4A7779BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -138,9 +132,6 @@ Global
 		{A6DBDBD8-29BC-47FD-B392-0E0460012C1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6DBDBD8-29BC-47FD-B392-0E0460012C1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6DBDBD8-29BC-47FD-B392-0E0460012C1D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{07AC9BF2-6784-42D1-B0D3-E1B6B4F8C2BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07AC9BF2-6784-42D1-B0D3-E1B6B4F8C2BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07AC9BF2-6784-42D1-B0D3-E1B6B4F8C2BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A84955A-E776-4E75-AA19-7D764A8C0554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5A84955A-E776-4E75-AA19-7D764A8C0554}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A84955A-E776-4E75-AA19-7D764A8C0554}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -151,9 +142,6 @@ Global
 		{E128A6BD-7BF1-4CF6-A4E5-6EDB86D6E963}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E128A6BD-7BF1-4CF6-A4E5-6EDB86D6E963}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E128A6BD-7BF1-4CF6-A4E5-6EDB86D6E963}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA9F9469-F548-4374-87FF-D373AE748D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA9F9469-F548-4374-87FF-D373AE748D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA9F9469-F548-4374-87FF-D373AE748D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6630C43-A642-4485-B69E-792414CE85CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6630C43-A642-4485-B69E-792414CE85CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6630C43-A642-4485-B69E-792414CE85CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
