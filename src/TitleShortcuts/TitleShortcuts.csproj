@@ -12,23 +12,23 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)src\BuildSettings.props" Condition="Exists('$(SolutionDir)src\BuildSettings.props')" />
+  <Import Project="$(SolutionDir)src\BuildSettings.props" />
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>$(SolutionDir)libs\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>$(SolutionDir)libs\BepInEx.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\bepinex5\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ConfigurationManager">
-      <HintPath>$(SolutionDir)libs\ConfigurationManager.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\ConfigurationManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine">
-      <HintPath>$(SolutionDir)libs\UnityEngine.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

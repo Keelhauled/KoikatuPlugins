@@ -13,31 +13,31 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)src\BuildSettings.props" Condition="Exists('$(SolutionDir)src\BuildSettings.props')" />
+  <Import Project="$(SolutionDir)src\BuildSettings.props" />
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>$(SolutionDir)libs\bepinex5\0Harmony.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\bepinex5\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>$(SolutionDir)libs\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>$(SolutionDir)libs\bepinex5\BepInEx.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\bepinex5\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx.Harmony">
-      <HintPath>$(SolutionDir)libs\bepinex5\BepInEx.Harmony.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\bepinex5\BepInEx.Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine">
-      <HintPath>$(SolutionDir)libs\UnityEngine.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>$(SolutionDir)libs\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

@@ -13,43 +13,43 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)src\BuildSettings.props" Condition="Exists('$(SolutionDir)src\BuildSettings.props')" />
+  <Import Project="$(SolutionDir)src\BuildSettings.props" />
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\libs\0Harmony.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\bepinex5\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\libs\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\libs\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\..\libs\BepInEx.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\bepinex5\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ConfigurationManager">
-      <HintPath>..\..\libs\ConfigurationManager.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\ConfigurationManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KKAPI">
-      <HintPath>..\..\libs\KKAPI.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\plugin\KKAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="TextMeshPro-1.0.55.56.0b12">
-      <HintPath>..\..\libs\TextMeshPro-1.0.55.56.0b12.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\TextMeshPro-1.0.55.56.0b12.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\libs\UnityEngine.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\libs\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
