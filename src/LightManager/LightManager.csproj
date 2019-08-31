@@ -31,8 +31,12 @@
       <HintPath>$(SolutionDir)lib\bepinex5\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="BepInEx.Harmony">
+      <HintPath>..\..\lib\bepinex5\BepInEx.Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="ExtensibleSaveFormat">
-      <HintPath>$(SolutionDir)lib\kk\ExtensibleSaveFormat.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\plugin\ExtensibleSaveFormat.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KKAPI">
@@ -58,6 +62,6 @@
   </ItemGroup>
   <Import Project="..\SharedPluginCode\SharedPluginCode.projitems" Label="Shared" />
   <Import Project="..\UILib\UILib.projitems" Label="Shared" />
-  <Import Project="..\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems" Label="Shared" />
+  <Import Project="..\HarmonyExtensions\HarmonyExtensions.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

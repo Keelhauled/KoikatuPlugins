@@ -1,6 +1,8 @@
 ﻿using BepInEx;
-using Harmony;
-using System.ComponentModel;
+using BepInEx.Configuration;
+using BepInEx.Harmony;
+using BepInEx.Logging;
+using HarmonyLib;
 using System.IO;
 using UnityEngine;
 
@@ -11,28 +13,29 @@ namespace MakerBridge
     {
         public const string GUID = "keelhauled.makerbridge";
         public const string Version = "1.0.1";
+        internal static new ManualLogSource Logger;
 
-        public static string MakerCardPath;
-        public static string OtherCardPath;
-        static GameObject bepinex;
+        internal static string MakerCardPath;
+        internal static string OtherCardPath;
+        private static GameObject bepinex;
 
-        [DisplayName("Send character")]
-        public static SavedKeyboardShortcut SendChara { get; set; }
+        internal static ConfigWrapper<KeyboardShortcut> SendChara { get; set; }
 
-        MakerBridge()
+        private MakerBridge()
         {
-            SendChara = new SavedKeyboardShortcut("SendChara", this, new KeyboardShortcut(KeyCode.B));
+            Logger = base.Logger;
+            SendChara = Config.GetSetting("Keyboard Shortcuts", "SendCharacter", new KeyboardShortcut(KeyCode.B));
         }
 
-        void Awake()
+        private void Awake()
         {
             var tempPath = Path.GetTempPath();
             MakerCardPath = Path.Combine(tempPath, "makerbridge1.png");
             OtherCardPath = Path.Combine(tempPath, "makerbridge2.png");
 
             bepinex = gameObject;
-            var harmony = HarmonyInstance.Create("keelhauled.makerbridge.harmony");
-            harmony.PatchAll(typeof(MakerBridge));
+            var harmony = new Harmony("keelhauled.makerbridge.harmony");
+            HarmonyWrapper.PatchAll(GetType(), harmony);
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "Start")]

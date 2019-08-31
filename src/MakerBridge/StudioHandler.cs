@@ -1,5 +1,5 @@
 ﻿using BepInEx.Logging;
-using Harmony;
+using HarmonyLib;
 using Studio;
 using System;
 using System.Collections.Generic;
@@ -8,13 +8,12 @@ using System.Linq;
 using System.Threading;
 using UniRx;
 using UnityEngine;
-using Logger = BepInEx.Logger;
 
 namespace MakerBridge
 {
-    class StudioHandler : MonoBehaviour
+    internal class StudioHandler : MonoBehaviour
     {
-        void Start()
+        private void Start()
         {
             var watcher = new FileSystemWatcher
             {
@@ -27,7 +26,7 @@ namespace MakerBridge
             watcher.EnableRaisingEvents = true;
         }
 
-        void FileChanged(object sender, FileSystemEventArgs e)
+        private void FileChanged(object sender, FileSystemEventArgs e)
         {
             bool fileIsBusy = true;
             while(fileIsBusy)
@@ -47,13 +46,13 @@ namespace MakerBridge
             MainThreadDispatcher.Post(LoadCharas, null);
         }
 
-        void Update()
+        private void Update()
         {
-            if(MakerBridge.SendChara.IsDown())
+            if(MakerBridge.SendChara.Value.IsDown())
                 SaveChara();
         }
 
-        void SaveChara()
+        private void SaveChara()
         {
             var characters = GetSelectedCharacters();
             if(characters.Count > 0)
@@ -71,16 +70,16 @@ namespace MakerBridge
             }
             else
             {
-                Logger.Log(LogLevel.Message, "Select a character to send to maker");
+                MakerBridge.Logger.Log(LogLevel.Message, "Select a character to send to maker");
             }
         }
 
-        void LoadCharas(object x)
+        private void LoadCharas(object x)
         {
             var characters = GetSelectedCharacters();
             if(characters.Count > 0)
             {
-                Logger.Log(LogLevel.Message, "Character received");
+                MakerBridge.Logger.Log(LogLevel.Message, "Character received");
 
                 foreach(var chara in characters)
                     chara.ChangeChara(MakerBridge.MakerCardPath);
@@ -89,16 +88,16 @@ namespace MakerBridge
             }
             else
             {
-                Logger.Log(LogLevel.Message, "Select a character before replacing it");
+                MakerBridge.Logger.Log(LogLevel.Message, "Select a character before replacing it");
             }
         }
 
-        List<OCIChar> GetSelectedCharacters()
+        private List<OCIChar> GetSelectedCharacters()
         {
             return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
         }
 
-        void UpdateStateInfo()
+        private void UpdateStateInfo()
         {
             var mpCharCtrl = FindObjectOfType<MPCharCtrl>();
             if(mpCharCtrl)

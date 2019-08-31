@@ -1,10 +1,8 @@
-﻿using System;
+﻿using BepInEx;
+using BepInEx.Configuration;
+using BepInEx.Harmony;
+using HarmonyLib;
 using System.Collections.Generic;
-using System.Linq;
-using BepInEx;
-using Harmony;
-using BepInEx.Logging;
-using Logger = BepInEx.Logger;
 using UnityEngine;
 
 namespace RealPov
@@ -15,29 +13,31 @@ namespace RealPov
         public const string GUID = "keelhauled.realpov";
         public const string Version = "1.0.0";
 
-        public static ConfigWrapper<float> ViewOffset { get; set; }
-        public static ConfigWrapper<float> DefaultFov { get; set; }
-        public static ConfigWrapper<float> MouseSens { get; set; }
-        public static SavedKeyboardShortcut PovHotkey { get; set; }
+        private const string SECTION_GENERAL = "General";
+        private const string SECTION_HOTKEYS = "Keyboard Shortcuts";
 
-        HarmonyInstance harmony;
-        static List<Vector3> rotation = new List<Vector3> { new Vector3(), new Vector3() };
-        static ChaControl currentChara;
-        static bool povEnabled = false;
-        static float currentFov;
+        private static ConfigWrapper<float> ViewOffset { get; set; }
+        private static ConfigWrapper<float> DefaultFov { get; set; }
+        private static ConfigWrapper<float> MouseSens { get; set; }
+        private static ConfigWrapper<KeyboardShortcut> PovHotkey { get; set; }
 
-        static float backupFov;
-        static Vector3 backupPos;
+        private Harmony harmony;
+        private static List<Vector3> rotation = new List<Vector3> { new Vector3(), new Vector3() };
+        private static ChaControl currentChara;
+        private static bool povEnabled = false;
+        private static float currentFov;
+        private static float backupFov;
+        private static Vector3 backupPos;
 
-        void Awake()
+        private void Awake()
         {
-            ViewOffset = new ConfigWrapper<float>("ViewOffset", this, 0.03f);
-            DefaultFov = new ConfigWrapper<float>("DefaultFov", this, 70f);
-            MouseSens = new ConfigWrapper<float>("MouseSens", this, 1f);
-            PovHotkey = new SavedKeyboardShortcut("PovHotkey", this, new KeyboardShortcut(KeyCode.Backspace));
+            ViewOffset = Config.GetSetting(SECTION_GENERAL, "ViewOffset", 0.03f);
+            DefaultFov = Config.GetSetting(SECTION_GENERAL, "DefaultFov", 70f);
+            MouseSens = Config.GetSetting(SECTION_GENERAL, "MouseSens", 1f);
+            PovHotkey = Config.GetSetting(SECTION_HOTKEYS, "PovHotkey", new KeyboardShortcut(KeyCode.Backspace));
 
-            harmony = HarmonyInstance.Create("keelhauled.realpov.harmony");
-            harmony.PatchAll(GetType());
+            harmony = new Harmony("keelhauled.realpov.harmony");
+            HarmonyWrapper.PatchAll(GetType(), harmony);
 
             currentChara = FindObjectOfType<ChaControl>();
             currentFov = DefaultFov.Value;
@@ -46,9 +46,9 @@ namespace RealPov
                 item.neckBone.rotation = new Quaternion();
         }
 
-        void Update()
+        private void Update()
         {
-            if(PovHotkey.IsDown())
+            if(PovHotkey.Value.IsDown())
                 TogglePov();
 
             if(povEnabled)
@@ -69,13 +69,13 @@ namespace RealPov
         }
 
 #if DEBUG
-        void OnDestroy()
+        private void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
         }
 #endif
 
-        void TogglePov()
+        private void TogglePov()
         {
             if(povEnabled)
             {
@@ -91,36 +91,39 @@ namespace RealPov
             }
         }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(NeckLookControllerVer2), "LateUpdate")]
-        public static bool ApplyRotation(NeckLookControllerVer2 __instance)
+        private class Hooks
         {
-            if(povEnabled)
+            [HarmonyPrefix, HarmonyPatch(typeof(NeckLookControllerVer2), "LateUpdate")]
+            public static bool ApplyRotation(NeckLookControllerVer2 __instance)
             {
-                if(__instance.neckLookScript && currentChara.neckLookCtrl == __instance)
+                if(povEnabled)
                 {
-                    __instance.neckLookScript.aBones[0].neckBone.rotation = Quaternion.identity;
-                    __instance.neckLookScript.aBones[1].neckBone.rotation = Quaternion.identity;
+                    if(__instance.neckLookScript && currentChara.neckLookCtrl == __instance)
+                    {
+                        __instance.neckLookScript.aBones[0].neckBone.rotation = Quaternion.identity;
+                        __instance.neckLookScript.aBones[1].neckBone.rotation = Quaternion.identity;
 
-                    //__instance.neckLookScript.aBones[0].neckBone.Rotate(rotation[0]);
-                    __instance.neckLookScript.aBones[1].neckBone.Rotate(rotation[1]);
+                        //__instance.neckLookScript.aBones[0].neckBone.Rotate(rotation[0]);
+                        __instance.neckLookScript.aBones[1].neckBone.Rotate(rotation[1]);
+                    }
+
+                    var eyeObjs = currentChara.eyeLookCtrl.eyeLookScript.eyeObjs;
+                    Camera.main.transform.position = Vector3.Lerp(eyeObjs[0].eyeTransform.position, eyeObjs[1].eyeTransform.position, 0.5f);
+                    Camera.main.transform.rotation = currentChara.objHeadBone.transform.rotation;
+                    Camera.main.transform.Translate(Vector3.forward * ViewOffset.Value);
+                    Camera.main.fieldOfView = currentFov;
+
+                    return false;
                 }
 
-                var eyeObjs = currentChara.eyeLookCtrl.eyeLookScript.eyeObjs;
-                Camera.main.transform.position = Vector3.Lerp(eyeObjs[0].eyeTransform.position, eyeObjs[1].eyeTransform.position, 0.5f);
-                Camera.main.transform.rotation = currentChara.objHeadBone.transform.rotation;
-                Camera.main.transform.Translate(Vector3.forward * ViewOffset.Value);
-                Camera.main.fieldOfView = currentFov;
-
-                return false; 
+                return true;
             }
 
-            return true;
-        }
-
-        [HarmonyPrefix, HarmonyPatch(typeof(CameraControl_Ver2), "LateUpdate")]
-        public static bool StopNormalCameraData(CameraControl_Ver2 __instance)
-        {
-            return !povEnabled;
+            [HarmonyPrefix, HarmonyPatch(typeof(CameraControl_Ver2), "LateUpdate")]
+            public static bool StopNormalCameraData(CameraControl_Ver2 __instance)
+            {
+                return !povEnabled;
+            }
         }
     }
 }

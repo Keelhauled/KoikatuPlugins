@@ -1,17 +1,18 @@
-﻿using BepInEx.Logging;
+﻿#pragma warning disable 649 // disable never assigned warning
+
+using BepInEx.Logging;
 using ParadoxNotion.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Logger = BepInEx.Logger;
 
 namespace LockOnPluginKK
 {
-    public class TargetData
+    internal class TargetData
     {
-        public static TargetData data;
-        const string dataFileName = "LockOnPluginData.json";
+        internal static TargetData data;
+        private const string dataFileName = "LockOnPluginData.json";
 
         public static void LoadData()
         {
@@ -24,22 +25,22 @@ namespace LockOnPluginKK
                 {
                     var json = File.ReadAllText(dataPath);
                     data = JSONSerializer.Deserialize<TargetData>(json);
-                    Logger.Log(LogLevel.Info, "Loading custom target data.");
+                    LockOnPlugin.Logger.Log(LogLevel.Info, "Loading custom target data.");
                 }
                 catch(Exception)
                 {
-                    Logger.Log(LogLevel.Info, "Failed to deserialize custom target data. Loading default target data.");
+                    LockOnPlugin.Logger.Log(LogLevel.Info, "Failed to deserialize custom target data. Loading default target data.");
                     LoadResourceData();
                 }
             }
             else
             {
-                Logger.Log(LogLevel.Info, "Loading default target data.");
+                LockOnPlugin.Logger.Log(LogLevel.Info, "Loading default target data.");
                 LoadResourceData();
             }
         }
 
-        static void LoadResourceData()
+        private static void LoadResourceData()
         {
             string resourceName = $"{nameof(LockOnPluginKK)}.{dataFileName}";
             using(var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))

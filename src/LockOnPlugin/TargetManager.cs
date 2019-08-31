@@ -3,22 +3,21 @@ using IllusionUtility.GetUtility;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Logger = BepInEx.Logger;
 
 namespace LockOnPluginKK
 {
-    class CameraTargetManager : MonoBehaviour
+    internal class CameraTargetManager : MonoBehaviour
     {
-        const string MOVEMENTPOINT_NAME = "MovementPoint";
-        const string CENTERPOINT_NAME = "CenterPoint";
+        private const string MOVEMENTPOINT_NAME = "MovementPoint";
+        private const string CENTERPOINT_NAME = "CenterPoint";
 
-        float targetSize = 25f;
-        bool showLockOnTargets = false;
-        ChaInfo chara;
+        private float targetSize = 25f;
+        private bool showLockOnTargets = false;
+        private ChaInfo chara;
 
-        List<GameObject> quickTargets = new List<GameObject>();
-        List<CustomTarget> customTargets = new List<CustomTarget>();
-        CenterPoint centerPoint;
+        private List<GameObject> quickTargets = new List<GameObject>();
+        private List<CustomTarget> customTargets = new List<CustomTarget>();
+        private CenterPoint centerPoint;
 
         public static CameraTargetManager GetTargetManager(ChaInfo chara)
         {
@@ -58,12 +57,12 @@ namespace LockOnPluginKK
             return quickTargets;
         }
 
-        void Update()
+        private void Update()
         {
             UpdateCustomTargetTransforms();
         }
 
-        void OnGUI()
+        private void OnGUI()
         {
             if(showLockOnTargets)
             {
@@ -76,7 +75,7 @@ namespace LockOnPluginKK
                         Vector3 pos = Camera.main.WorldToScreenPoint(boneList[i].transform.position);
                         if(pos.z > 0f && GUI.Button(new Rect(pos.x - targetSize / 2f, Screen.height - pos.y - targetSize / 2f, targetSize, targetSize), "L"))
                         {
-                            Logger.Log(LogLevel.Info, boneList[i].name);
+                            LockOnPlugin.Logger.Log(LogLevel.Info, boneList[i].name);
                         }
                     }
                 }
@@ -91,20 +90,20 @@ namespace LockOnPluginKK
                             //CameraTargetPos += targetOffsetSize;
                             //targetOffsetSize = new Vector3();
                             //LockOnBase.instance.LockOn(targets[i]);
-                            Logger.Log(LogLevel.Info, targets[i].name);
+                            LockOnPlugin.Logger.Log(LogLevel.Info, targets[i].name);
                         }
                     }
                 }
             }
         }
 
-        void UpdateCustomTargetTransforms()
+        private void UpdateCustomTargetTransforms()
         {
             for(int i = 0; i < customTargets.Count; i++) customTargets[i].UpdateTransform();
             centerPoint?.UpdatePosition();
         }
 
-        void UpdateAllTargets(ChaInfo character)
+        private void UpdateAllTargets(ChaInfo character)
         {
             if(character)
             {
@@ -114,7 +113,7 @@ namespace LockOnPluginKK
             }
         }
 
-        List<GameObject> UpdateQuickTargets(ChaInfo character)
+        private List<GameObject> UpdateQuickTargets(ChaInfo character)
         {
             var quickTargets = new List<GameObject>();
 
@@ -147,7 +146,7 @@ namespace LockOnPluginKK
             return quickTargets;
         }
 
-        List<CustomTarget> UpdateCustomTargets(ChaInfo character)
+        private List<CustomTarget> UpdateCustomTargets(ChaInfo character)
         {
             var customTargets = new List<CustomTarget>();
 
@@ -198,24 +197,24 @@ namespace LockOnPluginKK
                     }
                     else
                     {
-                        Logger.Log(LogLevel.Info, $"CustomTarget '{data.target}' failed");
+                        LockOnPlugin.Logger.Log(LogLevel.Info, $"CustomTarget '{data.target}' failed");
                     }
                 }
                 else
                 {
-                    Logger.Log(LogLevel.Info, $"CustomTarget '{data.target}' skipped because it is not in use");
+                    LockOnPlugin.Logger.Log(LogLevel.Info, $"CustomTarget '{data.target}' skipped because it is not in use");
                 }
             }
 
             return customTargets;
         }
 
-        class CustomTarget
+        private class CustomTarget
         {
-            GameObject target;
-            GameObject point1;
-            GameObject point2;
-            float midpoint;
+            private GameObject target;
+            private GameObject point1;
+            private GameObject point2;
+            private float midpoint;
 
             public CustomTarget(string name, GameObject point1, GameObject point2, float midpoint = 0.5f)
             {
@@ -237,14 +236,14 @@ namespace LockOnPluginKK
                 UpdateRotation();
             }
 
-            void UpdatePosition()
+            private void UpdatePosition()
             {
                 var pos1 = point1.transform.position;
                 var pos2 = point2.transform.position;
                 target.transform.position = Vector3.Lerp(pos1, pos2, midpoint);
             }
 
-            void UpdateRotation()
+            private void UpdateRotation()
             {
                 var rot1 = point1.transform.rotation;
                 var rot2 = point2.transform.rotation;
@@ -252,10 +251,10 @@ namespace LockOnPluginKK
             }
         }
 
-        class CenterPoint
+        private class CenterPoint
         {
-            List<WeightPoint> points = new List<WeightPoint>();
-            GameObject point;
+            private List<WeightPoint> points = new List<WeightPoint>();
+            private GameObject point;
 
             public CenterPoint(ChaInfo character)
             {
@@ -287,7 +286,7 @@ namespace LockOnPluginKK
                 if(point) point.transform.position = CalculateCenterPoint(points);
             }
 
-            Vector3 CalculateCenterPoint(List<WeightPoint> points)
+            private Vector3 CalculateCenterPoint(List<WeightPoint> points)
             {
                 var center = new Vector3();
                 float totalWeight = 0f;
@@ -301,7 +300,7 @@ namespace LockOnPluginKK
             }
         }
 
-        class WeightPoint
+        private class WeightPoint
         {
             public GameObject point;
             public float weight;

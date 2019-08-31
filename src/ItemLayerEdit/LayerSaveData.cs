@@ -3,7 +3,7 @@
 namespace ItemLayerEdit
 {
     [MessagePackObject(true)]
-    public class LayerSaveData
+    internal class LayerSaveData
     {
         public int DefaultLayer;
         public int NewLayer;

@@ -1,4 +1,4 @@
-﻿using BepInEx;
+﻿using BepInEx.Configuration;
 using Studio;
 using System;
 using System.Collections.Generic;
@@ -18,14 +18,14 @@ namespace StudioAddonLite
         private GuideObject firstTarget;
         private Dictionary<int, GuideObject> targets = new Dictionary<int, GuideObject>();
 
-        private Dictionary<KEY, SavedKeyboardShortcut> rotationKeys = new Dictionary<KEY, SavedKeyboardShortcut>()
+        private Dictionary<KEY, KeyboardShortcut> rotationKeys = new Dictionary<KEY, KeyboardShortcut>()
         {
-            { KEY.OBJ_ROT_X, StudioAddonLite.KEY_OBJ_ROT_X },
-            { KEY.OBJ_ROT_Y, StudioAddonLite.KEY_OBJ_ROT_Y },
-            { KEY.OBJ_ROT_Z, StudioAddonLite.KEY_OBJ_ROT_Z },
-            { KEY.OBJ_ROT_X_2, StudioAddonLite.KEY_OBJ_ROT_X_2 },
-            { KEY.OBJ_ROT_Y_2, StudioAddonLite.KEY_OBJ_ROT_Y_2 },
-            { KEY.OBJ_ROT_Z_2, StudioAddonLite.KEY_OBJ_ROT_Z_2 }
+            { KEY.OBJ_ROT_X, StudioAddonLite.KEY_OBJ_ROT_X.Value },
+            { KEY.OBJ_ROT_Y, StudioAddonLite.KEY_OBJ_ROT_Y.Value },
+            { KEY.OBJ_ROT_Z, StudioAddonLite.KEY_OBJ_ROT_Z.Value },
+            { KEY.OBJ_ROT_X_2, StudioAddonLite.KEY_OBJ_ROT_X_2.Value },
+            { KEY.OBJ_ROT_Y_2, StudioAddonLite.KEY_OBJ_ROT_Y_2.Value },
+            { KEY.OBJ_ROT_Z_2, StudioAddonLite.KEY_OBJ_ROT_Z_2.Value }
         };
 
         public GuideObject GetTargetObject()
@@ -54,7 +54,7 @@ namespace StudioAddonLite
                 var delta = new Vector3(-vector.x, 0f, -vector.y);
                 Move(delta);
 
-                if(!StudioAddonLite.KEY_OBJ_MOVE_XZ.IsPressed() || instance.mode != 0)
+                if(!StudioAddonLite.KEY_OBJ_MOVE_XZ.Value.IsPressed() || instance.mode != 0)
                 {
                     FinishMove();
                     mode = KEY.NONE;
@@ -65,7 +65,7 @@ namespace StudioAddonLite
                 var delta2 = new Vector3(0f, vector.y, 0f);
                 Move(delta2);
 
-                if(!StudioAddonLite.KEY_OBJ_MOVE_Y.IsPressed() || instance.mode != 0)
+                if(!StudioAddonLite.KEY_OBJ_MOVE_Y.Value.IsPressed() || instance.mode != 0)
                 {
                     FinishMove();
                     mode = KEY.NONE;
@@ -77,7 +77,7 @@ namespace StudioAddonLite
                 var delta3 = new Vector3(num, 0f, 0f);
                 Rotate(delta3);
 
-                if(!StudioAddonLite.KEY_OBJ_ROT_X.IsPressed() || instance.mode != 1)
+                if(!StudioAddonLite.KEY_OBJ_ROT_X.Value.IsPressed() || instance.mode != 1)
                 {
                     FinishRotate();
                     mode = KEY.NONE;
@@ -89,7 +89,7 @@ namespace StudioAddonLite
                 var delta4 = new Vector3(0f, num2, 0f);
                 Rotate(delta4);
 
-                if(!StudioAddonLite.KEY_OBJ_ROT_Y.IsPressed() || instance.mode != 1)
+                if(!StudioAddonLite.KEY_OBJ_ROT_Y.Value.IsPressed() || instance.mode != 1)
                 {
                     FinishRotate();
                     mode = KEY.NONE;
@@ -101,7 +101,7 @@ namespace StudioAddonLite
                 var delta5 = new Vector3(0f, 0f, num3);
                 Rotate(delta5);
 
-                if(!StudioAddonLite.KEY_OBJ_ROT_Z.IsPressed() || instance.mode != 1)
+                if(!StudioAddonLite.KEY_OBJ_ROT_Z.Value.IsPressed() || instance.mode != 1)
                 {
                     FinishRotate();
                     mode = KEY.NONE;
@@ -112,7 +112,7 @@ namespace StudioAddonLite
                 float delta6 = (vector.x + vector.y) / 2f;
                 Rotate2(Vector3.right, delta6);
 
-                if(!StudioAddonLite.KEY_OBJ_ROT_X_2.IsPressed() || instance.mode != 1)
+                if(!StudioAddonLite.KEY_OBJ_ROT_X_2.Value.IsPressed() || instance.mode != 1)
                 {
                     FinishRotate();
                     mode = KEY.NONE;
@@ -123,7 +123,7 @@ namespace StudioAddonLite
                 float delta7 = (vector.x + vector.y) / 2f;
                 Rotate2(Vector3.up, delta7);
 
-                if(!StudioAddonLite.KEY_OBJ_ROT_Y_2.IsPressed() || instance.mode != 1)
+                if(!StudioAddonLite.KEY_OBJ_ROT_Y_2.Value.IsPressed() || instance.mode != 1)
                 {
                     FinishRotate();
                     mode = KEY.NONE;
@@ -134,7 +134,7 @@ namespace StudioAddonLite
                 float delta8 = (vector.x + vector.y) / 2f;
                 Rotate2(Vector3.forward, delta8);
 
-                if(!StudioAddonLite.KEY_OBJ_ROT_Z_2.IsPressed() || instance.mode != 1)
+                if(!StudioAddonLite.KEY_OBJ_ROT_Z_2.Value.IsPressed() || instance.mode != 1)
                 {
                     FinishRotate();
                     mode = KEY.NONE;
@@ -146,7 +146,7 @@ namespace StudioAddonLite
                 float num4 = (vector2.x + vector2.y) / 2f;
                 Scale(Vector3.one * num4);
 
-                if(!StudioAddonLite.KEY_OBJ_SCALE_ALL.IsPressed() || instance.mode != 2)
+                if(!StudioAddonLite.KEY_OBJ_SCALE_ALL.Value.IsPressed() || instance.mode != 2)
                 {
                     FinishScale();
                     mode = KEY.NONE;
@@ -158,7 +158,7 @@ namespace StudioAddonLite
                 float num5 = (vector3.x + vector3.y) / 2f;
                 Scale(Vector3.left * num5);
 
-                if(!StudioAddonLite.KEY_OBJ_SCALE_ALL.IsPressed() || instance.mode != 2)
+                if(!StudioAddonLite.KEY_OBJ_SCALE_ALL.Value.IsPressed() || instance.mode != 2)
                 {
                     FinishScale();
                     mode = KEY.NONE;
@@ -170,7 +170,7 @@ namespace StudioAddonLite
                 float num6 = (vector4.x + vector4.y) / 2f;
                 Scale(Vector3.up * num6);
 
-                if(!StudioAddonLite.KEY_OBJ_SCALE_ALL.IsPressed() || instance.mode != 2)
+                if(!StudioAddonLite.KEY_OBJ_SCALE_ALL.Value.IsPressed() || instance.mode != 2)
                 {
                     FinishScale();
                     mode = KEY.NONE;
@@ -182,7 +182,7 @@ namespace StudioAddonLite
                 float num7 = (vector5.x + vector5.y) / 2f;
                 Scale(Vector3.forward * num7);
 
-                if(!StudioAddonLite.KEY_OBJ_SCALE_ALL.IsPressed() || instance.mode != 2)
+                if(!StudioAddonLite.KEY_OBJ_SCALE_ALL.Value.IsPressed() || instance.mode != 2)
                 {
                     FinishScale();
                     mode = KEY.NONE;
@@ -192,12 +192,12 @@ namespace StudioAddonLite
             {
                 if(instance.mode == 0)
                 {
-                    if(StudioAddonLite.KEY_OBJ_MOVE_XZ.IsPressed())
+                    if(StudioAddonLite.KEY_OBJ_MOVE_XZ.Value.IsPressed())
                     {
                         mode = KEY.OBJ_MOVE_XZ;
                         oldPos = CollectOldPos();
                     }
-                    else if(StudioAddonLite.KEY_OBJ_MOVE_Y.IsPressed())
+                    else if(StudioAddonLite.KEY_OBJ_MOVE_Y.Value.IsPressed())
                     {
                         mode = KEY.OBJ_MOVE_Y;
                         oldPos = CollectOldPos();
@@ -219,25 +219,25 @@ namespace StudioAddonLite
                 }
                 else if(instance.mode == 2)
                 {
-                    if(StudioAddonLite.KEY_OBJ_SCALE_ALL.IsPressed())
+                    if(StudioAddonLite.KEY_OBJ_SCALE_ALL.Value.IsPressed())
                     {
                         mode = KEY.OBJ_SCALE_ALL;
                         oldScale = CollectOldScale();
                         beginMousePos = GetMousePos();
                     }
-                    else if(StudioAddonLite.KEY_OBJ_SCALE_X.IsPressed())
+                    else if(StudioAddonLite.KEY_OBJ_SCALE_X.Value.IsPressed())
                     {
                         mode = KEY.OBJ_SCALE_X;
                         oldScale = CollectOldScale();
                         beginMousePos = GetMousePos();
                     }
-                    else if(StudioAddonLite.KEY_OBJ_SCALE_Y.IsPressed())
+                    else if(StudioAddonLite.KEY_OBJ_SCALE_Y.Value.IsPressed())
                     {
                         mode = KEY.OBJ_SCALE_Y;
                         oldScale = CollectOldScale();
                         beginMousePos = GetMousePos();
                     }
-                    else if(StudioAddonLite.KEY_OBJ_SCALE_Z.IsPressed())
+                    else if(StudioAddonLite.KEY_OBJ_SCALE_Z.Value.IsPressed())
                     {
                         mode = KEY.OBJ_SCALE_Z;
                         oldScale = CollectOldScale();

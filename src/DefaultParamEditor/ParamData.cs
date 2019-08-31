@@ -1,50 +1,9 @@
-﻿using Harmony;
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DefaultParamEditor
 {
-    public class ParamData
+    internal class ParamData
     {
-        public void PrintData()
-        {
-            Console.WriteLine(new string('=', 40));
-
-            if(charaParamData.saved)
-            {
-                Console.WriteLine(nameof(CharaData));
-                foreach(var field in AccessTools.GetDeclaredFields(typeof(CharaData)))
-                {
-                    var target = AccessTools.Field(typeof(CharaData), field.Name);
-                    var value = target.GetValue(charaParamData);
-                    Console.WriteLine($"{field.Name} = {value}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"{nameof(CharaData)} not saved");
-            }
-
-            Console.WriteLine(new string('=', 40));
-
-            if(sceneParamData.saved)
-            {
-                Console.WriteLine(nameof(SceneData));
-                foreach(var field in AccessTools.GetDeclaredFields(typeof(SceneData)))
-                {
-                    var target = AccessTools.Field(typeof(SceneData), field.Name);
-                    var value = target.GetValue(sceneParamData);
-                    Console.WriteLine($"{field.Name} = {value}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"{nameof(SceneData)} not saved");
-            }
-
-            Console.WriteLine(new string('=', 40));
-        }
-
         public CharaData charaParamData = new CharaData();
         public SceneData sceneParamData = new SceneData();
 

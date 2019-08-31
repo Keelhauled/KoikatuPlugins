@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Studio;
 using System;
 using System.Linq;
@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 namespace CharaStateX
 {
-    static class JointInfoPatch
+    internal static class JointInfoPatch
     {
-        public static void Patch(HarmonyInstance harmony)
+        public static void Patch(Harmony harmony)
         {
             var jointInfoType = typeof(MPCharCtrl).GetNestedType("JointInfo", AccessTools.all);
             var target = AccessTools.Method(jointInfoType, "OnValueChanged");
@@ -18,7 +18,7 @@ namespace CharaStateX
             PatchKKPE(harmony);
         }
 
-        static void JointInfoPostfix(object __instance, ref int _group, ref bool _value)
+        private static void JointInfoPostfix(object __instance, ref int _group, ref bool _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -26,7 +26,7 @@ namespace CharaStateX
                 chara.EnableExpressionCategory(_group, _value);
         }
 
-        static void PatchKKPE(HarmonyInstance harmony)
+        private static void PatchKKPE(Harmony harmony)
         {
             var ass = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault((x) => x.FullName.Contains("KKPE,"));
 
@@ -39,7 +39,7 @@ namespace CharaStateX
             }
         }
 
-        static void KKPESpawnGUIPostfix(object __instance)
+        private static void KKPESpawnGUIPostfix(object __instance)
         {
             var traverse = Traverse.Create(__instance);
             var _crotchCorrectionToggle = traverse.Field("_crotchCorrectionToggle").GetValue<Toggle>();

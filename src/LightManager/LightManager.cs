@@ -1,5 +1,4 @@
 ﻿using Studio;
-using System;
 using System.Collections.Generic;
 using UILib;
 using UnityEngine;
@@ -7,14 +6,14 @@ using UnityEngine.UI;
 
 namespace LightManager
 {
-    public class LightManager : MonoBehaviour
+    internal class LightManager : MonoBehaviour
     {
-        Image spotlightUI;
-        Image mainPanel;
-        Text targetText;
-        InputField speedField;
+        private Image spotlightUI;
+        private Image mainPanel;
+        private Text targetText;
+        private InputField speedField;
 
-        void Start()
+        private void Start()
         {
             var uiTransform = Studio.Studio.Instance.transform.Find("Canvas Main Menu/02_Manipulate/02_Light/Image Spot");
             spotlightUI = uiTransform.GetComponent<Image>();
@@ -25,13 +24,13 @@ namespace LightManager
             Studio.Studio.Instance.treeNodeCtrl.onSelect += OnSelectWork;
         }
 
-        void Update()
+        private void Update()
         {
             mainPanel.gameObject.SetActive(spotlightUI.isActiveAndEnabled);
         }
 
 #if DEBUG
-        void OnDestroy()
+        private void OnDestroy()
         {
             Studio.Studio.Instance.treeNodeCtrl.onSelect -= OnSelectWork;
             DestroyImmediate(mainPanel.gameObject);
@@ -41,7 +40,7 @@ namespace LightManager
         }
 #endif
 
-        void OnSelectWork(TreeNodeObject node)
+        private void OnSelectWork(TreeNodeObject node)
         {
             if(Studio.Studio.Instance.dicInfo.TryGetValue(node, out ObjectCtrlInfo objectCtrlInfo))
             {
@@ -63,7 +62,7 @@ namespace LightManager
             }
         }
 
-        void ExtraLightUI(Transform parent)
+        private void ExtraLightUI(Transform parent)
         {
             float width = 50f;
             float height = 50f;
@@ -95,7 +94,7 @@ namespace LightManager
             speedField.onEndEdit.AddListener((input) => UpdateSelectedTrackers(input));
         }
 
-        void UpdateSelectedTrackers(string input)
+        private void UpdateSelectedTrackers(string input)
         {
             if(!float.TryParse(input, out float parsedSpeed))
             {
@@ -114,7 +113,7 @@ namespace LightManager
             }
         }
 
-        void SetTargetsForSelected(Text targetText)
+        private void SetTargetsForSelected(Text targetText)
         {
             var lightlist = new List<OCILight>();
             var charalist = new List<OCIChar>();

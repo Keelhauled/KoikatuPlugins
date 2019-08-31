@@ -1,11 +1,11 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Studio;
 
 namespace CharaStateX
 {
-    static class HandInfoPatch
+    internal static class HandInfoPatch
     {
-        public static void Patch(HarmonyInstance harmony)
+        public static void Patch(Harmony harmony)
         {
             var type = typeof(MPCharCtrl).GetNestedType("HandInfo", AccessTools.all);
 
@@ -22,7 +22,7 @@ namespace CharaStateX
             }
         }
 
-        static void Patch_ChangeLeftHandAnime(object __instance, ref int _no)
+        private static void Patch_ChangeLeftHandAnime(object __instance, ref int _no)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -30,7 +30,7 @@ namespace CharaStateX
                 chara.ChangeHandAnime(0, _no);
         }
 
-        static void Patch_ChangeRightHandAnime(object __instance, ref int _no)
+        private static void Patch_ChangeRightHandAnime(object __instance, ref int _no)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 

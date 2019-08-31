@@ -2,14 +2,14 @@
 
 namespace LightManager
 {
-    class TrackTransform : MonoBehaviour
+    internal class TrackTransform : MonoBehaviour
     {
         public string targetName;
         public Transform target;
         public int targetKey;
         public float rotationSpeed = 1f;
 
-        void Update()
+        private void Update()
         {
             if(target)
             {

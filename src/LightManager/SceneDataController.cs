@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace LightManager
 {
-    public class SceneDataController : SceneCustomFunctionController
+    internal class SceneDataController : SceneCustomFunctionController
     {
-        const string SavedLights = "SavedLights";
+        private const string SavedLights = "SavedLights";
 
         protected override void OnSceneLoad(SceneOperationKind operation, ReadOnlyDictionary<int, ObjectCtrlInfo> loadedItems)
         {

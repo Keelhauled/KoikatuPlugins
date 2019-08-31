@@ -1,10 +1,10 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Manager;
 using System.Linq;
 
 namespace TogglePOVKK
 {
-    class HView : CommonView
+    internal class HView : CommonView
     {
         protected override bool CameraEnabled
         {

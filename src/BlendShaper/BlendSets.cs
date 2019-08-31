@@ -11,9 +11,9 @@ using UnityEngine;
 
 namespace BlendShaper
 {
-    class BlendSets
+    internal class BlendSets
     {
-        const string resourceFile = "BlendSets.json";
+        private const string resourceFile = "BlendSets.json";
 
         public static BlendSets LoadBlendSetData()
         {

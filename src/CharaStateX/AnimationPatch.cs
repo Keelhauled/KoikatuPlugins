@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Studio;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CharaStateX
 {
-    static class AnimationPatch
+    internal static class AnimationPatch
     {
         [HarmonyPostfix, HarmonyPatch(typeof(PauseRegistrationList), "OnClickLoad")]
         public static void PoseLoadPatch(PauseRegistrationList __instance)
@@ -52,7 +52,7 @@ namespace CharaStateX
             return false;
         }
 
-        static int MatchCategory(int sex, int group)
+        private static int MatchCategory(int sex, int group)
         {
             if(sex == 1)
             {

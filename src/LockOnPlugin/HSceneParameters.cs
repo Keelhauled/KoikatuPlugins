@@ -2,7 +2,7 @@
 
 namespace LockOnPluginKK
 {
-    partial class HSceneMono : LockOnBase
+    internal partial class HSceneMono : LockOnBase
     {
         protected override float CameraMoveSpeed
         {

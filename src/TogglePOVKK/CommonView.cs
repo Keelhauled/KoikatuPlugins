@@ -1,10 +1,9 @@
 using BepInEx.Logging;
 using UnityEngine;
-using Logger = BepInEx.Logger;
 
 namespace TogglePOVKK
 {
-    abstract class CommonView : MonoBehaviour
+    internal abstract class CommonView : MonoBehaviour
     {
         public const float MinFov = 5f;
         public const float MaxFov = 120f;
@@ -14,33 +13,33 @@ namespace TogglePOVKK
         protected abstract bool Shield { get; set; }
         protected abstract ChaControl GetChara();
 
-        float backupFov;
-        float backupNearClip;
-        Quaternion backupRot;
-        Vector3 backupPos;
-        bool backupShield;
-        bool backupDOF;
-        NECK_LOOK_TYPE_VER2 backupNeck;
+        private float backupFov;
+        private float backupNearClip;
+        private Quaternion backupRot;
+        private Vector3 backupPos;
+        private bool backupShield;
+        private bool backupDOF;
+        private NECK_LOOK_TYPE_VER2 backupNeck;
 
-        float currentFov;
-        ChaControl currentChara;
-        Transform neckBone;
-        Transform leftEye;
-        Transform rightEye;
-        Vector2 angle;
-        Vector2 rot;
-        DragManager dragManager;
+        private float currentFov;
+        private ChaControl currentChara;
+        private Transform neckBone;
+        private Transform leftEye;
+        private Transform rightEye;
+        private Vector2 angle;
+        private Vector2 rot;
+        private DragManager dragManager;
         public bool povActive = false;
         public static CommonView instance;
 
-        void Awake()
+        private void Awake()
         {
             instance = this;
             dragManager = gameObject.AddComponent<DragManager>();
             currentFov = TogglePOV.DefaultFov.Value;
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             Destroy(dragManager);
 
@@ -48,7 +47,7 @@ namespace TogglePOVKK
                 Restore();
         }
 
-        void LateUpdate()
+        private void LateUpdate()
         {
             if(TogglePOV.POVKey.IsDown())
                 SetPOV();
@@ -79,7 +78,7 @@ namespace TogglePOVKK
             }
         }
 
-        void Apply(ChaControl chara)
+        private void Apply(ChaControl chara)
         {
             currentChara = chara;
 
@@ -121,7 +120,7 @@ namespace TogglePOVKK
             povActive = false;
         }
 
-        void UpdateCamera()
+        private void UpdateCamera()
         {
             if(Input.GetMouseButton(1))
             {
@@ -176,7 +175,7 @@ namespace TogglePOVKK
             rot = new Vector2(rot.x - angle.x, rot.y - angle.y);
         }
 
-        void RotateToAngle(NeckTypeStateVer2 param, int boneNum, NeckObjectVer2 bone)
+        private void RotateToAngle(NeckTypeStateVer2 param, int boneNum, NeckObjectVer2 bone)
         {
             var delta = new Vector2();
             delta.x = Mathf.DeltaAngle(0f, bone.neckBone.localEulerAngles.x);
@@ -201,7 +200,7 @@ namespace TogglePOVKK
             bone.neckBone.localRotation = Quaternion.Euler(x, y, z);
         }
 
-        void FindBones()
+        private void FindBones()
         {
             foreach(var neckObjectVer in currentChara.neckLookCtrl.neckLookScript.aBones)
             {

@@ -1,6 +1,6 @@
 ﻿namespace HideAllUI
 {
-    abstract class HideUI
+    internal abstract class HideUI
     {
         public abstract void ToggleUI();
     }

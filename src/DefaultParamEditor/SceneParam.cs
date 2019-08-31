@@ -1,20 +1,17 @@
 ﻿using BepInEx.Logging;
-using Harmony;
+using HarmonyLib;
 using Studio;
 using UnityEngine;
-using Logger = BepInEx.Logger;
 
 namespace DefaultParamEditor
 {
-    public class SceneParam
+    internal class SceneParam
     {
         private static ParamData.SceneData _sceneData;
 
         public static void Init(ParamData.SceneData data)
         {
             _sceneData = data;
-            var harmony = HarmonyInstance.Create($"{DefaultParamEditor.GUID}.sceneparam.harmony");
-            harmony.PatchAll(typeof(SceneParam));
         }
 
         public static void Save()
@@ -54,7 +51,7 @@ namespace DefaultParamEditor
                 _sceneData.fov = Studio.Studio.Instance.cameraCtrl.fieldOfView;
 
                 _sceneData.saved = true;
-                Logger.Log(LogLevel.Message, "Default scene settings saved");
+                DefaultParamEditor.Logger.Log(LogLevel.Message, "Default scene settings saved");
             }
         }
 
@@ -68,7 +65,7 @@ namespace DefaultParamEditor
         {
             if(_sceneData.saved)
             {
-                Logger.Log(LogLevel.Debug, "Loading defaults for a new scene");
+                DefaultParamEditor.Logger.Log(LogLevel.Debug, "Loading defaults for a new scene");
                 SetSceneInfoValues(__instance);
                 Camera.main.nearClipPlane = _sceneData.cameraNearClip;
                 Studio.Studio.Instance.cameraCtrl.fieldOfView = _sceneData.fov;
@@ -79,7 +76,7 @@ namespace DefaultParamEditor
         {
             if(_sceneData.saved && Studio.Studio.Instance)
             {
-                Logger.Log(LogLevel.Info, "Loading scene defaults");
+                DefaultParamEditor.Logger.Log(LogLevel.Info, "Loading scene defaults");
                 SetSceneInfoValues(Studio.Studio.Instance.sceneInfo);
                 Studio.Studio.Instance.systemButtonCtrl.UpdateInfo();
             }

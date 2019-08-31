@@ -1,124 +1,76 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using System.ComponentModel;
 using UnityEngine;
 
 namespace GraphicsSettings
 {
-    [BepInPlugin("keelhauled.graphicssettings", "Graphics Settings", Version)]
+    [BepInPlugin(GUID, "Graphics Settings", Version)]
     public class GraphicsSettings : BaseUnityPlugin
     {
+        public const string GUID = "keelhauled.graphicssettings";
         public const string Version = "1.0.3";
-
-        // settings to add
-        // rimlighting toggle
-        // max fov adjustment
 
         const string CATEGORY_RENDER = "Rendering settings";
         const string CATEGORY_SHADOW = "Shadow settings";
         const string CATEGORY_MISC = "Misc settings";
 
+        const string DESCRIPTION_ANISOFILTER = "Improves distant textures when they are being viewer from indirect angles.";
+        const string DESCRIPTION_VSYNC = "VSync synchronizes the output video of the graphics card to the refresh rate of the monitor. " +
+                                         "This prevents tearing and produces a smoother video output.\n" +
+                                         "Half vsync synchronizes the output to half the refresh rate of your monitor.";
+        const string DESCRIPTION_LIMITFRAMERATE = "VSync has to be disabled for this to take effect.";
+        const string DESCRIPTION_ANTIALIASING = "Smooths out jagged edges on objects.";
+        const string DESCRIPTION_SHADOWPROJECTION = "Close Fit renders higher resolution shadows but they can sometimes wobble slightly if the camera moves." +
+                                                    "Stable Fit is lower resolution but no wobble.";
+        const string DESCRIPTION_SHADOWCASCADES = "Increasing the number of cascades lessens the effects of perspective aliasing on shadows.";
+        const string DESCRIPTION_SHADOWDISTANCE = "Increasing the distance lowers the shadow resolution slighly.";
+        const string DESCRIPTION_SHADOWNEARPLANEOFFSET = "A low shadow near plane offset value can create the appearance of holes in shadows.";
+        const string DESCRIPTION_CAMERANEARCLIPPLANE = "Determines how close the camera can be to objects without clipping into them. Lower equals closer.\n" +
+                                                       "Note: The saved value is not loaded at the start currently.";
+        const string DESCRIPTION_RUNINBACKGROUND = "Should the game be running when it is in the background (when the window is not focused)?\n" +
+                                                   "On \"no\", the game will stop completely when it is in the background.\n" +
+                                                   "On \"limited\", the game will stop if it has been unfocused and not loading anything for a couple seconds.";
+        const string DESCRIPTION_OPTIMIZEINBACKGROUND = "Optimize the game when it is the background and unfocused. " +
+                                                        "Settings such as anti-aliasing will be turned off or reduced in this state.";
+
         [Browsable(true)]
         [Category(CATEGORY_RENDER)]
         [DisplayName("!Resolution")]
         [CustomSettingDraw(nameof(ResolutionDrawer))]
-        string ApplyResolution { get; set; } = "";
-
-        [Category(CATEGORY_RENDER)]
-        [DisplayName("VSync level")]
-        [Description("VSync synchronizes the output video of the graphics card to the refresh rate of the monitor. " +
-                     "This prevents tearing and produces a smoother video output.\n\n" +
-                     "Half vsync synchronizes the output to half the refresh rate of your monitor.")]
+        ConfigWrapper<string> ApplyResolution { get; set; }
+        
         ConfigWrapper<VSyncType> VSyncCount { get; }
-
-        [Category(CATEGORY_RENDER)]
-        [DisplayName("Frame rate limiter")]
-        [Description("VSync has to be disabled for this to take effect.")]
         ConfigWrapper<bool> LimitFrameRate { get; }
-
-        [Category(CATEGORY_RENDER)]
-        [DisplayName("Frame rate limit")]
-        [AcceptableValueRange(20, 200, false)]
         ConfigWrapper<int> TargetFrameRate { get; }
-
-        [Category(CATEGORY_RENDER)]
-        [DisplayName("Anti-aliasing")]
-        [Description("Smooths out jagged edges on objects.")]
-        [AcceptableValueList(new object[] { 0, 2, 4, 8 })]
         ConfigWrapper<int> AntiAliasing { get; }
-
-        [Category(CATEGORY_RENDER)]
-        [DisplayName("Anisotropic filtering")]
-        [Description("Improves distant textures when they are being viewer from indirect angles.")]
         ConfigWrapper<AnisotropicFiltering> AnisotropicTextures { get; }
-
-        [Category(CATEGORY_SHADOW)]
-        [DisplayName("Shadow type")]
         ConfigWrapper<ShadowQuality2> ShadowType { get; }
-
-        [Category(CATEGORY_SHADOW)]
-        [DisplayName("Shadow resolution")]
         ConfigWrapper<ShadowResolution> ShadowRes { get; }
-
-        [Category(CATEGORY_SHADOW)]
-        [DisplayName("Shadow projection")]
-        [Description("Close Fit renders higher resolution shadows but they can sometimes wobble slightly if the camera moves." +
-                     "Stable Fit is lower resolution but no wobble.")]
         ConfigWrapper<ShadowProjection> ShadowProject { get; }
-
-        [Category(CATEGORY_SHADOW)]
-        [DisplayName("Shadow cascades")]
-        [Description("Increasing the number of cascades lessens the effects of perspective aliasing on shadows.")]
-        [AcceptableValueList(new object[] { 0, 2, 4 })]
         ConfigWrapper<int> ShadowCascades { get; }
-
-        [Category(CATEGORY_SHADOW)]
-        [DisplayName("Shadow distance")]
-        [Description("Increasing the distance lowers the shadow resolution slighly.")]
-        [AcceptableValueRange(0f, 100f, false)]
         ConfigWrapper<float> ShadowDistance { get; }
-
-        [Category(CATEGORY_SHADOW)]
-        [DisplayName("Shadow near plane offset")]
-        [Description("A low shadow near plane offset value can create the appearance of holes in shadows.")]
-        [AcceptableValueRange(0f, 4f, false)]
         ConfigWrapper<float> ShadowNearPlaneOffset { get; }
-
-        // this value is not loaded on start yet
-        [Category(CATEGORY_MISC)]
-        [DisplayName("Camera near clip plane")]
-        [Description("Determines how close the camera can be to objects without clipping into them. Lower equals closer.\n\n" +
-                     "Note: The saved value is not loaded at the start currently.")]
-        [AcceptableValueRange(0.01f, 0.06f, false)]
         ConfigWrapper<float> CameraNearClipPlane { get; }
-
-        [Category(CATEGORY_MISC)]
-        [DisplayName("Run game in background")]
-        [Description("Should the game be running when it is in the background (when the window is not focused)?\n\n" +
-                     "On \"no\", the game will stop completely when it is in the background.\n\n" +
-                     "On \"limited\", the game will stop if it has been unfocused and not loading anything for a couple seconds.")]
         ConfigWrapper<BackgroundRun> RunInBackground { get; }
-
-        [Category(CATEGORY_MISC)]
-        [DisplayName("Optimize game in background")]
-        [Description("Optimize the game when it is the background and unfocused. Settings such as anti-aliasing will be turned off or reduced in this state.")]
         ConfigWrapper<bool> OptimizeInBackground { get; }
 
         GraphicsSettings()
         {
-            VSyncCount = new ConfigWrapper<VSyncType>("VSyncCount", this, VSyncType.Enabled);
-            LimitFrameRate = new ConfigWrapper<bool>("EnableFramerateLimit", this, false);
-            TargetFrameRate = new ConfigWrapper<int>("TargetFrameRate", this, 60);
-            AntiAliasing = new ConfigWrapper<int>("AntiAliasing", this, 8);
-            AnisotropicTextures = new ConfigWrapper<AnisotropicFiltering>("AnisotropicTextures", this, AnisotropicFiltering.ForceEnable);
-            ShadowType = new ConfigWrapper<ShadowQuality2>("ShadowType", this, ShadowQuality2.SoftHard);
-            ShadowRes = new ConfigWrapper<ShadowResolution>("ShadowRes", this, ShadowResolution.VeryHigh);
-            ShadowProject = new ConfigWrapper<ShadowProjection>("ShadowProject", this, ShadowProjection.CloseFit);
-            ShadowCascades = new ConfigWrapper<int>("ShadowCascades", this, 4);
-            ShadowDistance = new ConfigWrapper<float>("ShadowDistance", this, 50f);
-            ShadowNearPlaneOffset = new ConfigWrapper<float>("ShadowNearPlaneOffset", this, 2f);
-            CameraNearClipPlane = new ConfigWrapper<float>("CameraNearClipPlane", this, 0.06f);
-            RunInBackground = new ConfigWrapper<BackgroundRun>("RunInBackground", this, BackgroundRun.Yes);
-            OptimizeInBackground = new ConfigWrapper<bool>("OptimizeInBackground", this, true);
+            VSyncCount = Config.GetSetting(CATEGORY_RENDER, "VSyncLevel", VSyncType.Enabled, new ConfigDescription(DESCRIPTION_VSYNC));
+            LimitFrameRate = Config.GetSetting(CATEGORY_RENDER, "LimitFramerate", false, new ConfigDescription(DESCRIPTION_LIMITFRAMERATE));
+            TargetFrameRate = Config.GetSetting(CATEGORY_RENDER, "TargetFrameRate", 60);
+            AntiAliasing = Config.GetSetting(CATEGORY_RENDER, "AntiAliasingMultiplier", 8, new ConfigDescription(DESCRIPTION_ANTIALIASING));
+            AnisotropicTextures = Config.GetSetting(CATEGORY_RENDER, "AnisotropicFiltering", AnisotropicFiltering.ForceEnable, new ConfigDescription(DESCRIPTION_ANISOFILTER));
+            ShadowType = Config.GetSetting(CATEGORY_SHADOW, "ShadowType", ShadowQuality2.SoftHard);
+            ShadowRes = Config.GetSetting(CATEGORY_SHADOW, "ShadowRes", ShadowResolution.VeryHigh);
+            ShadowProject = Config.GetSetting(CATEGORY_SHADOW, "ShadowProjection", ShadowProjection.CloseFit);
+            ShadowCascades = Config.GetSetting(CATEGORY_SHADOW, "ShadowCascades", 4, new ConfigDescription(DESCRIPTION_SHADOWCASCADES, new AcceptableValueList<int>(0, 2, 4)));
+            ShadowDistance = Config.GetSetting(CATEGORY_SHADOW, "ShadowDistance", 50f, new ConfigDescription(DESCRIPTION_SHADOWDISTANCE, new AcceptableValueRange<float>(0f, 100f)));
+            ShadowNearPlaneOffset = Config.GetSetting(CATEGORY_SHADOW, "ShadowNearPlaneOffset", 2f, new ConfigDescription(DESCRIPTION_SHADOWNEARPLANEOFFSET, new AcceptableValueRange<float>(0f, 4f)));
+            CameraNearClipPlane = Config.GetSetting(CATEGORY_MISC, "CameraNearClipPlane", 0.06f, new ConfigDescription(DESCRIPTION_CAMERANEARCLIPPLANE, new AcceptableValueRange<float>(0.01f, 0.06f)));
+            RunInBackground = Config.GetSetting(CATEGORY_MISC, "RunInBackground", BackgroundRun.Yes, new ConfigDescription(DESCRIPTION_RUNINBACKGROUND));
+            OptimizeInBackground = Config.GetSetting(CATEGORY_MISC, "OptimizeInBackground", true, new ConfigDescription(DESCRIPTION_OPTIMIZEINBACKGROUND));
         }
 
         bool fullscreen = Screen.fullScreen;

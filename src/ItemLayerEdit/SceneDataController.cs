@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace ItemLayerEdit
 {
-    public class SceneDataController : SceneCustomFunctionController
+    internal class SceneDataController : SceneCustomFunctionController
     {
-        const string SaveId = "SavedLayers";
+        private const string SaveId = "SavedLayers";
 
         protected override void OnSceneLoad(SceneOperationKind operation, ReadOnlyDictionary<int, ObjectCtrlInfo> loadedItems)
         {

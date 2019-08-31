@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace HideAllUI
 {
-    class HideStudioUI : HideUI
+    internal class HideStudioUI : HideUI
     {
-        string[] targets = new[] { "Canvas", "Canvas Object List", "Canvas Main Menu", "Canvas Frame cap", "Canvas System Menu", "Canvas Guide Input" };
-        IEnumerable<Canvas> canvasList;
-        bool visible = true;
+        private string[] targets = new[] { "Canvas", "Canvas Object List", "Canvas Main Menu", "Canvas Frame cap", "Canvas System Menu", "Canvas Guide Input" };
+        private IEnumerable<Canvas> canvasList;
+        private bool visible = true;
 
         public HideStudioUI()
         {

@@ -1,21 +1,18 @@
 ﻿using BepInEx.Logging;
-using Harmony;
+using HarmonyLib;
 using Studio;
 using System.Linq;
 using UnityEngine;
-using Logger = BepInEx.Logger;
 
 namespace DefaultParamEditor
 {
-    public class CharacterParam
+    internal class CharacterParam
     {
         private static ParamData.CharaData _charaData;
 
         public static void Init(ParamData.CharaData data)
         {
             _charaData = data;
-            var harmony = HarmonyInstance.Create($"{DefaultParamEditor.GUID}.characterparam.harmony");
-            harmony.PatchAll(typeof(CharacterParam));
         }
 
         public static void Save()
@@ -42,11 +39,11 @@ namespace DefaultParamEditor
                 _charaData.mouthPtn = status.mouthPtn;
 
                 _charaData.saved = true;
-                Logger.Log(LogLevel.Message, "Default character settings saved");
+                DefaultParamEditor.Logger.Log(LogLevel.Message, "Default character settings saved");
             }
             else
             {
-                Logger.Log(LogLevel.Message, "Warning: Select character to save default settings");
+                DefaultParamEditor.Logger.Log(LogLevel.Message, "Warning: Select character to save default settings");
             }
         }
 
@@ -60,7 +57,7 @@ namespace DefaultParamEditor
         {
             if(_charaData.saved)
             {
-                Logger.Log(LogLevel.Debug, "Loading defaults for a new character");
+                DefaultParamEditor.Logger.Log(LogLevel.Debug, "Loading defaults for a new character");
                 SetCharaValues(__instance);
             }
         }
@@ -78,12 +75,12 @@ namespace DefaultParamEditor
                         SetCharaValues(chara.charFileStatus);
 
                     UpdateStateInfo();
-                    Logger.Log(LogLevel.Info, "Loading chara defaults");
+                    DefaultParamEditor.Logger.Log(LogLevel.Info, "Loading chara defaults");
                 }
             }
         }
 
-        static void SetCharaValues(ChaFileStatus chaFileStatus)
+        private static void SetCharaValues(ChaFileStatus chaFileStatus)
         {
             chaFileStatus.clothesState = _charaData.clothesState.ToArray();
             chaFileStatus.shoesType = _charaData.shoesType;
@@ -100,7 +97,7 @@ namespace DefaultParamEditor
             chaFileStatus.mouthPtn = _charaData.mouthPtn;
         }
 
-        static void UpdateStateInfo()
+        private static void UpdateStateInfo()
         {
             var mpCharCtrl = GameObject.FindObjectOfType<MPCharCtrl>();
             if(mpCharCtrl)

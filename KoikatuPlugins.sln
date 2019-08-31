@@ -49,8 +49,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedPluginCode", "src\Sha
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedProjects", "SharedProjects", "{AACAE72F-60D9-4DCE-A92C-FBB2705AC4A3}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HarmonyExtensionsV1", "src\HarmonyExtensionsV1\HarmonyExtensionsV1.shproj", "{B2512C34-A879-4C2A-8CC9-778A05A1FA72}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemLayerEdit", "src\ItemLayerEdit\ItemLayerEdit.csproj", "{36426C1C-FCA2-4E21-AD35-9B93965CEE96}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightManager", "src\LightManager\LightManager.csproj", "{BF5529D8-D359-4D01-A58C-B44C82CF158A}"
@@ -64,6 +62,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Archive", "Archive", "{9891
 		archive\ShadowRealm.cs = archive\ShadowRealm.cs
 	EndProjectSection
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HarmonyExtensions", "src\HarmonyExtensions\HarmonyExtensions.shproj", "{1FEDBF60-6BBF-4373-86D5-992B5A21ADC4}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\SharedPluginCode\SharedPluginCode.projitems*{0358b313-1f18-4a67-bc4e-2c8e7f0b1bc0}*SharedItemsImports = 4
@@ -71,10 +71,11 @@ Global
 		src\UILib\UILib.projitems*{14b2da69-1dd3-482d-8d95-1722dbce46f3}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
-		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{36426c1c-fca2-4e21-ad35-9b93965cee96}*SharedItemsImports = 4
+		src\HarmonyExtensions\HarmonyExtensions.projitems*{1fedbf60-6bbf-4373-86d5-992b5a21adc4}*SharedItemsImports = 13
+		src\HarmonyExtensions\HarmonyExtensions.projitems*{36426c1c-fca2-4e21-ad35-9b93965cee96}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{36426c1c-fca2-4e21-ad35-9b93965cee96}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{36426c1c-fca2-4e21-ad35-9b93965cee96}*SharedItemsImports = 4
-		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{45ed5eb2-9f9b-4f43-b885-ca0695c8f40f}*SharedItemsImports = 4
+		src\HarmonyExtensions\HarmonyExtensions.projitems*{45ed5eb2-9f9b-4f43-b885-ca0695c8f40f}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{45ed5eb2-9f9b-4f43-b885-ca0695c8f40f}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{476e4113-af49-45e0-9cdd-1d76ee51fa24}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{5a84955a-e776-4e75-aa19-7d764a8c0554}*SharedItemsImports = 4
@@ -82,16 +83,15 @@ Global
 		src\SharedPluginCode\SharedPluginCode.projitems*{7609fc13-64e8-4402-a3af-383b4a7779bd}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{7bcb2a53-6172-496b-a915-daec90857b8e}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{921651cf-6a2c-4064-91fe-af949cfa9a16}*SharedItemsImports = 4
-		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
+		src\HarmonyExtensions\HarmonyExtensions.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{b141f3cd-b048-42fd-b039-e3ea6cd9eed7}*SharedItemsImports = 4
-		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{b2512c34-a879-4c2a-8cc9-778a05a1fa72}*SharedItemsImports = 13
-		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
+		src\HarmonyExtensions\HarmonyExtensions.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
-		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
+		src\HarmonyExtensions\HarmonyExtensions.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{e6630c43-a642-4485-b69e-792414ce85ca}*SharedItemsImports = 4
-		src\HarmonyExtensionsV1\HarmonyExtensionsV1.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
+		src\HarmonyExtensions\HarmonyExtensions.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{e9b05374-8972-4d23-ae9f-eb01f3346ef7}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{fbaeed86-37c9-4932-99f6-926fc82047ad}*SharedItemsImports = 13
 	EndGlobalSection
@@ -175,7 +175,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{044C35DB-98CA-4A9F-905D-93B61C8057A1} = {AACAE72F-60D9-4DCE-A92C-FBB2705AC4A3}
 		{FBAEED86-37C9-4932-99F6-926FC82047AD} = {AACAE72F-60D9-4DCE-A92C-FBB2705AC4A3}
-		{B2512C34-A879-4C2A-8CC9-778A05A1FA72} = {AACAE72F-60D9-4DCE-A92C-FBB2705AC4A3}
+		{1FEDBF60-6BBF-4373-86D5-992B5A21ADC4} = {AACAE72F-60D9-4DCE-A92C-FBB2705AC4A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {20BD17DF-F863-4CE8-A095-B79F271FFA15}

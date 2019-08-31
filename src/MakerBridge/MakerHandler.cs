@@ -1,5 +1,5 @@
 ﻿using ChaCustom;
-using Harmony;
+using HarmonyLib;
 using System;
 using System.IO;
 using System.Threading;
@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace MakerBridge
 {
-    class MakerHandler : MonoBehaviour
+    internal class MakerHandler : MonoBehaviour
     {
-        void Start()
+        private void Start()
         {
             var watcher = new FileSystemWatcher
             {
@@ -23,7 +23,7 @@ namespace MakerBridge
             watcher.EnableRaisingEvents = true;
         }
 
-        void FileChanged(object sender, FileSystemEventArgs e)
+        private void FileChanged(object sender, FileSystemEventArgs e)
         {
             bool fileIsBusy = true;
             while(fileIsBusy)
@@ -43,13 +43,13 @@ namespace MakerBridge
             MainThreadDispatcher.Post(LoadChara, null);
         }
 
-        void Update()
+        private void Update()
         {
-            if(MakerBridge.SendChara.IsDown())
+            if(MakerBridge.SendChara.Value.IsDown())
                 SaveCharacter();
         }
 
-        void LoadChara(object x)
+        private void LoadChara(object x)
         {
             var customCharaFile = FindObjectOfType<CustomCharaFile>();
             var traverse = Traverse.Create(customCharaFile);
@@ -65,7 +65,7 @@ namespace MakerBridge
             listCtrl.Create(customCharaFile.OnChangeSelect);
         }
 
-        public void SaveCharacter()
+        private void SaveCharacter()
         {
             var customBase = CustomBase.Instance;
             if(customBase)

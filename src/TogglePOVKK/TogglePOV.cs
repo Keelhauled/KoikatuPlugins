@@ -1,6 +1,7 @@
 ﻿using BepInEx;
-using Harmony;
-using System.ComponentModel;
+using BepInEx.Configuration;
+using BepInEx.Harmony;
+using HarmonyLib;
 using UnityEngine;
 
 namespace TogglePOVKK
@@ -11,76 +12,65 @@ namespace TogglePOVKK
         public const string GUID = "togglepovkk";
         public const string Version = "1.0.0";
 
-        [DisplayName("Toggle POV")]
-        public static SavedKeyboardShortcut POVKey { get; set; }
+        internal static ConfigWrapper<KeyboardShortcut> POVKey { get; set; }
+        internal static ConfigWrapper<float> DefaultFov { get; set; }
+        internal static ConfigWrapper<float> ViewOffset { get; set; }
+        internal static ConfigWrapper<float> VerticalSensitivity { get; set; }
+        internal static ConfigWrapper<float> HorizontalSensitivity { get; set; }
+        internal static ConfigWrapper<float> NearClipPov { get; set; }
+        internal static ConfigWrapper<bool> ClampRotation { get; set; }
 
-        [DisplayName("Default FOV")]
-        [AcceptableValueRange(CommonView.MinFov, CommonView.MaxFov, false)]
-        public static ConfigWrapper<float> DefaultFov { get; set; }
+        private static GameObject bepinex;
+        private static Harmony harmony;
 
-        [DisplayName("POV view offset")]
-        public static ConfigWrapper<float> ViewOffset { get; set; }
-
-        [DisplayName("Horizontal mouse sensitivity")]
-        public static ConfigWrapper<float> VerticalSensitivity { get; set; }
-
-        [DisplayName("Vertical mouse sensitivity")]
-        public static ConfigWrapper<float> HorizontalSensitivity { get; set; }
-
-        [DisplayName("POV camera near clip")]
-        public static ConfigWrapper<float> NearClipPov { get; set; }
-
-        [DisplayName("Clamp neck rotation")]
-        public static ConfigWrapper<bool> ClampRotation { get; set; }
-
-        static GameObject bepinex;
-        static HarmonyInstance harmony;
-
-        TogglePOV()
+        private TogglePOV()
         {
-            POVKey = new SavedKeyboardShortcut("POVKey", this, new KeyboardShortcut(KeyCode.Backspace));
-            DefaultFov = new ConfigWrapper<float>("DefaultFov", this, 70f);
-            ViewOffset = new ConfigWrapper<float>("ViewOffset", this, 0.0315f);
-            VerticalSensitivity = new ConfigWrapper<float>("VerticalSensitivity", this, 0.5f);
-            HorizontalSensitivity = new ConfigWrapper<float>("HorizontalSensitivity", this, 0.5f);
-            NearClipPov = new ConfigWrapper<float>("NearClipPov", this, 0.005f);
-            ClampRotation = new ConfigWrapper<bool>("ClampRotation", this, true);
+            POVKey = Config.GetSetting("", "TogglePOV", new KeyboardShortcut(KeyCode.Backspace));
+            DefaultFov = Config.GetSetting("", "DefaultFOV", 70f, new ConfigDescription("", new AcceptableValueRange<float>(CommonView.MinFov, CommonView.MaxFov)));
+            ViewOffset = Config.GetSetting("", "ViewOffset", 0.0315f);
+            VerticalSensitivity = Config.GetSetting("", "VerticalSensitivity", 0.5f);
+            HorizontalSensitivity = Config.GetSetting("", "HorizontalSensitivity", 0.5f);
+            NearClipPov = Config.GetSetting("", "NearClipPOV", 0.005f);
+            ClampRotation = Config.GetSetting("", "ClampRotation", true);
         }
 
-        void Awake()
+        private void Awake()
         {
             bepinex = gameObject;
-            harmony = HarmonyInstance.Create("togglepovkk.harmony");
-            harmony.PatchAll(GetType());
-            harmony.PatchAll(typeof(HView));
+            harmony = new Harmony("togglepovkk.harmony");
+            HarmonyWrapper.PatchAll(typeof(Hooks), harmony);
+            HarmonyWrapper.PatchAll(typeof(HView), harmony);
 
             bepinex.GetOrAddComponent<StudioView>();
         }
 
 #if DEBUG
-        void OnDestroy()
+        private void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
             harmony.UnpatchAll(typeof(HView));
         }
 #endif
 
-        [HarmonyPrefix, HarmonyPatch(typeof(Studio.Studio), "Awake")]
-        public static void StudioStart()
+        private class Hooks
         {
-            bepinex.GetOrAddComponent<StudioView>();
-        }
+            [HarmonyPrefix, HarmonyPatch(typeof(Studio.Studio), "Awake")]
+            public static void StudioStart()
+            {
+                bepinex.GetOrAddComponent<StudioView>();
+            }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "SetShortcutKey")]
-        public static void HSceneStart()
-        {
-            bepinex.GetOrAddComponent<HView>();
-        }
+            [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "SetShortcutKey")]
+            public static void HSceneStart()
+            {
+                bepinex.GetOrAddComponent<HView>();
+            }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "OnDestroy")]
-        public static void HSceneEnd()
-        {
-            Destroy(bepinex.GetComponent<HView>());
+            [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "OnDestroy")]
+            public static void HSceneEnd()
+            {
+                Destroy(bepinex.GetComponent<HView>());
+            }
         }
     }
 }

@@ -1,15 +1,15 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Studio;
 using System;
 
 namespace CharaStateX
 {
-    static class StateInfoPatch
+    internal static class StateInfoPatch
     {
-        static HarmonyInstance harmony;
-        static Type stateInfoType;
+        private static Harmony harmony;
+        private static Type stateInfoType;
 
-        public static void Patch(HarmonyInstance harmonyInstance)
+        public static void Patch(Harmony harmonyInstance)
         {
             harmony = harmonyInstance;
             stateInfoType = typeof(MPCharCtrl).GetNestedType("StateInfo", AccessTools.all);
@@ -26,14 +26,14 @@ namespace CharaStateX
             PatchStateInfoMethod("OnValueChangedSonLength");
         }
 
-        static void PatchStateInfoMethod(string targetName)
+        private static void PatchStateInfoMethod(string targetName)
         {
             var target = AccessTools.Method(stateInfoType, targetName);
             var patch = AccessTools.Method(typeof(StateInfoPatch), $"Patch_{targetName}");
             harmony.Patch(target, null, new HarmonyMethod(patch));
         }
 
-        static void Patch_OnClickCosType(object __instance, ref int _value)
+        private static void Patch_OnClickCosType(object __instance, ref int _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -41,7 +41,7 @@ namespace CharaStateX
                 chara.SetCoordinateInfo((ChaFileDefine.CoordinateType)_value, false);
         }
 
-        static void Patch_OnClickShoesType(object __instance, ref int _value)
+        private static void Patch_OnClickShoesType(object __instance, ref int _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -49,7 +49,7 @@ namespace CharaStateX
                 chara.SetShoesType(_value);
         }
 
-        static void Patch_OnClickCosState(object __instance, ref int _value)
+        private static void Patch_OnClickCosState(object __instance, ref int _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -57,7 +57,7 @@ namespace CharaStateX
                 chara.SetClothesStateAll(_value);
         }
 
-        static void Patch_OnClickClothingDetails(object __instance, ref int _id, ref byte _state)
+        private static void Patch_OnClickClothingDetails(object __instance, ref int _id, ref byte _state)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -65,7 +65,7 @@ namespace CharaStateX
                 chara.SetClothesState(_id, _state);
         }
 
-        static void Patch_OnClickAccessories(object __instance, ref int _id, ref bool _flag)
+        private static void Patch_OnClickAccessories(object __instance, ref int _id, ref bool _flag)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -73,7 +73,7 @@ namespace CharaStateX
                 chara.ShowAccessory(_id, _flag);
         }
 
-        static void Patch_OnClickLiquid(object __instance, ref ChaFileDefine.SiruParts _parts, ref byte _state)
+        private static void Patch_OnClickLiquid(object __instance, ref ChaFileDefine.SiruParts _parts, ref byte _state)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -81,7 +81,7 @@ namespace CharaStateX
                 chara.SetSiruFlags(_parts, _state);
         }
 
-        static void Patch_OnClickTears(object __instance, ref byte _state)
+        private static void Patch_OnClickTears(object __instance, ref byte _state)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -89,7 +89,7 @@ namespace CharaStateX
                 chara.SetTearsLv(_state);
         }
 
-        static void Patch_OnValueChangedCheek(object __instance, ref float _value)
+        private static void Patch_OnValueChangedCheek(object __instance, ref float _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -97,7 +97,7 @@ namespace CharaStateX
                 chara.SetHohoAkaRate(_value);
         }
 
-        static void Patch_OnValueChangedNipple(object __instance, ref float _value)
+        private static void Patch_OnValueChangedNipple(object __instance, ref float _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -105,7 +105,7 @@ namespace CharaStateX
                 chara.SetNipStand(_value);
         }
 
-        static void Patch_OnValueChangedSon(object __instance, ref bool _value)
+        private static void Patch_OnValueChangedSon(object __instance, ref bool _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -113,7 +113,7 @@ namespace CharaStateX
                 chara.SetVisibleSon(_value);
         }
 
-        static void Patch_OnValueChangedSonLength(object __instance, ref float _value)
+        private static void Patch_OnValueChangedSonLength(object __instance, ref float _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 

@@ -1,98 +1,107 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
+using BepInEx.Harmony;
 using BepInEx.Logging;
-using Harmony;
+using HarmonyLib;
+using SharedPluginCode;
 using Studio;
 using System;
 using System.IO;
-using SharedPluginCode;
 
 namespace PosePng
 {
     [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
-    [BepInPlugin("keelhauled.posepng", "PosePng", Version)]
-    class PosePng : BaseUnityPlugin
+    [BepInPlugin(GUID, "PosePng", Version)]
+    public class PosePng : BaseUnityPlugin
     {
+        public const string GUID = "keelhauled.posepng";
         public const string Version = "1.0.0";
+        internal static new ManualLogSource Logger;
 
-        public static ConfigWrapper<string> SavePath { get; set; }
+        private static ConfigWrapper<string> SaveFolder { get; set; }
 
-        const string PngExt = ".png";
-        HarmonyInstance harmony;
+        private const string PngExt = ".png";
+        private Harmony harmony;
 
-        void Start()
+        private void Start()
         {
-            SavePath = new ConfigWrapper<string>("SavePath", this, "");
+            Logger = base.Logger;
 
-            harmony = HarmonyInstance.Create("keelhauled.posepng.harmony");
-            harmony.PatchAll(GetType());
+            SaveFolder = Config.GetSetting("General", "SaveFolder", "");
+
+            harmony = new Harmony("keelhauled.posepng.harmony");
+            HarmonyWrapper.PatchAll(GetType(), harmony);
         }
 
 #if DEBUG
-        void OnDestroy()
+        private void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
         }
 #endif
 
-        [HarmonyPrefix, HarmonyPatch(typeof(PauseCtrl), nameof(PauseCtrl.Save))]
-        public static bool PoseSavePatch(OCIChar _ociChar, ref string _name)
+        private class Hooks
         {
-            var filename = $"{_name}_{DateTime.Now.ToString("yyyy_MMdd_HHmm_ss_fff")}{PngExt}";
-            var path = Path.Combine(SavePath.Value, filename);
-            var fileInfo = new PauseCtrl.FileInfo(_ociChar);
-
-            try
+            [HarmonyPrefix, HarmonyPatch(typeof(PauseCtrl), nameof(PauseCtrl.Save))]
+            public static bool PoseSavePatch(OCIChar _ociChar, ref string _name)
             {
-                using(var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
-                using(var binaryWriter = new BinaryWriter(fileStream))
+                var filename = $"{_name}_{DateTime.Now.ToString("yyyy_MMdd_HHmm_ss_fff")}{PngExt}";
+                var path = Path.Combine(SaveFolder.Value, filename);
+                var fileInfo = new PauseCtrl.FileInfo(_ociChar);
+
+                try
                 {
-                    var buffer = Studio.Studio.Instance.gameScreenShot.CreatePngScreen(320, 180, false, false);
-                    binaryWriter.Write(buffer);
-                    binaryWriter.Write(PauseCtrl.saveIdentifyingCode);
-                    binaryWriter.Write(PauseCtrl.saveVersion);
-                    binaryWriter.Write(_ociChar.oiCharInfo.sex);
-                    binaryWriter.Write(_name);
-                    fileInfo.Save(binaryWriter);
-                }
-            }
-            catch(Exception ex)
-            {
-                Logger.Log(LogLevel.Message, "PosePng plugin save path has not been set properly");
-                Logger.Log(LogLevel.Error, ex);
-            }
-
-            return false;
-        }
-
-        [HarmonyPrefix, HarmonyPatch(typeof(PauseCtrl), nameof(PauseCtrl.Load))]
-        public static bool PoseLoadPatch(OCIChar _ociChar, ref string _path, ref bool __result)
-        {
-            if(Path.GetExtension(_path).ToLower() == PngExt)
-            {
-                var fileInfo = new PauseCtrl.FileInfo(null);
-                using(var fileStream = new FileStream(_path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using(var binaryReader = new BinaryReader(fileStream))
-                {
-                    PngFile.SkipPng(binaryReader);
-
-                    if(string.Compare(binaryReader.ReadString(), PauseCtrl.saveIdentifyingCode) != 0)
+                    using(var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                    using(var binaryWriter = new BinaryWriter(fileStream))
                     {
-                        __result = false;
-                        return false;
+                        var buffer = Studio.Studio.Instance.gameScreenShot.CreatePngScreen(320, 180, false, false);
+                        binaryWriter.Write(buffer);
+                        binaryWriter.Write(PauseCtrl.saveIdentifyingCode);
+                        binaryWriter.Write(PauseCtrl.saveVersion);
+                        binaryWriter.Write(_ociChar.oiCharInfo.sex);
+                        binaryWriter.Write(_name);
+                        fileInfo.Save(binaryWriter);
                     }
-
-                    int ver = binaryReader.ReadInt32();
-                    binaryReader.ReadInt32();
-                    binaryReader.ReadString();
-                    fileInfo.Load(binaryReader, ver);
+                }
+                catch(Exception ex)
+                {
+                    Logger.Log(LogLevel.Message, "PosePng plugin save path has not been set properly");
+                    Logger.Log(LogLevel.Error, ex);
                 }
 
-                fileInfo.Apply(_ociChar);
-                __result = true;
                 return false;
             }
 
-            return true;
+            [HarmonyPrefix, HarmonyPatch(typeof(PauseCtrl), nameof(PauseCtrl.Load))]
+            public static bool PoseLoadPatch(OCIChar _ociChar, ref string _path, ref bool __result)
+            {
+                if(Path.GetExtension(_path).ToLower() == PngExt)
+                {
+                    var fileInfo = new PauseCtrl.FileInfo(null);
+                    using(var fileStream = new FileStream(_path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using(var binaryReader = new BinaryReader(fileStream))
+                    {
+                        PngFile.SkipPng(binaryReader);
+
+                        if(string.Compare(binaryReader.ReadString(), PauseCtrl.saveIdentifyingCode) != 0)
+                        {
+                            __result = false;
+                            return false;
+                        }
+
+                        int ver = binaryReader.ReadInt32();
+                        binaryReader.ReadInt32();
+                        binaryReader.ReadString();
+                        fileInfo.Load(binaryReader, ver);
+                    }
+
+                    fileInfo.Apply(_ociChar);
+                    __result = true;
+                    return false;
+                }
+
+                return true;
+            }
         }
     }
 }

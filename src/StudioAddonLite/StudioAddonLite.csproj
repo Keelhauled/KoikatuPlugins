@@ -22,10 +22,6 @@
       <HintPath>$(SolutionDir)lib\bepinex5\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ConfigurationManager">
-      <HintPath>$(SolutionDir)lib\kk\ConfigurationManager.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="TextMeshPro-1.0.55.56.0b12">
       <HintPath>$(SolutionDir)lib\kk\TextMeshPro-1.0.55.56.0b12.dll</HintPath>
@@ -41,7 +37,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FKIKAssistMgr.cs" />
     <Compile Include="ObjMoveRotAssistMgr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StudioAddonLite.cs" />

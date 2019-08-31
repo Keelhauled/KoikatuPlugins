@@ -1,67 +1,27 @@
 ﻿using BepInEx;
+using BepInEx.Harmony;
 using BepInEx.Logging;
+using HarmonyLib;
 using ParadoxNotion.Serialization;
+using SharedPluginCode;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
-using Logger = BepInEx.Logger;
-using SharedPluginCode;
-using UnityEngine.UI;
-using Harmony;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace DefaultParamEditor
 {
     [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
     [BepInPlugin(GUID, "DefaultParamEditor", Version)]
-    internal class DefaultParamEditor : BaseUnityPlugin
+    public class DefaultParamEditor : BaseUnityPlugin
     {
         public const string GUID = "keelhauled.defaultparameditor";
         public const string Version = "1.1.0";
-        private const string ResetValue = "Reset";
 
-        [Browsable(true)]
-        [DisplayName("Set default character parameters")]
-        [Description("Saves parameters like Blinking, Type of shoes, Eye follow, etc.\nas the default values for newly loaded characters.\n\n" +
-                     "Values are taken from the currently selected character.")]
-        [CustomSettingDraw(nameof(CharaParamSettingDrawer))]
-        [DefaultValue(ResetValue)]
-        protected string CharaParamSetting
-        {
-            get => null;
-            set
-            {
-                if(value == ResetValue)
-                {
-                    Logger.Log(LogLevel.Debug, "Resetting charaParam");
-                    CharacterParam.Reset();
-                    SaveToFile();
-                }
-            }
-        }
+        internal static new ManualLogSource Logger;
 
-        [Browsable(true)]
-        [DisplayName("Set default scene parameters")]
-        [Description("Saves parameters like Bloom, Vignette, Shading, etc.\nas the default values for newly created scenes.\n\n" +
-                     "Values are taken from the current scene. They are used when starting Studio and when resetting the current scene.")]
-        [CustomSettingDraw(nameof(SceneParamSettingDrawer))]
-        [DefaultValue(ResetValue)]
-        protected string SceneParamSetting
-        {
-            get => null;
-            set
-            {
-                if(value == ResetValue)
-                {
-                    Logger.Log(LogLevel.Debug, "Resetting sceneParam");
-                    SceneParam.Reset();
-                    SaveToFile();
-                }
-            }
-        }
-        
         private static string savePath;
         private static ParamData data = new ParamData();
 
@@ -71,34 +31,11 @@ namespace DefaultParamEditor
             savePath = Path.Combine(Path.GetDirectoryName(ass.Location), "DefaultParamEditorData.json");
         }
 
-        private static void SaveToFile()
+        private void Awake()
         {
-            var json = JSONSerializer.Serialize(data.GetType(), data, true);
-            File.WriteAllText(savePath, json);
-        }
-
-        private void CharaParamSettingDrawer()
-        {
-            if(GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
-            {
-                CharacterParam.Save();
-                SaveToFile();
-            }
-        }
-
-        private void SceneParamSettingDrawer()
-        {
-            if(GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
-            {
-                SceneParam.Save();
-                SaveToFile();
-            }
-        }
-
-        protected void Awake()
-        {
-            var harmony = HarmonyInstance.Create($"{GUID}.harmony");
-            harmony.PatchAll(GetType());
+            Logger = base.Logger;
+            var harmony = new Harmony($"{GUID}.harmony");
+            HarmonyWrapper.PatchAll(typeof(Hooks), harmony);
 
             if(File.Exists(savePath))
             {
@@ -113,69 +50,78 @@ namespace DefaultParamEditor
                     data = new ParamData();
                 }
             }
-            
+
             CharacterParam.Init(data.charaParamData);
             SceneParam.Init(data.sceneParamData);
         }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(Studio.Studio), nameof(Studio.Studio.Init))]
-        public static void CreateUI()
+        private static void SaveToFile()
         {
-            var mainlist = SetupList("StudioScene/Canvas Main Menu/04_System");
-            CreateMainButton("Load scene param", mainlist, SceneParam.LoadDefaults);
-            CreateMainButton("Save scene param", mainlist, () =>
-            {
-                SceneParam.Save();
-                SaveToFile();
-            });
-
-            var charalist = SetupList("StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/00_Root");
-            //CreateCharaButton("Load chara param", charalist, CharacterParam.LoadDefaults);
-            CreateCharaButton("Save chara param", charalist, () =>
-            {
-                CharacterParam.Save();
-                SaveToFile();
-            });
+            var json = JSONSerializer.Serialize(data.GetType(), data, true);
+            File.WriteAllText(savePath, json);
         }
 
-        public static ScrollRect SetupList(string goPath)
+        private class Hooks
         {
-            var listObject = GameObject.Find(goPath);
-            var scrollRect = listObject.GetComponent<ScrollRect>();
-            scrollRect.content.gameObject.GetOrAddComponent<VerticalLayoutGroup>();
-            scrollRect.content.gameObject.GetOrAddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            scrollRect.scrollSensitivity = 25;
-
-            foreach(Transform item in scrollRect.content.transform)
+            [HarmonyPostfix, HarmonyPatch(typeof(Studio.Studio), nameof(Studio.Studio.Init))]
+            public static void CreateUI()
             {
-                var layoutElement = item.gameObject.GetOrAddComponent<LayoutElement>();
-                layoutElement.preferredHeight = 40;
+                var mainlist = SetupList("StudioScene/Canvas Main Menu/04_System");
+                CreateMainButton("Load scene param", mainlist, SceneParam.LoadDefaults);
+                CreateMainButton("Save scene param", mainlist, () =>
+                {
+                    SceneParam.Save();
+                    SaveToFile();
+                });
+
+                var charalist = SetupList("StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/00_Root");
+                //CreateCharaButton("Load chara param", charalist, CharacterParam.LoadDefaults);
+                CreateCharaButton("Save chara param", charalist, () =>
+                {
+                    CharacterParam.Save();
+                    SaveToFile();
+                });
             }
 
-            return scrollRect;
-        }
+            private static ScrollRect SetupList(string goPath)
+            {
+                var listObject = GameObject.Find(goPath);
+                var scrollRect = listObject.GetComponent<ScrollRect>();
+                scrollRect.content.gameObject.GetOrAddComponent<VerticalLayoutGroup>();
+                scrollRect.content.gameObject.GetOrAddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                scrollRect.scrollSensitivity = 25;
 
-        public static Button CreateMainButton(string name, ScrollRect scrollRect, UnityAction onClickEvent)
-        {
-            return CreateButton(name, scrollRect, onClickEvent, "StudioScene/Canvas Main Menu/04_System/Viewport/Content/End");
-        }
+                foreach(Transform item in scrollRect.content.transform)
+                {
+                    var layoutElement = item.gameObject.GetOrAddComponent<LayoutElement>();
+                    layoutElement.preferredHeight = 40;
+                }
 
-        public static Button CreateCharaButton(string name, ScrollRect scrollRect, UnityAction onClickEvent)
-        {
-            return CreateButton(name, scrollRect, onClickEvent, "StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/00_Root/Viewport/Content/State");
-        }
+                return scrollRect;
+            }
 
-        public static Button CreateButton(string name, ScrollRect scrollRect, UnityAction onClickEvent, string goPath)
-        {
-            var template = GameObject.Find(goPath);
-            var newObject = GameObject.Instantiate(template, scrollRect.content.transform);
-            newObject.name = "NewObject";
-            var textComponent = newObject.GetComponentInChildren<Text>();
-            textComponent.text = name;
-            var buttonComponent = newObject.GetComponent<Button>();
-            buttonComponent.onClick.ActuallyRemoveAllListeners();
-            buttonComponent.onClick.AddListener(onClickEvent);
-            return buttonComponent;
+            private static Button CreateMainButton(string name, ScrollRect scrollRect, UnityAction onClickEvent)
+            {
+                return CreateButton(name, scrollRect, onClickEvent, "StudioScene/Canvas Main Menu/04_System/Viewport/Content/End");
+            }
+
+            private static Button CreateCharaButton(string name, ScrollRect scrollRect, UnityAction onClickEvent)
+            {
+                return CreateButton(name, scrollRect, onClickEvent, "StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/00_Root/Viewport/Content/State");
+            }
+
+            private static Button CreateButton(string name, ScrollRect scrollRect, UnityAction onClickEvent, string goPath)
+            {
+                var template = GameObject.Find(goPath);
+                var newObject = GameObject.Instantiate(template, scrollRect.content.transform);
+                newObject.name = "NewObject";
+                var textComponent = newObject.GetComponentInChildren<Text>();
+                textComponent.text = name;
+                var buttonComponent = newObject.GetComponent<Button>();
+                buttonComponent.onClick.ActuallyRemoveAllListeners();
+                buttonComponent.onClick.AddListener(onClickEvent);
+                return buttonComponent;
+            }
         }
     }
 }

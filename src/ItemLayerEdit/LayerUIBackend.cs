@@ -5,15 +5,15 @@ using UnityEngine.UI;
 
 namespace ItemLayerEdit
 {
-    public static class LayerUIBackend
+    internal static class LayerUIBackend
     {
-        const string panelTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Color1 Background";
-        const string textTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/TextMeshPro Width";
-        const string sliderTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/Slider Width";
-        const string inputTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/TextMeshPro - InputField Width";
-        const string defButtonTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/Button Width Default";
+        private const string panelTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Color1 Background";
+        private const string textTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/TextMeshPro Width";
+        private const string sliderTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/Slider Width";
+        private const string inputTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/TextMeshPro - InputField Width";
+        private const string defButtonTemplatePath = "StudioScene/Canvas Main Menu/02_Manipulate/01_Item/Image Line/Button Width Default";
 
-        public static GameObject CreatePanel()
+        internal static GameObject CreatePanel()
         {
             var panelTemplate = GameObject.Find(panelTemplatePath);
 
@@ -30,7 +30,7 @@ namespace ItemLayerEdit
             return panel;
         }
 
-        public static TextMeshProUGUI CreateText(Transform parent)
+        internal static TextMeshProUGUI CreateText(Transform parent)
         {
             var textTemplate = GameObject.Find(textTemplatePath);
 
@@ -43,7 +43,7 @@ namespace ItemLayerEdit
             return layerTextComponent;
         }
 
-        public static Slider CreateSlider(Transform parent)
+        internal static Slider CreateSlider(Transform parent)
         {
             var sliderTemplate = GameObject.Find(sliderTemplatePath);
 
@@ -58,7 +58,7 @@ namespace ItemLayerEdit
             return layerSliderComponent;
         }
 
-        public static TMP_InputField CreateInputfield(Transform parent)
+        internal static TMP_InputField CreateInputfield(Transform parent)
         {
             var inputTemplate = GameObject.Find(inputTemplatePath);
 
@@ -70,7 +70,7 @@ namespace ItemLayerEdit
             return layerInputComponent;
         }
 
-        public static Button CreateButton(Transform parent)
+        internal static Button CreateButton(Transform parent)
         {
             var defButtonTemplate = GameObject.Find(defButtonTemplatePath);
 

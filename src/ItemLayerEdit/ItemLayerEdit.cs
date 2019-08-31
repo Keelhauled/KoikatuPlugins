@@ -1,5 +1,6 @@
 ﻿using BepInEx;
-using Harmony;
+using BepInEx.Harmony;
+using HarmonyLib;
 using KKAPI.Studio.SaveLoad;
 using SharedPluginCode;
 using Studio;
@@ -12,6 +13,7 @@ using UnityEngine.UI;
 
 namespace ItemLayerEdit
 {
+    [BepInDependency(KKAPI.KoikatuAPI.GUID)]
     [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
     [BepInPlugin(GUID, "Item Layer Edit", Version)]
     public class ItemLayerEdit : BaseUnityPlugin
@@ -19,22 +21,22 @@ namespace ItemLayerEdit
         public const string GUID = "keelhauled.itemlayeredit";
         public const string Version = "1.0.0";
 
-        static HarmonyInstance harmony;
-        static List<GameObject> targetObjects = new List<GameObject>();
-        static GameObject panel;
-        static Slider layerSliderComponent;
-        static TMP_InputField layerInputComponent;
-        static bool pluginSetup = false;
+        private static Harmony harmony;
+        private static List<GameObject> targetObjects = new List<GameObject>();
+        private static GameObject panel;
+        private static Slider layerSliderComponent;
+        private static TMP_InputField layerInputComponent;
+        private static bool pluginSetup = false;
 
-        void Awake()
+        private void Awake()
         {
-            harmony = HarmonyInstance.Create($"{GUID}.harmony");
-            harmony.PatchAll(GetType());
+            harmony = new Harmony($"{GUID}.harmony");
+            HarmonyWrapper.PatchAll(GetType(), harmony);
             StudioSaveLoadApi.RegisterExtraBehaviour<SceneDataController>(GUID);
         }
 
 #if DEBUG
-        void OnDestroy()
+        private void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
             DestroyImmediate(panel);
@@ -60,12 +62,12 @@ namespace ItemLayerEdit
             }
         }
 
-        static void OnSelect(TreeNodeObject node) => UpdateTargetObjects();
-        static void OnSelectMultiple() => UpdateTargetObjects();
-        static void OnDeselect(TreeNodeObject node) => UpdateTargetObjects();
-        static void OnDelete(TreeNodeObject node) => UpdateTargetObjects();
+        private static void OnSelect(TreeNodeObject node) => UpdateTargetObjects();
+        private static void OnSelectMultiple() => UpdateTargetObjects();
+        private static void OnDeselect(TreeNodeObject node) => UpdateTargetObjects();
+        private static void OnDelete(TreeNodeObject node) => UpdateTargetObjects();
 
-        static void SetupStudio()
+        private static void SetupStudio()
         {
             if(pluginSetup)
                 return;
@@ -110,7 +112,7 @@ namespace ItemLayerEdit
             pluginSetup = true;
         }
 
-        static void UpdateTargetObjects()
+        private static void UpdateTargetObjects()
         {
             targetObjects.Clear();
 
@@ -127,7 +129,7 @@ namespace ItemLayerEdit
             }
         }
 
-        static void SetTargetObjectLayers(int layer)
+        private static void SetTargetObjectLayers(int layer)
         {
             foreach(var targetObject in targetObjects)
             {
@@ -138,7 +140,7 @@ namespace ItemLayerEdit
             }
         }
 
-        static void SetTargetObjectLayersDefault()
+        private static void SetTargetObjectLayersDefault()
         {
             foreach(var targetObject in targetObjects)
             {

@@ -1,50 +1,41 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
+using SharedPluginCode;
 using System.Collections;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-using static BepInEx.Logger;
-using SharedPluginCode;
 
 namespace TitleShortcuts
 {
     [BepInProcess(KoikatuConstants.KoikatuMainProcessName)]
     [BepInProcess(KoikatuConstants.KoikatuSteamProcessName)]
     [BepInProcess(KoikatuConstants.KoikatuVRProcessName)]
-    [BepInPlugin("keelhauled.titleshortcuts", "TitleShortcuts", Version)]
-    class TitleShortcuts : BaseUnityPlugin
+    [BepInProcess(KoikatuConstants.KoikatuSteamVRProcessName)]
+    [BepInPlugin(GUID, "TitleShortcuts", Version)]
+    public class TitleShortcuts : BaseUnityPlugin
     {
+        public const string GUID = "keelhauled.titleshortcuts";
         public const string Version = "1.1.1";
 
-        [DisplayName("Automatic start mode")]
-        [Description("Choose which mode to start automatically when launching.\nDuring startup, hold esc or F1 to cancel automatic behaviour or hold another shortcut to use that instead.")]
-        ConfigWrapper<AutoStartOption> AutoStart { get; }
+        private const string DESCRIPTION_AUTOSTART = "Choose which mode to start automatically when launching.\nDuring startup, " +
+                                                     "hold esc or F1 to cancel automatic behaviour or hold another shortcut to use that instead.";
 
-        [DisplayName("!Start female maker")]
-        SavedKeyboardShortcut StartFemaleMaker { get; }
+        private ConfigWrapper<AutoStartOption> AutoStart { get; }
+        private ConfigWrapper<KeyboardShortcut> StartFemaleMaker { get; }
+        private ConfigWrapper<KeyboardShortcut> StartMaleMaker { get; }
+        private ConfigWrapper<KeyboardShortcut> StartUploader { get; }
+        private ConfigWrapper<KeyboardShortcut> StartDownloader { get; }
+        private ConfigWrapper<KeyboardShortcut> StartFreeH { get; }
+        private ConfigWrapper<KeyboardShortcut> StartLiveShow { get; }
 
-        [DisplayName("!Start male maker")]
-        SavedKeyboardShortcut StartMaleMaker { get; }
+        private bool check = false;
+        private bool cancelAuto = false;
+        private TitleScene titleScene;
 
-        [DisplayName("Start uploader")]
-        SavedKeyboardShortcut StartUploader { get; }
-
-        [DisplayName("Start downloader")]
-        SavedKeyboardShortcut StartDownloader { get; }
-
-        [DisplayName("Start free H")]
-        SavedKeyboardShortcut StartFreeH { get; }
-
-        [DisplayName("Start live show")]
-        SavedKeyboardShortcut StartLiveShow { get; }
-
-        bool check = false;
-        bool cancelAuto = false;
-        TitleScene titleScene;
-
-        enum AutoStartOption
+        private enum AutoStartOption
         {
             Disabled,
             [Description("Female maker")]
@@ -57,23 +48,23 @@ namespace TitleShortcuts
             LiveStage
         }
 
-        TitleShortcuts()
+        private TitleShortcuts()
         {
-            AutoStart = new ConfigWrapper<AutoStartOption>("AutoStart", this, AutoStartOption.Disabled);
-            StartFemaleMaker = new SavedKeyboardShortcut("StartFemaleMaker", this, new KeyboardShortcut(KeyCode.F));
-            StartMaleMaker = new SavedKeyboardShortcut("StartMaleMaker", this, new KeyboardShortcut(KeyCode.M));
-            StartUploader = new SavedKeyboardShortcut("StartUploader", this, new KeyboardShortcut(KeyCode.U));
-            StartDownloader = new SavedKeyboardShortcut("StartDownloader", this, new KeyboardShortcut(KeyCode.D));
-            StartFreeH = new SavedKeyboardShortcut("StartFreeH", this, new KeyboardShortcut(KeyCode.H));
-            StartLiveShow = new SavedKeyboardShortcut("StartLiveShow", this, new KeyboardShortcut(KeyCode.L));
+            AutoStart = Config.GetSetting("", "AutoStartMode", AutoStartOption.Disabled, new ConfigDescription(DESCRIPTION_AUTOSTART));
+            StartFemaleMaker = Config.GetSetting("", "StartFemaleMaker", new KeyboardShortcut(KeyCode.F));
+            StartMaleMaker = Config.GetSetting("", "StartMaleMaker", new KeyboardShortcut(KeyCode.M));
+            StartUploader = Config.GetSetting("", "StartUploader", new KeyboardShortcut(KeyCode.U));
+            StartDownloader = Config.GetSetting("", "StartDownloader", new KeyboardShortcut(KeyCode.D));
+            StartFreeH = Config.GetSetting("", "StartFreeH", new KeyboardShortcut(KeyCode.H));
+            StartLiveShow = Config.GetSetting("", "StartLiveShow", new KeyboardShortcut(KeyCode.L));
         }
 
-        void Awake()
+        private void Awake()
         {
             SceneManager.sceneLoaded += StartInput;
         }
 
-        void StartInput(Scene scene, LoadSceneMode mode)
+        private void StartInput(Scene scene, LoadSceneMode mode)
         {
             var title = FindObjectOfType<TitleScene>();
 
@@ -92,41 +83,41 @@ namespace TitleShortcuts
             }
         }
 
-        IEnumerator InputCheck()
+        private IEnumerator InputCheck()
         {
             while(check)
             {
                 if(!cancelAuto && AutoStart.Value != AutoStartOption.Disabled && (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.F1)))
                 {
-                    Log(LogLevel.Message, "Automatic start cancelled");
+                    Logger.Log(LogLevel.Message, "Automatic start cancelled");
                     cancelAuto = true;
                 }
 
                 if(!Manager.Scene.Instance.IsNowLoadingFade)
                 {
-                    if(StartFemaleMaker.IsPressed())
+                    if(StartFemaleMaker.Value.IsPressed())
                     {
                         StartMode(titleScene.OnCustomFemale, "Starting female maker");
                     }
-                    else if(StartMaleMaker.IsPressed())
+                    else if(StartMaleMaker.Value.IsPressed())
                     {
                         StartMode(titleScene.OnCustomMale, "Starting male maker");
                     }
 
-                    else if(StartUploader.IsPressed())
+                    else if(StartUploader.Value.IsPressed())
                     {
                         StartMode(titleScene.OnUploader, "Starting uploader");
                     }
-                    else if(StartDownloader.IsPressed())
+                    else if(StartDownloader.Value.IsPressed())
                     {
                         StartMode(titleScene.OnDownloader, "Starting downloader");
                     }
 
-                    else if(StartFreeH.IsPressed())
+                    else if(StartFreeH.Value.IsPressed())
                     {
                         StartMode(titleScene.OnOtherFreeH, "Starting free H");
                     }
-                    else if(StartLiveShow.IsPressed())
+                    else if(StartLiveShow.Value.IsPressed())
                     {
                         StartMode(titleScene.OnOtherIdolLive, "Starting live show");
                     }
@@ -160,10 +151,10 @@ namespace TitleShortcuts
             }
         }
 
-        void StartMode(UnityAction action, string msg)
+        private void StartMode(UnityAction action, string msg)
         {
             if(FindObjectOfType<ConfigScene>()) return;
-            Log(LogLevel.Message, msg);
+            Logger.Log(LogLevel.Message, msg);
             check = false;
             action();
         }

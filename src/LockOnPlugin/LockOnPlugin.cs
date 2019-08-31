@@ -1,85 +1,74 @@
 ﻿using BepInEx;
-using System.ComponentModel;
+using BepInEx.Configuration;
+using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace LockOnPluginKK
 {
-    [BepInPlugin("keelhauled.lockonpluginkk", "LockOnPlugin", Version)]
-    class LockOnPlugin : BaseUnityPlugin
+    [BepInPlugin(GUID, "LockOnPlugin", Version)]
+    internal class LockOnPlugin : BaseUnityPlugin
     {
+        public const string GUID = "keelhauled.lockonpluginkk";
         public const string Version = "1.0.0";
+        internal static new ManualLogSource Logger;
 
-        [DisplayName("!Tracking speed")]
-        [Description("The speed at which the target is followed.")]
-        [AcceptableValueRange(0.01f, 0.3f, false)]
-        public static ConfigWrapper<float> TrackingSpeedNormal { get; private set; }
+        private const string SECTION_HOTKEYS = "Keyboard Shortcuts";
+        private const string SECTION_GENERAL = "General";
 
-        [DisplayName("Scroll through males")]
-        [Description("Choose whether to include males in the rotation when switching between characters using the hotkeys from the plugin.")]
-        public static ConfigWrapper<bool> ScrollThroughMalesToo { get; private set; }
+        private const string DESCRIPTION_TRACKSPEED = "The speed at which the target is followed.";
+        private const string DESCRIPTION_SCROLLMALES = "Choose whether to include males in the rotation when switching between characters using the hotkeys from the plugin.";
+        private const string DESCRIPTION_LEASHLENGTH = "The amount of slack allowed when tracking.";
+        private const string DESCRIPTION_AUTOLOCK = "Lock on automatically after switching characters.";
 
-        [DisplayName("Show info messages")]
-        public static ConfigWrapper<bool> ShowInfoMsg { get; private set; }
+        internal static ConfigWrapper<float> TrackingSpeedNormal { get; set; }
+        internal static ConfigWrapper<bool> ScrollThroughMalesToo { get; set; }
+        internal static ConfigWrapper<bool> ShowInfoMsg { get; set; }
+        internal static ConfigWrapper<float> LockLeashLength { get; set; }
+        internal static ConfigWrapper<bool> AutoSwitchLock { get; set; }
+        internal static ConfigWrapper<bool> ShowDebugTargets { get; set; }
+        internal static ConfigWrapper<KeyboardShortcut> LockOnKey { get; set; }
+        internal static ConfigWrapper<KeyboardShortcut> LockOnGuiKey { get; set; }
+        internal static ConfigWrapper<KeyboardShortcut> PrevCharaKey { get; set; }
+        internal static ConfigWrapper<KeyboardShortcut> NextCharaKey { get; set; }
 
-        [DisplayName("!Leash length")]
-        [Description("The amount of slack allowed when tracking.")]
-        [AcceptableValueRange(0f, 0.5f, false)]
-        public static ConfigWrapper<float> LockLeashLength { get; private set; }
-
-        [DisplayName("Auto lock on switch")]
-        [Description("Lock on automatically after switching characters.")]
-        public static ConfigWrapper<bool> AutoSwitchLock { get; private set; }
-
-        [Advanced(true)]
-        [DisplayName("Show debug targets")]
-        public static ConfigWrapper<bool> ShowDebugTargets { get; private set; }
-
-        [DisplayName("!Lock on")]
-        public static SavedKeyboardShortcut LockOnKey { get; private set; }
-
-        [DisplayName("!Show target gui")]
-        public static SavedKeyboardShortcut LockOnGuiKey { get; private set; }
-
-        [DisplayName("Select previous character")]
-        public static SavedKeyboardShortcut PrevCharaKey { get; private set; }
-
-        [DisplayName("Select next character")]
-        public static SavedKeyboardShortcut NextCharaKey { get; private set; }
-
-        LockOnPlugin()
+        private LockOnPlugin()
         {
-            TrackingSpeedNormal = new ConfigWrapper<float>("LockedTrackingSpeed", this, 0.1f);
-            ScrollThroughMalesToo = new ConfigWrapper<bool>("ScrollThroughMalesToo", this, true);
-            ShowInfoMsg = new ConfigWrapper<bool>("ShowInfoMsg", this, true);
-            LockLeashLength = new ConfigWrapper<float>("LockLeashLength", this, 0f);
-            AutoSwitchLock = new ConfigWrapper<bool>("AutoSwitchLock", this, false);
-            ShowDebugTargets = new ConfigWrapper<bool>("ShowDebugTargets", this, false);
+            Logger = base.Logger;
 
-            LockOnKey = new SavedKeyboardShortcut("LockOnKey", this, new KeyboardShortcut(KeyCode.Mouse4));
-            LockOnGuiKey = new SavedKeyboardShortcut("LockOnGuiKey", this, new KeyboardShortcut(KeyCode.None));
-            PrevCharaKey = new SavedKeyboardShortcut("PrevCharaKey", this, new KeyboardShortcut(KeyCode.None));
-            NextCharaKey = new SavedKeyboardShortcut("NextCharaKey", this, new KeyboardShortcut(KeyCode.None));
+            TrackingSpeedNormal = Config.GetSetting(SECTION_GENERAL, "TrackingSpeed", 0.1f, new ConfigDescription(DESCRIPTION_TRACKSPEED, new AcceptableValueRange<float>(0.01f, 0.3f)));
+            ScrollThroughMalesToo = Config.GetSetting(SECTION_GENERAL, "ScrollThroughMalesToo", true, new ConfigDescription(DESCRIPTION_SCROLLMALES));
+            ShowInfoMsg = Config.GetSetting(SECTION_GENERAL, "ShowInfoMsg", true);
+            LockLeashLength = Config.GetSetting(SECTION_GENERAL, "LeashLength", 0f, new ConfigDescription(DESCRIPTION_LEASHLENGTH, new AcceptableValueRange<float>(0f, 0.5f)));
+            AutoSwitchLock = Config.GetSetting(SECTION_GENERAL, "AutoSwitchLock", false, new ConfigDescription(DESCRIPTION_AUTOLOCK));
+            ShowDebugTargets = Config.GetSetting(SECTION_GENERAL, "ShowDebugTargets", false, new ConfigDescription("", null, "Advanced"));
+
+            LockOnKey = Config.GetSetting(SECTION_HOTKEYS, "LockOn", new KeyboardShortcut(KeyCode.Mouse4));
+            LockOnGuiKey = Config.GetSetting(SECTION_HOTKEYS, "ShowTargetGUI", new KeyboardShortcut(KeyCode.None));
+            PrevCharaKey = Config.GetSetting(SECTION_HOTKEYS, "SelectPrevChara", new KeyboardShortcut(KeyCode.None));
+            NextCharaKey = Config.GetSetting(SECTION_HOTKEYS, "SelectNextChara", new KeyboardShortcut(KeyCode.None));
         }
 
-        void Awake()
+        private void Awake()
         {
             TargetData.LoadData();
             SceneLoaded();
             SceneManager.sceneLoaded += SceneLoaded;
         }
 
-        void OnDestroy() // for ScriptEngine
+#if DEBUG
+        private void OnDestroy()
         {
             SceneManager.sceneLoaded += SceneLoaded;
         }
+#endif
 
-        void SceneLoaded(Scene scene, LoadSceneMode mode)
+        private void SceneLoaded(Scene scene, LoadSceneMode mode)
         {
             SceneLoaded();
         }
 
-        void SceneLoaded()
+        private void SceneLoaded()
         {
             var comp = gameObject.GetComponent<LockOnBase>();
 

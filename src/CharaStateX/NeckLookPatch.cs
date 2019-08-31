@@ -1,11 +1,11 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Studio;
 
 namespace CharaStateX
 {
-    static class NeckLookPatch
+    internal static class NeckLookPatch
     {
-        public static void Patch(HarmonyInstance harmony)
+        public static void Patch(Harmony harmony)
         {
             {
                 var type = typeof(MPCharCtrl).GetNestedType("LookAtInfo", AccessTools.all);
@@ -22,7 +22,7 @@ namespace CharaStateX
             }
         }
 
-        static void Patch_LookAtInfo_OnClick(object __instance, ref int _no)
+        private static void Patch_LookAtInfo_OnClick(object __instance, ref int _no)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -30,7 +30,7 @@ namespace CharaStateX
                 chara.ChangeLookEyesPtn(_no, false);
         }
 
-        static void Patch_NeckInfo_OnClick(object __instance, ref int _idx)
+        private static void Patch_NeckInfo_OnClick(object __instance, ref int _idx)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
             var patterns = Traverse.Create(__instance).Field("patterns").GetValue<int[]>();

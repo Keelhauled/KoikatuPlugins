@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Logger = BepInEx.Logger;
 
 namespace LockOnPluginKK
 {
@@ -46,10 +45,10 @@ namespace LockOnPluginKK
         protected virtual void Start()
         {
             defaultCameraSpeed = CameraMoveSpeed;
-            lockOnHotkey = new Hotkey(LockOnPlugin.LockOnKey, 0.4f);
-            lockOnGUIHotkey = new Hotkey(LockOnPlugin.LockOnGuiKey);
-            prevCharaHotkey = new Hotkey(LockOnPlugin.PrevCharaKey);
-            nextCharaHotkey = new Hotkey(LockOnPlugin.NextCharaKey);
+            lockOnHotkey = new Hotkey(LockOnPlugin.LockOnKey.Value, 0.4f);
+            lockOnGUIHotkey = new Hotkey(LockOnPlugin.LockOnGuiKey.Value);
+            prevCharaHotkey = new Hotkey(LockOnPlugin.PrevCharaKey.Value);
+            nextCharaHotkey = new Hotkey(LockOnPlugin.NextCharaKey.Value);
         }
 
         protected virtual void OnDestroy()
@@ -61,7 +60,7 @@ namespace LockOnPluginKK
         {
             if(!lockOnTarget && lockedOn)
             {
-                Logger.Log(LogLevel.Info, "Reset LockOnPlugin");
+                LockOnPlugin.Logger.Log(LogLevel.Info, "Reset LockOnPlugin");
                 ResetModState();
             }
 
@@ -346,7 +345,7 @@ namespace LockOnPluginKK
 
         protected virtual void CharaSwitch(bool scrollDown = true)
         {
-            Logger.Log(LogLevel.Info, "Character switching not implemented in this version");
+            LockOnPlugin.Logger.Log(LogLevel.Info, "Character switching not implemented in this version");
         }
 
         protected virtual void ResetModState()

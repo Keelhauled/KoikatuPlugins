@@ -27,6 +27,10 @@
       <HintPath>$(SolutionDir)lib\bepinex5\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="BepInEx.Harmony">
+      <HintPath>..\..\lib\bepinex5\BepInEx.Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>

@@ -1,11 +1,11 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Studio;
 
 namespace CharaStateX
 {
-    static class FKIKPatch
+    internal static class FKIKPatch
     {
-        public static void Patch(HarmonyInstance harmony)
+        public static void Patch(Harmony harmony)
         {
             {
                 var type = typeof(MPCharCtrl).GetNestedType("FKInfo", AccessTools.all);
@@ -22,7 +22,7 @@ namespace CharaStateX
             }
         }
 
-        static void Patch_FKInfo_OnChangeValueFunction(object __instance, ref bool _value)
+        private static void Patch_FKInfo_OnChangeValueFunction(object __instance, ref bool _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 
@@ -30,7 +30,7 @@ namespace CharaStateX
                 chara.ActiveKinematicMode(OICharInfo.KinematicMode.FK, _value, false);
         }
 
-        static void Patch_IKInfo_OnChangeValueFunction(object __instance, ref bool _value)
+        private static void Patch_IKInfo_OnChangeValueFunction(object __instance, ref bool _value)
         {
             if(Utils.GetIsUpdateInfo(__instance)) return;
 

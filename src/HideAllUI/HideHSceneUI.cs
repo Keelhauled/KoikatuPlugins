@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace HideAllUI
 {
-    class HideHSceneUI : HideUI
+    internal class HideHSceneUI : HideUI
     {
-        IEnumerable<Canvas> canvasList;
-        bool visible = true;
+        private IEnumerable<Canvas> canvasList;
+        private bool visible = true;
 
         public HideHSceneUI()
         {

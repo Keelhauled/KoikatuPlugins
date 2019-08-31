@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Studio;
 using System;
 using System.Collections.Generic;
@@ -7,15 +7,15 @@ using UnityEngine.UI;
 
 namespace LockOnPluginKK
 {
-    partial class StudioMono : LockOnBase
+    internal partial class StudioMono : LockOnBase
     {
-        Studio.Studio studio = Studio.Studio.Instance;
-        Studio.CameraControl camera = Studio.Studio.Instance.cameraCtrl;
-        TreeNodeCtrl treeNodeCtrl = Studio.Studio.Instance.treeNodeCtrl;
-        GuideObjectManager guideObjectManager = GuideObjectManager.Instance;
+        private Studio.Studio studio = Studio.Studio.Instance;
+        private Studio.CameraControl camera = Studio.Studio.Instance.cameraCtrl;
+        private TreeNodeCtrl treeNodeCtrl = Studio.Studio.Instance.treeNodeCtrl;
+        private GuideObjectManager guideObjectManager = GuideObjectManager.Instance;
 
-        Studio.CameraControl.CameraData cameraData;
-        OCIChar currentCharaOCI;
+        private Studio.CameraControl.CameraData cameraData;
+        private OCIChar currentCharaOCI;
 
         protected override void Start()
         {
@@ -30,7 +30,7 @@ namespace LockOnPluginKK
             Guitime.pos = new Vector2(1f, 1f);
         }
 
-        void OnSelectWork(TreeNodeObject node)
+        private void OnSelectWork(TreeNodeObject node)
         {
             if(studio.dicInfo.TryGetValue(node, out ObjectCtrlInfo objectCtrlInfo))
             {
@@ -70,7 +70,7 @@ namespace LockOnPluginKK
             currentCharaInfo = null;
         }
 
-        void OnDeleteWork(ObjectCtrlInfo info)
+        private void OnDeleteWork(ObjectCtrlInfo info)
         {
             if(info.kind == 0)
             {
@@ -131,7 +131,7 @@ namespace LockOnPluginKK
             treeNodeCtrl.SelectSingle(null);
         }
 
-        List<TreeNodeObject> GetCharaNodes<CharaType>()
+        private List<TreeNodeObject> GetCharaNodes<CharaType>()
         {
             var charaNodes = new List<TreeNodeObject>();
 

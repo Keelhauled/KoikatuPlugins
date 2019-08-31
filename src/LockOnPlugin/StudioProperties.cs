@@ -2,7 +2,7 @@
 
 namespace LockOnPluginKK
 {
-    partial class StudioMono : LockOnBase
+    internal partial class StudioMono : LockOnBase
     {
         protected override float CameraMoveSpeed
         {

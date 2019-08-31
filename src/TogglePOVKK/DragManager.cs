@@ -3,13 +3,13 @@ using UnityEngine.EventSystems;
 
 namespace TogglePOVKK
 {
-    public class DragManager : MonoBehaviour
+    internal class DragManager : MonoBehaviour
     {
         public static bool allowCamera = false;
-        bool mouseButtonDown0 = false;
-        bool mouseButtonDown1 = false;
+        private bool mouseButtonDown0 = false;
+        private bool mouseButtonDown1 = false;
 
-        void Update()
+        private void Update()
         {
             if(!allowCamera)
             {

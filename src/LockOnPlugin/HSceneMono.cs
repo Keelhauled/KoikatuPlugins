@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace LockOnPluginKK
 {
-    partial class HSceneMono : LockOnBase
+    internal partial class HSceneMono : LockOnBase
     {
-        CameraControl_Ver2 camera = Singleton<CameraControl_Ver2>.Instance;
+        private CameraControl_Ver2 camera = Singleton<CameraControl_Ver2>.Instance;
 
-        ChaInfo GetClosestChara()
+        private ChaInfo GetClosestChara()
         {
             ChaInfo closestChara = null;
             float smallestMagnitude = 0f;

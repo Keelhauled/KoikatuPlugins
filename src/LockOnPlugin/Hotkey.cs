@@ -1,4 +1,4 @@
-﻿using BepInEx;
+﻿using BepInEx.Configuration;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -6,20 +6,20 @@ using UnityEngine.UI;
 
 namespace LockOnPluginKK
 {
-    class Hotkey
+    internal class Hotkey
     {
         public static bool allowHotkeys = true;
 
-        SavedKeyboardShortcut key;
-        float procTime = 0f;
-        float timeHeld = 0f;
-        bool released = true;
-        bool enabled = true;
+        private KeyboardShortcut key;
+        private float procTime = 0f;
+        private float timeHeld = 0f;
+        private bool released = true;
+        private bool enabled = true;
 
-        public Hotkey(SavedKeyboardShortcut newKey, float newProcTime = 0f)
+        public Hotkey(KeyboardShortcut newKey, float newProcTime = 0f)
         {
             key = newKey;
-            if(key.Value.MainKey == KeyCode.None)
+            if(key.MainKey == KeyCode.None)
                 enabled = false;
 
             if(newProcTime > 0f)
@@ -69,7 +69,7 @@ namespace LockOnPluginKK
             }
         }
 
-        bool ResetIfShould()
+        private bool ResetIfShould()
         {
             bool shouldReset = false;
 

@@ -2,7 +2,7 @@
 
 namespace ItemLayerEdit
 {
-    public class LayerDataContainer : MonoBehaviour
+    internal class LayerDataContainer : MonoBehaviour
     {
         public int DefaultLayer;
     }

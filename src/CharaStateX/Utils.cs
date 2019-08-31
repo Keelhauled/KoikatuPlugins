@@ -1,11 +1,11 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Studio;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CharaStateX
 {
-    static class Utils
+    internal static class Utils
     {
         public static IEnumerable<OCIChar> GetSelectedCharacters()
         {
@@ -14,7 +14,8 @@ namespace CharaStateX
 
         public static IEnumerable<OCIChar> GetAllSelectedButMain(object __instance)
         {
-            return GetSelectedCharacters().Where((chara) => chara != GetMainChara(__instance));
+            var mainChara = GetMainChara(__instance);
+            return GetSelectedCharacters().Where((chara) => chara != mainChara);
         }
 
         public static OCIChar GetMainChara(object __instance)

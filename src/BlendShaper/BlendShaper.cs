@@ -1,10 +1,10 @@
 ﻿using BepInEx;
+using SharedPluginCode;
 using Studio;
 using System.Collections.Generic;
 using UILib;
 using UnityEngine;
 using UnityEngine.UI;
-using SharedPluginCode;
 
 //cf_O_canine
 //cf_O_face
@@ -23,20 +23,20 @@ using SharedPluginCode;
 namespace BlendShaper
 {
     [BepInProcess(KoikatuConstants.KoikatuStudioProcessName)]
-    [BepInPlugin("keelhauled.blendshaper", "BlendShaper", Version)]
-    class BlendShaper : BaseUnityPlugin
+    [BepInPlugin(GUID, "BlendShaper", Version)]
+    public class BlendShaper : BaseUnityPlugin
     {
+        public const string GUID = "keelhauled.blendshaper";
         public const string Version = "1.0.0";
 
-        float UIScale = 1.0f;
-        float elementSize = 20f;
+        private float UIScale = 1.0f;
+        private float elementSize = 20f;
+        private Canvas UISystem;
+        private ScrollRect categoryList;
+        private ScrollRect blendSetList;
+        private BlendSets blendSets = BlendSets.LoadBlendSetData();
 
-        Canvas UISystem;
-        ScrollRect categoryList;
-        ScrollRect blendSetList;
-        BlendSets blendSets = BlendSets.LoadBlendSetData();
-
-        void Start()
+        private void Start()
         {
             UIUtility.Init(nameof(BlendShaper));
 
@@ -51,14 +51,14 @@ namespace BlendShaper
             Studio.Studio.Instance.treeNodeCtrl.onDelete += ClearUI;
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             Destroy(UISystem);
             Studio.Studio.Instance.treeNodeCtrl.onSelect -= UpdateUI;
             Studio.Studio.Instance.treeNodeCtrl.onDelete -= ClearUI;
         }
 
-        void LateUpdate()
+        private void LateUpdate()
         {
             foreach(var category in blendSets.Categories)
             {
@@ -67,7 +67,7 @@ namespace BlendShaper
             }
         }
 
-        void UpdateUI(TreeNodeObject node)
+        private void UpdateUI(TreeNodeObject node)
         {
             ClearUI(node);
 
@@ -85,7 +85,7 @@ namespace BlendShaper
             }
         }
 
-        void UpdateBlend(List<BlendSets.Set> sets, OCIChar chara)
+        private void UpdateBlend(List<BlendSets.Set> sets, OCIChar chara)
         {
             foreach(var button in blendSetList.content.GetComponentsInChildren<Image>())
             {
@@ -115,7 +115,7 @@ namespace BlendShaper
             }
         }
 
-        void ClearUI(TreeNodeObject node)
+        private void ClearUI(TreeNodeObject node)
         {
             foreach(var button in categoryList.content.GetComponentsInChildren<Button>())
             {
@@ -130,7 +130,7 @@ namespace BlendShaper
             }
         }
 
-        Image CreateUIBase(float width, float height)
+        private Image CreateUIBase(float width, float height)
         {
             var margin = 4f;
             var title = 25f;
@@ -161,7 +161,7 @@ namespace BlendShaper
             return panel;
         }
 
-        ScrollRect CreateList(Transform parent, float anchorLeft, float anchorBottom, float anchorRight, float anchorTop)
+        private ScrollRect CreateList(Transform parent, float anchorLeft, float anchorBottom, float anchorRight, float anchorTop)
         {
             float scrollOffsetX = -15f;
 

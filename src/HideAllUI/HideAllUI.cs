@@ -1,6 +1,8 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
+using BepInEx.Harmony;
 using ChaCustom;
-using Harmony;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,8 @@ using UnityEngine;
 
 namespace HideAllUI
 {
+    [BepInIncompatibility("HideStudioUI")]
+    [BepInIncompatibility("HideHInterface")]
     [BepInPlugin(GUID, "HideAllUI", Version)]
     public class HideAllUI : BaseUnityPlugin
     {
@@ -16,74 +20,79 @@ namespace HideAllUI
         public const string Version = "1.0.0";
 
         // must be static for the transpiler
-        public static SavedKeyboardShortcut HideHotkey { get; set; }
+        private static ConfigWrapper<KeyboardShortcut> HideHotkey { get; set; }
 
-        HarmonyInstance harmony;
-        static HideUI currentUIHandler;
+        private Harmony harmony;
+        private static HideUI currentUIHandler;
 
-        void Start()
+        private void Start()
         {
-            if(IncompatiblePluginDetector.AnyIncompatiblePlugins())
-                return;
-
-            HideHotkey = new SavedKeyboardShortcut("HideHotkey", this, new KeyboardShortcut(KeyCode.Space));
-
-            harmony = HarmonyInstance.Create("keelhauled.hideallui.harmony");
-            harmony.PatchAll(GetType());
+            HideHotkey = Config.GetSetting("Keyboard Shortcuts", "Hide UI", new KeyboardShortcut(KeyCode.Space));
+            harmony = new Harmony("keelhauled.hideallui.harmony");
+            HarmonyWrapper.PatchAll(GetType(), harmony);
         }
 
 #if DEBUG
-        void OnDestroy()
+        private void OnDestroy()
         {
             harmony.UnpatchAll(GetType());
         }
 #endif
 
-        void Update()
+        private void Update()
         {
-            if(currentUIHandler != null && HideHotkey.IsDown())
+            if(currentUIHandler != null && HideHotkey.Value.IsDown())
                 currentUIHandler.ToggleUI();
         }
 
-        [HarmonyTranspiler, HarmonyPatch(typeof(CustomControl), "Update")]
-        public static IEnumerable<CodeInstruction> SetMakerHotkey(IEnumerable<CodeInstruction> instructions)
+        private class Hooks
         {
-            var codes = instructions.ToList();
-            var inputGetKeyDown = AccessTools.Method(typeof(Input), nameof(Input.GetKeyDown), new Type[] { typeof(KeyCode) });
 
-            for(int i = 0; i < codes.Count; i++)
+            [HarmonyTranspiler, HarmonyPatch(typeof(CustomControl), "Update")]
+            public static IEnumerable<CodeInstruction> SetMakerHotkey(IEnumerable<CodeInstruction> instructions)
             {
-                if(codes[i].opcode == OpCodes.Ldc_I4_S && codes[i].operand is sbyte val && val == (sbyte)KeyCode.Space)
+                var codes = instructions.ToList();
+                var inputGetKeyDown = AccessTools.Method(typeof(Input), nameof(Input.GetKeyDown), new Type[] { typeof(KeyCode) });
+
+                for(int i = 0; i < codes.Count; i++)
                 {
-                    if(codes[i + 1].opcode == OpCodes.Call && codes[i + 1].operand == inputGetKeyDown)
+                    if(codes[i].opcode == OpCodes.Ldc_I4_S && codes[i].operand is sbyte val && val == (sbyte)KeyCode.Space)
                     {
-                        codes[i].opcode = OpCodes.Call;
-                        codes[i].operand = AccessTools.Property(typeof(HideAllUI), nameof(HideHotkey)).GetGetMethod();
-                        codes[i + 1] = new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(SavedKeyboardShortcut), nameof(SavedKeyboardShortcut.IsDown)));
-                        break;
+                        if(codes[i + 1].opcode == OpCodes.Call && codes[i + 1].operand == inputGetKeyDown)
+                        {
+                            codes[i].opcode = OpCodes.Call;
+                            codes[i].operand = AccessTools.Property(typeof(HideAllUI), nameof(HideHotkey)).GetGetMethod();
+                            codes[i + 1] = new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(Hooks), nameof(HotkeyIsDown)));
+                            break;
+                        }
                     }
                 }
+
+                return codes;
             }
 
-            return codes;
-        }
+            public static bool HotkeyIsDown()
+            {
+                return HideHotkey.Value.IsDown();
+            }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(Studio.Studio), "Init")]
-        public static void StudioInit()
-        {
-            currentUIHandler = new HideStudioUI();
-        }
+            [HarmonyPostfix, HarmonyPatch(typeof(Studio.Studio), "Init")]
+            public static void StudioInit()
+            {
+                currentUIHandler = new HideStudioUI();
+            }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "SetShortcutKey")]
-        public static void HSceneStart()
-        {
-            currentUIHandler = new HideHSceneUI();
-        }
+            [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "SetShortcutKey")]
+            public static void HSceneStart()
+            {
+                currentUIHandler = new HideHSceneUI();
+            }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "OnDestroy")]
-        public static void HSceneEnd()
-        {
-            currentUIHandler = null;
+            [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "OnDestroy")]
+            public static void HSceneEnd()
+            {
+                currentUIHandler = null;
+            }
         }
     }
 }

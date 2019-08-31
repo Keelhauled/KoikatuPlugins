@@ -3,10 +3,10 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>b2512c34-a879-4c2a-8cc9-778a05a1fa72</SharedGUID>
+    <SharedGUID>1fedbf60-6bbf-4373-86d5-992b5a21adc4</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>HarmonyExtensionsV1</Import_RootNamespace>
+    <Import_RootNamespace>HarmonyExtensions</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)HarmonyExtensions.cs" />

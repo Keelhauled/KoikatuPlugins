@@ -1,11 +1,11 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Studio;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace TogglePOVKK
 {
-    class StudioView : CommonView
+    internal class StudioView : CommonView
     {
         protected override bool CameraEnabled
         {
@@ -35,7 +35,7 @@ namespace TogglePOVKK
             return characters.Count > 0 ? characters[0].charInfo : null;
         }
 
-        List<OCIChar> GetSelectedCharacters()
+        private List<OCIChar> GetSelectedCharacters()
         {
             return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
         }

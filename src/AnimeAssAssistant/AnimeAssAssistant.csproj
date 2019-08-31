@@ -31,10 +31,6 @@
       <HintPath>$(SolutionDir)lib\bepinex5\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ConfigurationManager">
-      <HintPath>$(SolutionDir)lib\kk\ConfigurationManager.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="KKAPI">
       <HintPath>$(SolutionDir)lib\plugin\KKAPI.dll</HintPath>
       <Private>False</Private>
@@ -55,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assistant.cs" />
-    <Compile Include="AssInit.cs" />
+    <Compile Include="AAA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="..\SharedPluginCode\SharedPluginCode.projitems" Label="Shared" />

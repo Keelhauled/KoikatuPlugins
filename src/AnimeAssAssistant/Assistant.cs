@@ -1,6 +1,5 @@
-﻿using BepInEx.Logging;
-using ChaCustom;
-using Harmony;
+﻿using ChaCustom;
+using HarmonyLib;
 using KKAPI.Utilities;
 using System;
 using System.Collections.Generic;
@@ -9,63 +8,62 @@ using System.Linq;
 using TMPro;
 using UniRx;
 using UnityEngine;
-using Logger = BepInEx.Logger;
 
 namespace AnimeAssAssistant
 {
-    public class Assistant : MonoBehaviour
+    internal class Assistant : MonoBehaviour
     {
-        string currentCharacter;
-        List<string> loadedCharacters = new List<string>();
-        TMP_Dropdown outfitDropDown;
+        private string currentCharacter;
+        private List<string> loadedCharacters = new List<string>();
+        private TMP_Dropdown outfitDropDown;
 
-        void Start()
+        private void Start()
         {
             outfitDropDown = Traverse.Create(Singleton<CustomControl>.Instance).Field("ddCoordinate").GetValue<TMP_Dropdown>();
         }
 
-        void Update()
+        private void Update()
         {
-            if(AssInit.EnableAAA)
+            if(AAA.EnableAAA)
             {
-                if(AssInit.HotkeyNext.IsDown())
+                if(AAA.HotkeyNext.Value.IsDown())
                     LoadNextChara();
-                else if(AssInit.HotkeyPrev.IsDown())
+                else if(AAA.HotkeyPrev.Value.IsDown())
                     LoadPrevChara();
-                else if(AssInit.HotkeyKill.IsDown())
+                else if(AAA.HotkeyKill.Value.IsDown())
                     RecycleCurrentChara();
-                else if(AssInit.HotkeySave.IsDown())
+                else if(AAA.HotkeySave.Value.IsDown())
                     SaveCurrentChara();
 
-                else if(AssInit.HotkeyOutfit1.IsDown())
+                else if(AAA.HotkeyOutfit1.Value.IsDown())
                     outfitDropDown.value = 0;
-                else if(AssInit.HotkeyOutfit2.IsDown())
+                else if(AAA.HotkeyOutfit2.Value.IsDown())
                     outfitDropDown.value = 1;
-                else if(AssInit.HotkeyOutfit3.IsDown())
+                else if(AAA.HotkeyOutfit3.Value.IsDown())
                     outfitDropDown.value = 2;
-                else if(AssInit.HotkeyOutfit4.IsDown())
+                else if(AAA.HotkeyOutfit4.Value.IsDown())
                     outfitDropDown.value = 3;
-                else if(AssInit.HotkeyOutfit5.IsDown())
+                else if(AAA.HotkeyOutfit5.Value.IsDown())
                     outfitDropDown.value = 4;
-                else if(AssInit.HotkeyOutfit6.IsDown())
+                else if(AAA.HotkeyOutfit6.Value.IsDown())
                     outfitDropDown.value = 5;
-                else if(AssInit.HotkeyOutfit7.IsDown())
+                else if(AAA.HotkeyOutfit7.Value.IsDown())
                     outfitDropDown.value = 6;
             }
         }
 
-        void LoadRandomChara()
+        private void LoadRandomChara()
         {
-            if(string.IsNullOrEmpty(AssInit.SearchFolder.Value))
+            if(string.IsNullOrEmpty(AAA.SearchFolder.Value))
             {
-                Logger.Log(LogLevel.Message, "[AnimeAssAssistant] Search folder has not been set, please set it in ConfigManager");
+                AAA.Logger.LogMessage("Search folder has not been set, please set it in ConfigManager");
                 return;
             }
 
-            var files = Directory.GetFiles(AssInit.SearchFolder.Value, "*.png");
+            var files = Directory.GetFiles(AAA.SearchFolder.Value, "*.png");
             if(files.Length == 0)
             {
-                Logger.Log(LogLevel.Message, "[AnimeAssAssistant] Search folder is empty");
+                AAA.Logger.LogMessage("Search folder is empty");
                 return;
             }
 
@@ -74,36 +72,36 @@ namespace AnimeAssAssistant
             LoadChara(path);
         }
 
-        void RecycleCurrentChara()
+        private void RecycleCurrentChara()
         {
             if(!string.IsNullOrEmpty(currentCharacter))
             {
                 RecycleBinUtil.MoveToRecycleBin(currentCharacter);
                 loadedCharacters.Remove(currentCharacter);
-                Logger.Log(LogLevel.Info, $"[AnimeAssAssistant] {currentCharacter} moved to the recycle bin.");
+                AAA.Logger.LogInfo($"{currentCharacter} moved to the recycle bin.");
                 LoadRandomChara();
             }
         }
 
-        void SaveCurrentChara()
+        private void SaveCurrentChara()
         {
-            if(string.IsNullOrEmpty(AssInit.SaveFolder.Value))
+            if(string.IsNullOrEmpty(AAA.SaveFolder.Value))
             {
-                Logger.Log(LogLevel.Message, "[AnimeAssAssistant] Save folder has not been set, please set it in ConfigManager");
+                AAA.Logger.LogMessage("Save folder has not been set, please set it in ConfigManager");
                 return;
             }
 
             if(!string.IsNullOrEmpty(currentCharacter))
             {
-                var dest = Path.Combine(AssInit.SaveFolder.Value, Path.GetFileName(currentCharacter));
+                var dest = Path.Combine(AAA.SaveFolder.Value, Path.GetFileName(currentCharacter));
                 File.Move(currentCharacter, dest);
                 loadedCharacters.Remove(currentCharacter);
-                Logger.Log(LogLevel.Info, $"[AnimeAssAssistant] {currentCharacter} moved to save folder.");
+                AAA.Logger.LogInfo($"{currentCharacter} moved to save folder.");
                 LoadRandomChara();
             }
         }
 
-        void LoadNextChara()
+        private void LoadNextChara()
         {
             var index = loadedCharacters.IndexOf(currentCharacter);
             if(index == -1 || index == loadedCharacters.Count - 1)
@@ -112,14 +110,14 @@ namespace AnimeAssAssistant
                 LoadChara(loadedCharacters[index + 1]);
         }
 
-        void LoadPrevChara()
+        private void LoadPrevChara()
         {
             var index = loadedCharacters.IndexOf(currentCharacter);
             if(index != -1 && index != 0)
                 LoadChara(loadedCharacters[index - 1]);
         }
 
-        void LoadChara(string path)
+        private void LoadChara(string path)
         {
             currentCharacter = path;
 
@@ -149,7 +147,7 @@ namespace AnimeAssAssistant
             if(chaCtrl.chaFile.parameter.sex != originalSex)
             {
                 chaCtrl.chaFile.parameter.sex = originalSex;
-                Logger.Log(LogLevel.Message, "[AnimeAssAssistant] Warning: The character's sex has been changed to match the editor mode.");
+                AAA.Logger.LogMessage("Warning: The character's sex has been changed to match the editor mode.");
             }
 
             chaCtrl.ChangeCoordinateType(true);
