@@ -35,7 +35,7 @@ namespace LockOnPluginKK
             }
             else
             {
-                LockOnPlugin.Logger.Log(LogLevel.Info, "Loading default target data.");
+                LockOnPlugin.Logger.Log(LogLevel.Debug, "Loading default target data.");
                 LoadResourceData();
             }
         }

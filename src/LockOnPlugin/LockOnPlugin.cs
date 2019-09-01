@@ -1,13 +1,14 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using BepInEx.Harmony;
 using BepInEx.Logging;
+using HarmonyLib;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace LockOnPluginKK
 {
     [BepInPlugin(GUID, "LockOnPlugin", Version)]
-    internal class LockOnPlugin : BaseUnityPlugin
+    public class LockOnPlugin : BaseUnityPlugin
     {
         public const string GUID = "keelhauled.lockonpluginkk";
         public const string Version = "1.0.0";
@@ -32,6 +33,9 @@ namespace LockOnPluginKK
         internal static ConfigWrapper<KeyboardShortcut> PrevCharaKey { get; set; }
         internal static ConfigWrapper<KeyboardShortcut> NextCharaKey { get; set; }
 
+        private static Harmony harmony;
+        private static GameObject bepinex;
+
         private LockOnPlugin()
         {
             Logger = base.Logger;
@@ -52,41 +56,49 @@ namespace LockOnPluginKK
         private void Awake()
         {
             TargetData.LoadData();
-            SceneLoaded();
-            SceneManager.sceneLoaded += SceneLoaded;
+
+            bepinex = gameObject;
+            harmony = new Harmony($"{GUID}.harmony");
+            HarmonyWrapper.PatchAll(typeof(Hooks), harmony);
         }
 
 #if DEBUG
         private void OnDestroy()
         {
-            SceneManager.sceneLoaded += SceneLoaded;
+            harmony.UnpatchAll();
         }
 #endif
 
-        private void SceneLoaded(Scene scene, LoadSceneMode mode)
+        private class Hooks
         {
-            SceneLoaded();
-        }
+            [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "Start")]
+            public static void CustomSceneInit()
+            {
+                bepinex.GetOrAddComponent<MakerMono>();
+            }
 
-        private void SceneLoaded()
-        {
-            var comp = gameObject.GetComponent<LockOnBase>();
+            [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "OnDestroy")]
+            public static void CustomSceneStop()
+            {
+                Destroy(bepinex.GetComponent<MakerMono>());
+            }
 
-            if(FindObjectOfType<StudioScene>())
+            [HarmonyPrefix, HarmonyPatch(typeof(StudioScene), "Start")]
+            public static void StudioSceneInit()
             {
-                if(!comp) gameObject.AddComponent<StudioMono>();
+                bepinex.GetOrAddComponent<StudioMono>();
             }
-            else if(FindObjectOfType<CustomScene>())
+
+            [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "SetShortcutKey")]
+            public static void HSceneStart()
             {
-                if(!comp) gameObject.AddComponent<MakerMono>();
+                bepinex.GetOrAddComponent<HSceneMono>();
             }
-            else if(FindObjectOfType<HSceneProc>())
+
+            [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "OnDestroy")]
+            public static void HSceneEnd()
             {
-                if(!comp) gameObject.AddComponent<HSceneMono>();
-            }
-            else if(comp)
-            {
-                Destroy(comp);
+                Destroy(bepinex.GetComponent<HSceneMono>());
             }
         }
     }

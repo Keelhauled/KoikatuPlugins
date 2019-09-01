@@ -88,6 +88,7 @@ Global
 		src\HarmonyExtensions\HarmonyExtensions.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
 		src\UILib\UILib.projitems*{bf5529d8-d359-4d01-a58c-b44c82cf158a}*SharedItemsImports = 4
+		src\HarmonyExtensions\HarmonyExtensions.projitems*{d6a01fb7-318e-4fa6-bb4d-f8d2a58b9f84}*SharedItemsImports = 4
 		src\HarmonyExtensions\HarmonyExtensions.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{e128a6bd-7bf1-4cf6-a4e5-6edb86d6e963}*SharedItemsImports = 4
 		src\SharedPluginCode\SharedPluginCode.projitems*{e6630c43-a642-4485-b69e-792414ce85ca}*SharedItemsImports = 4
