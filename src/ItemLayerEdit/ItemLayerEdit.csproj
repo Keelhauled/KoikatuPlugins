@@ -32,15 +32,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx.Harmony">
-      <HintPath>..\..\lib\bepinex5\BepInEx.Harmony.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\bepinex5\BepInEx.Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExtensibleSaveFormat">
-      <HintPath>$(SolutionDir)lib\plugin\ExtensibleSaveFormat.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\ExtensibleSaveFormat.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KKAPI">
-      <HintPath>$(SolutionDir)lib\plugin\KKAPI.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\KKAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

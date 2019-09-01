@@ -32,7 +32,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="KKAPI">
-      <HintPath>$(SolutionDir)lib\plugin\KKAPI.dll</HintPath>
+      <HintPath>$(SolutionDir)lib\kk\KKAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
