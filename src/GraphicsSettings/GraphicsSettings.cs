@@ -11,9 +11,9 @@ namespace GraphicsSettings
         public const string GUID = "keelhauled.graphicssettings";
         public const string Version = "1.0.3";
 
-        const string CATEGORY_RENDER = "Rendering settings";
-        const string CATEGORY_SHADOW = "Shadow settings";
-        const string CATEGORY_MISC = "Misc settings";
+        const string CATEGORY_RENDER = "Rendering";
+        const string CATEGORY_SHADOW = "Shadows";
+        const string CATEGORY_MISC = "Misc";
 
         const string DESCRIPTION_ANISOFILTER = "Improves distant textures when they are being viewer from indirect angles.";
         const string DESCRIPTION_VSYNC = "VSync synchronizes the output video of the graphics card to the refresh rate of the monitor. " +

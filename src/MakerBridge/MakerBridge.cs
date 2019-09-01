@@ -24,7 +24,7 @@ namespace MakerBridge
         private MakerBridge()
         {
             Logger = base.Logger;
-            SendChara = Config.GetSetting("Keyboard Shortcuts", "SendCharacter", new KeyboardShortcut(KeyCode.B));
+            SendChara = Config.GetSetting("", "SendCharacter", new KeyboardShortcut(KeyCode.B));
         }
 
         private void Awake()
@@ -35,25 +35,28 @@ namespace MakerBridge
 
             bepinex = gameObject;
             var harmony = new Harmony("keelhauled.makerbridge.harmony");
-            HarmonyWrapper.PatchAll(GetType(), harmony);
+            HarmonyWrapper.PatchAll(typeof(Hooks), harmony);
         }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "Start")]
-        public static void CustomSceneInit()
+        private class Hooks
         {
-            bepinex.GetOrAddComponent<MakerHandler>();
-        }
+            [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "Start")]
+            public static void CustomSceneInit()
+            {
+                bepinex.GetOrAddComponent<MakerHandler>();
+            }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "OnDestroy")]
-        public static void CustomSceneStop()
-        {
-            Destroy(bepinex.GetComponent<MakerHandler>());
-        }
+            [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "OnDestroy")]
+            public static void CustomSceneStop()
+            {
+                Destroy(bepinex.GetComponent<MakerHandler>());
+            }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(StudioScene), "Start")]
-        public static void StudioSceneInit()
-        {
-            bepinex.GetOrAddComponent<StudioHandler>();
+            [HarmonyPrefix, HarmonyPatch(typeof(StudioScene), "Start")]
+            public static void StudioSceneInit()
+            {
+                bepinex.GetOrAddComponent<StudioHandler>();
+            }
         }
     }
 }

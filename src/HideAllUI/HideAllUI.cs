@@ -27,9 +27,9 @@ namespace HideAllUI
 
         private void Start()
         {
-            HideHotkey = Config.GetSetting("Keyboard Shortcuts", "Hide UI", new KeyboardShortcut(KeyCode.Space));
+            HideHotkey = Config.GetSetting("", "Hide UI", new KeyboardShortcut(KeyCode.Space));
             harmony = new Harmony("keelhauled.hideallui.harmony");
-            HarmonyWrapper.PatchAll(GetType(), harmony);
+            HarmonyWrapper.PatchAll(typeof(Hooks), harmony);
         }
 
 #if DEBUG
@@ -45,9 +45,13 @@ namespace HideAllUI
                 currentUIHandler.ToggleUI();
         }
 
+        private static bool HotkeyIsDown()
+        {
+            return HideHotkey.Value.IsDown();
+        }
+
         private class Hooks
         {
-
             [HarmonyTranspiler, HarmonyPatch(typeof(CustomControl), "Update")]
             public static IEnumerable<CodeInstruction> SetMakerHotkey(IEnumerable<CodeInstruction> instructions)
             {
@@ -60,20 +64,14 @@ namespace HideAllUI
                     {
                         if(codes[i + 1].opcode == OpCodes.Call && codes[i + 1].operand == inputGetKeyDown)
                         {
-                            codes[i].opcode = OpCodes.Call;
-                            codes[i].operand = AccessTools.Property(typeof(HideAllUI), nameof(HideHotkey)).GetGetMethod();
-                            codes[i + 1] = new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(Hooks), nameof(HotkeyIsDown)));
+                            codes[i].opcode = OpCodes.Nop;
+                            codes[i + 1] = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(HideAllUI), nameof(HotkeyIsDown)));
                             break;
                         }
                     }
                 }
 
                 return codes;
-            }
-
-            public static bool HotkeyIsDown()
-            {
-                return HideHotkey.Value.IsDown();
             }
 
             [HarmonyPostfix, HarmonyPatch(typeof(Studio.Studio), "Init")]

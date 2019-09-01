@@ -14,7 +14,7 @@ namespace LockOnPluginKK
         internal static new ManualLogSource Logger;
 
         private const string SECTION_HOTKEYS = "Keyboard Shortcuts";
-        private const string SECTION_GENERAL = "General";
+        private const string SECTION_GENERAL = "";
 
         private const string DESCRIPTION_TRACKSPEED = "The speed at which the target is followed.";
         private const string DESCRIPTION_SCROLLMALES = "Choose whether to include males in the rotation when switching between characters using the hotkeys from the plugin.";
@@ -38,7 +38,7 @@ namespace LockOnPluginKK
 
             TrackingSpeedNormal = Config.GetSetting(SECTION_GENERAL, "TrackingSpeed", 0.1f, new ConfigDescription(DESCRIPTION_TRACKSPEED, new AcceptableValueRange<float>(0.01f, 0.3f)));
             ScrollThroughMalesToo = Config.GetSetting(SECTION_GENERAL, "ScrollThroughMalesToo", true, new ConfigDescription(DESCRIPTION_SCROLLMALES));
-            ShowInfoMsg = Config.GetSetting(SECTION_GENERAL, "ShowInfoMsg", true);
+            ShowInfoMsg = Config.GetSetting(SECTION_GENERAL, "ShowInfoMsg", false);
             LockLeashLength = Config.GetSetting(SECTION_GENERAL, "LeashLength", 0f, new ConfigDescription(DESCRIPTION_LEASHLENGTH, new AcceptableValueRange<float>(0f, 0.5f)));
             AutoSwitchLock = Config.GetSetting(SECTION_GENERAL, "AutoSwitchLock", false, new ConfigDescription(DESCRIPTION_AUTOLOCK));
             ShowDebugTargets = Config.GetSetting(SECTION_GENERAL, "ShowDebugTargets", false, new ConfigDescription("", null, "Advanced"));

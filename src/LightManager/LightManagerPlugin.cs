@@ -22,7 +22,7 @@ namespace LightManager
         {
             bepinex = gameObject;
             harmony = new Harmony($"{GUID}.harmony");
-            HarmonyWrapper.PatchAll(GetType(), harmony);
+            HarmonyWrapper.PatchAll(typeof(Hooks), harmony);
             StudioSaveLoadApi.RegisterExtraBehaviour<SceneDataController>(GUID);
         }
 

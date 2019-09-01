@@ -30,7 +30,7 @@ namespace PosePng
             SaveFolder = Config.GetSetting("General", "SaveFolder", "");
 
             harmony = new Harmony("keelhauled.posepng.harmony");
-            HarmonyWrapper.PatchAll(GetType(), harmony);
+            HarmonyWrapper.PatchAll(typeof(Hooks), harmony);
         }
 
 #if DEBUG

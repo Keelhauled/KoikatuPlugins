@@ -37,7 +37,7 @@ namespace RealPov
             PovHotkey = Config.GetSetting(SECTION_HOTKEYS, "PovHotkey", new KeyboardShortcut(KeyCode.Backspace));
 
             harmony = new Harmony("keelhauled.realpov.harmony");
-            HarmonyWrapper.PatchAll(GetType(), harmony);
+            HarmonyWrapper.PatchAll(typeof(Hooks), harmony);
 
             currentChara = FindObjectOfType<ChaControl>();
             currentFov = DefaultFov.Value;

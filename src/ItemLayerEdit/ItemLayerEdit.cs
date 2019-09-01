@@ -31,7 +31,7 @@ namespace ItemLayerEdit
         private void Awake()
         {
             harmony = new Harmony($"{GUID}.harmony");
-            HarmonyWrapper.PatchAll(GetType(), harmony);
+            HarmonyWrapper.PatchAll(typeof(Hooks), harmony);
             StudioSaveLoadApi.RegisterExtraBehaviour<SceneDataController>(GUID);
         }
 
@@ -48,19 +48,6 @@ namespace ItemLayerEdit
             studio.treeNodeCtrl.onDelete -= OnDelete;
         }
 #endif
-
-        [HarmonyPostfix, HarmonyPatch(typeof(ManipulatePanelCtrl), "SetActive")]
-        public static void ActivatePanel(ManipulatePanelCtrl __instance)
-        {
-            var traverse = Traverse.Create(__instance);
-            if(traverse.Field("kinds").GetValue<int[]>().Contains(1))
-            {
-                var rootPanel = traverse.Property("rootPanel").GetValue<IList>();
-                var rootObject = Traverse.Create(rootPanel[1]).Field("root").GetValue<GameObject>();
-                rootObject.SetActive(true);
-                SetupStudio();
-            }
-        }
 
         private static void OnSelect(TreeNodeObject node) => UpdateTargetObjects();
         private static void OnSelectMultiple() => UpdateTargetObjects();
@@ -147,6 +134,22 @@ namespace ItemLayerEdit
                 var data = targetObject.GetComponent<LayerDataContainer>();
                 if(data && targetObject.layer != data.DefaultLayer)
                     targetObject.SetLayers(data.DefaultLayer);
+            }
+        }
+
+        private class Hooks
+        {
+            [HarmonyPostfix, HarmonyPatch(typeof(ManipulatePanelCtrl), "SetActive")]
+            public static void ActivatePanel(ManipulatePanelCtrl __instance)
+            {
+                var traverse = Traverse.Create(__instance);
+                if(traverse.Field("kinds").GetValue<int[]>().Contains(1))
+                {
+                    var rootPanel = traverse.Property("rootPanel").GetValue<IList>();
+                    var rootObject = Traverse.Create(rootPanel[1]).Field("root").GetValue<GameObject>();
+                    rootObject.SetActive(true);
+                    SetupStudio();
+                }
             }
         }
     }
