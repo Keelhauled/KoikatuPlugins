@@ -1,3 +1,5 @@
+New plugin repo at https://github.com/Keelhauled/KeelPlugins
+
 # KoikatuPlugins
 
 Various koikatu plugins.  
